@@ -6,10 +6,6 @@
          class="stop-summary-wrapper"
 		>
          <stop-summary :stop="stop" />
-         <stop-summary :stop="stop" />
-         <stop-summary :stop="stop" />
-         <stop-summary :stop="stop" />
-         <stop-summary :stop="stop" />
 		</div>
    </div>
 </template>

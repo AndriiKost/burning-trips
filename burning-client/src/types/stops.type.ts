@@ -5,6 +5,7 @@ export interface Stop {
     votes: Array<Vote>;
     description: string;
     imageUrl: string;
+    isBurning: boolean;
 }
 
 export interface Vote {

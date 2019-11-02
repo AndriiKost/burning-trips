@@ -49,3 +49,14 @@ a.no-dec {
 .bg {
     user-select: none;
 }
+
+.relative {
+    position: relative;
+}
+
+// Icons
+.icon-brng {
+    width: 25px;
+    height: 25px;
+    background: url('https://storage.cloud.google.com/burning_bucket/flame.svg');
+}
