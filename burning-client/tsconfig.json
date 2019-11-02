@@ -15,9 +15,18 @@
       "webpack-env",
       "jest"
     ],
+    "typeRoots": [
+      "src/types"
+    ],
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@/types/*": [
+        "src/types/*"
+      ],
+      "@/components/*": [
+        "src/components/*"
       ]
     },
     "lib": [

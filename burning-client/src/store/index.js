@@ -8,10 +8,10 @@ import globalStore from './global-store';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  ...globalStore,
-  modules: {
-    region: regionStore,
-    stop: stopStore,
-  },
-  plugins: [pathify.plugin]
+	...globalStore,
+	modules: {
+		region: regionStore,
+		stop: stopStore,
+	},
+	plugins: [pathify.plugin]
 });

@@ -2,7 +2,7 @@
     <div class="vote-section flex-row space-between">
         <div class="icon-wrapper relative">
             <div 
-                v-if="isBurning" 
+                v-if="trending" 
                 class="icon-brng icon-btn inline-block" 
                 @click="handleVote"
             ></div>
@@ -30,7 +30,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 @Component({
    name: 'VoteSection'
 })
-export default class  extends Vue {
+export default class VoteSection extends Vue {
 
     /* Props */
     @Prop({ type: Number, default: 25 })
@@ -40,7 +40,7 @@ export default class  extends Vue {
     readonly totalVotes: Number;
 
     @Prop({ type: Boolean, default: false })
-    readonly isBurning: Boolean;
+    readonly trending: Boolean;
 
     /* Computed */
 
@@ -66,7 +66,7 @@ export default class  extends Vue {
 </script>
 
 <style lang='scss' scoped>
-@import 'src/sass/variables.scss';
+@import 'src/scss/variables.scss';
 .vote-section {
     .icon-btn {
         color: darken($red, 10%);

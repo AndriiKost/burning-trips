@@ -11,11 +11,13 @@
 				</a>
 				<div class="bottom clearfix flex-row space-between">
 					<vote-section 
-						:totalVotes="totalVotes" 
-						:is-burning="stop.isBurning" 
+						:total-votes="totalVotes" 
+						:trending="stop.trending" 
 						@update-votes="updateVotes"
 					/>
-					<el-button type="text" class="button-primary">Read More</el-button>
+					<el-button type="text" class="button-primary">
+						Read More
+					</el-button>
 				</div>
 			</div>
 		</el-card>
@@ -26,11 +28,10 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Get, Sync } from 'vuex-pathify';
-import { Stop, Vote } from '@/types/stops.type';
-import { User } from '@/types/User.type';
+import { IStop } from '../../types/Stop';
+import { IUser } from '../../types/User';
+import { IVote } from '../../types/Vote';
 import VoteSection from '@/components/global/VoteSection.vue';
-
-let timer: any;
 
 @Component({
 	name: 'StopSummary',
@@ -38,28 +39,25 @@ let timer: any;
 		VoteSection
 	}
 })
-export default class  extends Vue {
+export default class StopSummaryCard extends Vue {
 
 	/* Props */
-	@Prop({ type: Stop, required: true })
-	readonly stop: Stop;
+	@Prop({ type: Object as () => IStop, required: true })
+	readonly stop: IStop;
 
 	/* Computed */
 	@Get('user')
-	readonly user: User;
-
-	@Get('stop/voteLimit')
-	readonly voteLimit: number;
+	readonly user: IUser;
 
 	@Sync('stop/stops')
-	stops: Array<Stop>
+	stops: IStop[];
 
 	get totalVotes() {
-		return this.stop.votes.reduce((acc, cur) => acc += cur.votes, 0);
+		return this.stop.votes.reduce((acc, cur) => acc += cur.userVotes, 0);
 	}
 
-	updateVotes(votes: number) {
-		const userVote: Vote = { uid: this.user.uid, votes };
+	updateVotes(userVotes: number) {
+		const userVote: IVote = { userID: this.user.uid, userVotes };
 		// update votes
 	}
 
@@ -69,7 +67,7 @@ export default class  extends Vue {
 </script>
 
 <style lang='scss'>
-@import 'src/sass/variables.scss';
+@import 'src/scss/variables.scss';
 .stop-summary {
 	max-width: 450px;
 	.image-wrapper {

@@ -5,31 +5,31 @@
 			:key="stop.id"
          class="stop-summary-wrapper"
 		>
-         <stop-summary :stop="stop" />
+         <stop-summary-card :stop="stop" />
 		</div>
    </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import StopSummary from './StopSummary.vue';
+import StopSummaryCard from './StopSummaryCard.vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Get } from 'vuex-pathify';
-import { Stop } from '@/types/stops.type';
+import { IStop } from '../../types/Stop';
 
 @Component({
    name: 'StopListScreen',
    components: {
-      StopSummary
+      StopSummaryCard
    }
 })
-export default class  extends Vue {
+export default class StopListScreen extends Vue {
 
    /* Props */
 
    /* Computed */
    @Get('stop/stops')
-   stops: Array<Stop>
+   stops: Array<IStop>
 
    /* Data */
 

@@ -1,5 +1,5 @@
 import { make } from 'vuex-pathify';
-import { User } from '@/types/User.type';
+import { User } from '@/types/User';
 
 class GlobalState {
     user: User = {
