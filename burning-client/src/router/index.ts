@@ -1,14 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import StopListScreen from '@/components/stops/StopListScreen.vue';
+import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/stop",
     component: StopListScreen
   },
+  {
+    path: "/stop/create",
+    component: CreateStopSection
+  }
   // {
     // path: "/about",
     // name: "about",

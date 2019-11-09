@@ -103,7 +103,7 @@ export default class StopSummaryCard extends Vue {
 	}
 
 	.content-wrapper {
-		padding: 1.4rem;
+		padding: 1rem;
 	}
 }
 </style>

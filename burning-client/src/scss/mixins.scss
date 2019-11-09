@@ -55,8 +55,21 @@ a.no-dec {
 }
 
 // Icons
-.icon-brng {
-    width: 25px;
-    height: 25px;
-    background: url('https://storage.cloud.google.com/burning_bucket/flame.svg');
+.icon-trending {
+    width: 2rem;
+    height: 2rem;
+    background: url('https://burningbucket.s3.us-east-2.amazonaws.com/flame.svg');
+}
+
+.icon-camera {
+    width: 2rem;
+    height: 2rem;
+    background: url('https://burningbucket.s3.us-east-2.amazonaws.com/camera.svg');
+}
+
+.icon-add {
+    width: 3.5rem;
+    height: 3.5rem;
+    cursor: pointer;
+    background: url('https://burningbucket.s3.us-east-2.amazonaws.com/plus.svg');
 }
