@@ -3,14 +3,14 @@
         <div class="icon-wrapper relative">
             <div 
                 v-if="trending" 
-                class="icon-brng icon-btn inline-block" 
+                class="icon-trending icon-btn inline-block" 
                 @click="handleVote"
             ></div>
-            <i 
+            <div 
                 v-else 
-                class="icon icon-btn el-icon-camera-solid" 
-                @click="handleVote" 
-            />
+                class="icon-camera icon-btn inline-block" 
+                @click="handleVote"
+            ></div>
             <transition name="el-fade-in">
                 <span v-show="showUserVotes" class="user-votes bg">
                     +{{ curVotes }}

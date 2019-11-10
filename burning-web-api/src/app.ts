@@ -1,9 +1,10 @@
 'use strict'
+import mongoose from 'mongoose';
+import Koa from 'koa';
+import logger from 'koa-logger';
+import Router from 'koa-router';
+
 require('dotenv').config();
-const mongoose = require('mongoose');
-const Koa = require('koa');
-const logger = require('koa-logger');
-const Router = require('koa-router');
 
 const dbConnectionString = process.env.MONGO_DB_CONNECTION_STRING;
 const port = process.env.PORT;
@@ -12,14 +13,14 @@ mongoose.connect(dbConnectionString, { useNewUrlParser: true, useUnifiedTopology
     .then(dbData => console.log('connected to database ', dbConnectionString))
     .catch(err => handleError(err));
 
-mongoose.connection.on('error', err => handleError(err));
+mongoose.Connection.on('error', err => handleError(err));
 
 const app = new Koa();
 const router = new Router({
     prefix: '/api'
 });
 
-require('./routes')({ router });
+// require('./routes')({ router });
 
 app
     .use(logger())
