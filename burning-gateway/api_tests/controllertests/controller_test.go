@@ -1,4 +1,4 @@
-package modeltests
+package controllertests
 
 import (
 	"fmt"
@@ -25,32 +25,33 @@ func TestMain(m *testing.M) {
 	Database()
 
 	os.Exit(m.Run())
+
 }
 
 func Database() {
 
 	var err error
 
-	TestDbDriver := os.Getenv("TestDbDriver")
+	TEST_DB_DRIVER := os.Getenv("TEST_DB_DRIVER")
 
-	if TestDbDriver == "mysql" {
-		DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("TestDbUser"), os.Getenv("TestDbPassword"), os.Getenv("TestDbHost"), os.Getenv("TestDbPort"), os.Getenv("TestDbName"))
-		server.DB, err = gorm.Open(TestDbDriver, DBURL)
+	if TEST_DB_DRIVER == "mysql" {
+		DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("TEST_DB_USER"), os.Getenv("TEST_DB_PASSWORD"), os.Getenv("TestDbHost"), os.Getenv("TEST_DB_PORT"), os.Getenv("TEST_DB_NAME"))
+		server.DB, err = gorm.Open(TEST_DB_DRIVER, DBURL)
 		if err != nil {
-			fmt.Printf("Cannot connect to %s database\n", TestDbDriver)
+			fmt.Printf("Cannot connect to %s database\n", TEST_DB_DRIVER)
 			log.Fatal("This is the error:", err)
 		} else {
-			fmt.Printf("We are connected to the %s database\n", TestDbDriver)
+			fmt.Printf("We are connected to the %s database\n", TEST_DB_DRIVER)
 		}
 	}
-	if TestDbDriver == "postgres" {
-		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", os.Getenv("TestDbHost"), os.Getenv("TestDbPort"), os.Getenv("TestDbUser"), os.Getenv("TestDbName"), os.Getenv("TestDbPassword"))
-		server.DB, err = gorm.Open(TestDbDriver, DBURL)
+	if TEST_DB_DRIVER == "postgres" {
+		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", os.Getenv("TestDbHost"), os.Getenv("TEST_DB_PORT"), os.Getenv("TEST_DB_USER"), os.Getenv("TEST_DB_NAME"), os.Getenv("TEST_DB_PASSWORD"))
+		server.DB, err = gorm.Open(TEST_DB_DRIVER, DBURL)
 		if err != nil {
-			fmt.Printf("Cannot connect to %s database\n", TestDbDriver)
+			fmt.Printf("Cannot connect to %s database\n", TEST_DB_DRIVER)
 			log.Fatal("This is the error:", err)
 		} else {
-			fmt.Printf("We are connected to the %s database\n", TestDbDriver)
+			fmt.Printf("We are connected to the %s database\n", TEST_DB_DRIVER)
 		}
 	}
 }
@@ -70,7 +71,10 @@ func refreshUserTable() error {
 
 func seedOneUser() (models.User, error) {
 
-	refreshUserTable()
+	err := refreshUserTable()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	user := models.User{
 		Username: "Pet",
@@ -78,15 +82,19 @@ func seedOneUser() (models.User, error) {
 		Password: "password",
 	}
 
-	err := server.DB.Model(&models.User{}).Create(&user).Error
+	err = server.DB.Model(&models.User{}).Create(&user).Error
 	if err != nil {
-		log.Fatalf("cannot seed users table: %v", err)
+		return models.User{}, err
 	}
 	return user, nil
 }
 
-func seedUsers() error {
+func seedUsers() ([]models.User, error) {
 
+	var err error
+	if err != nil {
+		return nil, err
+	}
 	users := []models.User{
 		models.User{
 			Username: "Steven victor",
@@ -99,14 +107,13 @@ func seedUsers() error {
 			Password: "password",
 		},
 	}
-
 	for i, _ := range users {
 		err := server.DB.Model(&models.User{}).Create(&users[i]).Error
 		if err != nil {
-			return err
+			return []models.User{}, err
 		}
 	}
-	return nil
+	return users, nil
 }
 
 func refreshUserAndStopTable() error {
@@ -141,8 +148,6 @@ func seedOneUserAndOneStop() (models.Stop, error) {
 	stop := models.Stop{
 		Name:     "This is the title sam",
 		Content:  "This is the content sam",
-		Address:  "Some address",
-		ImageUrl: "Some url",
 		AuthorID: user.ID,
 	}
 	err = server.DB.Model(&models.Stop{}).Create(&stop).Error
@@ -173,18 +178,15 @@ func seedUsersAndStops() ([]models.User, []models.Stop, error) {
 	}
 	var stops = []models.Stop{
 		models.Stop{
-			Name:     "Name 1",
-			Content:  "Hello world 1",
-			Address:  "Test address 1",
-			ImageUrl: "Test url 1",
+			Name:    "Name 1",
+			Content: "Hello world 1",
 		},
 		models.Stop{
-			Name:     "Name 2",
-			Content:  "Hello world 2",
-			Address:  "Test address 2",
-			ImageUrl: "Test url 2",
+			Name:    "Name 2",
+			Content: "Hello world 2",
 		},
 	}
+
 	for i, _ := range users {
 		err = server.DB.Model(&models.User{}).Create(&users[i]).Error
 		if err != nil {
