@@ -1,6 +1,6 @@
 export interface IVote {
-    uid?: string;
-    userID: string;
+    id: number;
+    userID: number;
     userVotes: number;
 }
 

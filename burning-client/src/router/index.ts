@@ -2,17 +2,22 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import StopListScreen from '@/components/stops/StopListScreen.vue';
 import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
+import LoginScreen from '@/components/auth/LoginScreen.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/stop",
+    path: "/stops",
     component: StopListScreen
   },
   {
-    path: "/stop/create",
+    path: "/stops/create",
     component: CreateStopSection
+  },
+  {
+    path: "/login",
+    component: LoginScreen
   }
   // {
     // path: "/about",

@@ -49,15 +49,12 @@ export default class StopSummaryCard extends Vue {
 	@Get('user')
 	readonly user: IUser;
 
-	@Sync('stop/stops')
-	stops: IStop[];
-
 	get totalVotes() {
 		return this.stop.votes.reduce((acc, cur) => acc += cur.userVotes, 0);
 	}
 
 	updateVotes(userVotes: number) {
-		const userVote: IVote = { userID: this.user.uid, userVotes };
+		const userVote: IVote = { userID: this.user.id, userVotes, id: 0 };
 		// update votes
 	}
 
