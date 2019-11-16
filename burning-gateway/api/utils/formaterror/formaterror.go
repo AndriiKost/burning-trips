@@ -16,7 +16,7 @@ func FormatError(err string) error {
 	}
 
 	if strings.Contains(err, "name") {
-		return errors.New("The Name Already Taken")
+		return errors.New("There is already a Stop that exists with the requested name.")
 	}
 	if strings.Contains(err, "hashedPassword") {
 		return errors.New("Incorrect Password")

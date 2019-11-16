@@ -53,7 +53,7 @@ func TestCreateStop(t *testing.T) {
 			inputJSON:    `{"name":"The name", "content": "the content", "authorID": 1}`,
 			statusCode:   500,
 			tokenGiven:   tokenString,
-			errorMessage: "The Name Already Taken",
+			errorMessage: "There is already a Stop that exists with the requested name.",
 		},
 		{
 			// When no token is passed
@@ -289,7 +289,7 @@ func TestUpdateStop(t *testing.T) {
 		// 	updateJSON:   `{"name": "Name 2", "content": "This is the updated content", "authorID": 1}`,
 		// 	statusCode:   200,
 		// 	tokenGiven:   tokenString,
-		// 	errorMessage: "The Name Already Taken",
+		// 	errorMessage: "There is already a Stop that exists with the requested name.",
 		// },
 
 		{
