@@ -14,8 +14,6 @@ import (
 
 func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 
-	setupResponse(&w, r)
-
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -41,8 +39,6 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode("OKOK")
-
 	responses.JSON(w, http.StatusOK, token)
 }
 
@@ -61,10 +57,4 @@ func (server *Server) SignIn(email, password string) (string, error) {
 		return "", err
 	}
 	return auth.CreateToken(user.ID)
-}
-
-func setupResponse(w *http.ResponseWriter, req *http.Request) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }

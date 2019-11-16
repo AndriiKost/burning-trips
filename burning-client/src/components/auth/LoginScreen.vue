@@ -7,8 +7,8 @@
 			label-width="120px" 
 			class="new-stop-form"
 		>
-			<el-form-item label="Username" prop="username">
-				<el-input v-model="userToSign.username"></el-input>
+			<el-form-item label="email" prop="email">
+				<el-input v-model="userToSign.email"></el-input>
 			</el-form-item>
             <el-form-item label="Password" prop="password">
 				<el-input v-model="userToSign.password"></el-input>
@@ -43,15 +43,15 @@ export default class LoginScreen extends Vue {
 
     /* Data */
     userToSign: IUserToSign = {
-       username: '',
+       email: '',
        password: ''
     };
 	valid: boolean = false;
 
 	rules = {
-		username: [
+		email: [
 			{ required: true, message: 'Please enter your credentials', trigger: 'blur' },
-			{ min: 3, max: 60, message: 'username should 3 to 32 characters', trigger: 'blur' }
+			{ min: 3, max: 60, message: 'email should 3 to 32 characters', trigger: 'blur' }
 		],
 		password: [
 			{ required: true, message: 'Please enter your credentials', trigger: 'blur' },

@@ -10,6 +10,6 @@ export interface IUser {
 }
 
 export interface IUserToSign {
-    username: string;
+    email: string;
     password: string;
 }
