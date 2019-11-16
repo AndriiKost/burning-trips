@@ -5,7 +5,7 @@ import config from '@/config';
 export default class ApiRequestInit implements RequestInit {
     readonly body?: any;
     readonly method: string;
-    readonly creadentials: RequestCredentials;
+    readonly creadentials: RequestCredentials = 'same-origin';
     readonly mode: RequestMode = 'cors';
     options: IApiRequestOptions;
     headers: HeadersInit;
@@ -19,7 +19,7 @@ export default class ApiRequestInit implements RequestInit {
         this.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': token ? `Bearer ${token}` : null,
+            'Authorization': token ? token : null,
             'X-Requested-With': 'XMLHttpRequest'
         };
         if (method !== 'GET' && data != null) {

@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { make } from 'vuex-pathify';
-import { IUserToSign, IUser } from '../types/User';
+import { make, commit } from 'vuex-pathify';
+import { IUser } from '../types/User';
 import _svc from '@/services/AuthService';
 import { Store } from 'vuex';
+import { ISignInRequest } from 'http';
 
 class AuthStore {
     user: IUser;
@@ -11,11 +12,15 @@ class AuthStore {
 const state = new AuthStore();
 
 const mutations = make.mutations(state);
+mutations['SET_USER'] = function(state: AuthStore, user: IUser) {
+    state.user = user;
+}
 
 const actions = {
-    async signIn(_: Store<AuthStore>, userToSign: IUserToSign) {
-        return await _svc.signIn(userToSign);
-        // return await axios.post(`http://192.168.1.219:80/api/login`, userToSign);
+    async signIn({ commit }: Store<AuthStore>, userToSign: ISignInRequest) {
+        const loggedInUser = await _svc.signIn(userToSign);
+        if (!loggedInUser) return;
+        commit('SET_USER', loggedInUser);
     }
 }
 

@@ -14,7 +14,6 @@ export default class BaseHttpService {
 
     private async _makeRequest<T>(url: string, method: string, data?: any, options?: IApiRequestOptions): Promise<IApiResponse<T>> {
         if (url.indexOf('://') === -1) url = config.API_URL + url;
-        console.log(url);
         let requestInit = new ApiRequestInit(url, method, data, options);
         let request = new Request(url, requestInit);
         let response: IApiResponse<T>;
