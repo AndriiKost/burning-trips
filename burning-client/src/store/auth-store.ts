@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { make } from 'vuex-pathify';
 import { IUserToSign, IUser } from '../types/User';
+import _svc from '@/services/AuthService';
 import { Store } from 'vuex';
 
 class AuthStore {
@@ -13,7 +14,8 @@ const mutations = make.mutations(state);
 
 const actions = {
     async signIn(_: Store<AuthStore>, userToSign: IUserToSign) {
-        return await axios.post(`http://localhost:8080/login`, userToSign, { crossdomain: true, headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'} });
+        return await _svc.signIn(userToSign);
+        // return await axios.post(`http://192.168.1.219:80/api/login`, userToSign);
     }
 }
 
