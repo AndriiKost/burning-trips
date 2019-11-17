@@ -1,0 +1,13 @@
+apiVersion: v1                                      # API version
+kind: Service                                       # Type of kubernetes resource 
+metadata:
+  name: burning-postgres                          # Name of the resource
+  labels:                                           # Labels that will be applied to the resource
+    app: burning-postgres
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:                                         # Selects any Pod with labels `app=burning-postgres,tier=postgres`
+    app: burning-postgres
+    tier: postgres
