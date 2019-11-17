@@ -12,7 +12,6 @@ class AuthService extends BaseHttpService {
         const token = res.result;
         this.addJWTCookie(token);
         const user = await this.getUserData();
-        console.log(user);
         if (!user) return null;
         return user;
     }

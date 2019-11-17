@@ -1,7 +1,7 @@
 <template>
 	<div class="stop-summary">
 		<el-card :body-style="{ padding: '0px' }" shadow="always">
-			<a class="image-wrapper no-dec" href="#">
+			<a class="image-wrapper no-dec" :href="`/stops/${stop.id}`">
 				<img :src="stop.imageUrl" class="image" />
 			</a>
 			<div class="content-wrapper relative">
@@ -46,11 +46,11 @@ export default class StopSummaryCard extends Vue {
 	readonly stop: IStop;
 
 	/* Computed */
-	@Get('user')
+	@Get('auth/loggedInUser')
 	readonly user: IUser;
 
 	get totalVotes() {
-		return this.stop.votes.reduce((acc, cur) => acc += cur.userVotes, 0);
+		return this.stop.votes ? this.stop.votes.reduce((acc, cur) => acc += cur.userVotes, 0) : 0;
 	}
 
 	updateVotes(userVotes: number) {

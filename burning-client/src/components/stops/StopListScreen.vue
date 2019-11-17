@@ -41,7 +41,15 @@ export default class StopListScreen extends Vue {
       this.$router.push('stops/create')
    }
 
+   async init() {
+      await this.$store.dispatch('stop/getAllStops');
+   }
+
    /* Lifecycle Hooks */
+
+   created() {
+      this.init();
+   }
 
 }
 </script>

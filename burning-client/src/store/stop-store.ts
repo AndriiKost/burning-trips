@@ -57,15 +57,23 @@ const state = new StopStore();
 const mutations = make.mutations(state);
 
 mutations['NEW_MUTATIONS'] = function(state: StopStore, arg: any) {
-    console.log('New mutations, with argument = ', arg);
 }
 
 const actions = {
+
     async createStop({ commit, state }: Store<StopStore>, newStop: IStop) {
         return await stopService.createStop(newStop);
     },
+
     async getAllStops({ commit, state }: Store<StopStore>) {
-        console.log('get all stops');
+        const stops = await stopService.getAllStops();
+        if (!stops) return [];
+        commit('SET_STOPS', stops);
+        return stops;
+    },
+
+    async getStop(_, stopID: number) {
+        return await stopService.getStop(stopID);
     }
 }
 

@@ -79,7 +79,6 @@ const state = new RegionStore();
 const mutations = make.mutations(state);
 
 mutations['NEW_MUTATIONS'] = function(state: RegionStore, arg: any) {
-    console.log('New mutations, with argument = ', arg);
 }
 
 const actions = {

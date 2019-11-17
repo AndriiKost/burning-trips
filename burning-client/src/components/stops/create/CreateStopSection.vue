@@ -13,7 +13,7 @@
 			<el-form-item label="Stop Name" prop="name">
 				<el-input v-model="newStop.name"></el-input>
 			</el-form-item>
-			<el-form-item label="Address" prop="address.address">
+			<el-form-item label="Address" prop="address">
 				<el-input v-model="newStop.address"></el-input>
 			</el-form-item>
 			<el-form-item label="Image Url" prop="imageUrl">
@@ -113,11 +113,15 @@ export default class CreateStopSection extends Vue {
 		const result = await this.$store.dispatch('stop/createStop', this.newStop);
 		if (!result) this.error = 'Oops, something went wrong. Please try again!';
 		// if success, add message to a notif stack with success info
-		this.resetForm();
+		this.$router.push({ name: 'Stop List' });
 	}
 
 	mounted() {
 		this.newStop.authorID = this.loggedInUser.id;
+	}
+
+	beforeDestroy() {
+		this.resetForm();
 	}
 
 }

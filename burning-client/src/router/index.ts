@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import StopListScreen from '@/components/stops/StopListScreen.vue';
+import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
 import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
 import LoginScreen from '@/components/auth/LoginScreen.vue';
 import { loggedInGuard } from './middleware';
@@ -12,6 +13,14 @@ const routes = [
     path: "/stops",
     component: StopListScreen,
     name: 'Stop List',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: "/stops/:id",
+    component: StopDetailsPage,
+    name: 'Stop Details',
     meta: {
       allowGuest: true
     }

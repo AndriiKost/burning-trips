@@ -8,6 +8,18 @@ class StopService extends BaseHttpService {
         if (!res.ok || !res) return null
         return res.result;
     }
+
+    async getAllStops() {
+        const res = await this.get<IStop[]>('/stops');
+        if (!res.ok || !res) return [];
+        return res.result;
+    }
+
+    async getStop(id: number) {
+        const res = await this.get<IStop>(`/stops/${id}`);
+        if (!res.ok || !res) return null;
+        return res.result;
+    }
     
 }
 
