@@ -4,7 +4,12 @@ export interface IUser {
     firstName?: string;
     lastName?: string;
     username: string;
-    uid: string;
+    id: number;
     email: string;
-    bookmarks: IBookmark;
+    bookmarks?: IBookmark;
+}
+
+export interface IUserToSign {
+    email: string;
+    password: string;
 }

@@ -1,38 +1,37 @@
 <template>
 	<div>
-		<el-form :model="newStop" :rules="rules" ref="newStop" label-width="120px" class="new-stop-form">
+		<div v-if="error" style="color: darkred; font-size: 16px;">
+			{{ error }}
+		</div>
+		<el-form 
+			:model="newStop" 
+			:rules="rules" 
+			ref="new_stop_form" 
+			label-width="120px" 
+			class="new-stop-form"
+		>
 			<el-form-item label="Stop Name" prop="name">
 				<el-input v-model="newStop.name"></el-input>
 			</el-form-item>
-			<el-form-item label="Include Address">
-				<el-switch v-model="showAddressFields"></el-switch>
+			<el-form-item label="Address" prop="address">
+				<el-input v-model="newStop.address"></el-input>
 			</el-form-item>
-			<div v-if="showAddressFields">
-				<el-form-item label="Address" prop="address.address">
-					<el-input v-model="newStop.address.address"></el-input>
-				</el-form-item>
-				<el-form-item label="City" prop="address.city">
-					<el-input v-model="newStop.address.city"></el-input>
-				</el-form-item>
-				<el-form-item label="State/Province" prop="address.state">
-					<el-input v-model="newStop.address.state"></el-input>
-				</el-form-item>
-				<el-form-item label="Zip Code" prop="address.zipcode">
-					<el-input v-model="newStop.address.zipcode"></el-input>
-				</el-form-item>
-				<el-form-item label="Country" prop="address.country">
-					<el-input v-model="newStop.address.country"></el-input>
-				</el-form-item>
-			</div>
 			<el-form-item label="Image Url" prop="imageUrl">
 				<el-input v-model="newStop.imageUrl"></el-input>
 			</el-form-item>
-			<el-form-item label="Description" prop="description">
-				<el-input type="textarea" v-model="newStop.description"></el-input>
+			<el-form-item label="content" prop="content">
+				<el-input type="textarea" v-model="newStop.content"></el-input>
 			</el-form-item>
+			<el-form-item label="Preview My Stop">
+				<el-switch :value="preview" @input="handlePreview"></el-switch>
+			</el-form-item>
+			<stop-summary-card
+				v-if="preview && valid"
+				:stop="newStop"
+			/>
 			<el-form-item>
-				<el-button type="primary" @click="submitForm('newStop')">Create</el-button>
-				<el-button @click="resetForm('newStop')">Reset</el-button>
+				<el-button type="primary" @click="create">Create</el-button>
+				<el-button @click="resetForm">Reset</el-button>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -43,73 +42,106 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { IStop } from '../../../types/Stop';
 import Stop from '../../../models/Stop';
+import StopSummaryCard from '../StopSummaryCard.vue';
+import { Get } from 'vuex-pathify';
+import { IUser } from '../../../types/User';
 
 @Component({
-	name: 'CreateStopSection'
+	name: 'CreateStopSection',
+	components: {
+		StopSummaryCard
+	}
 })
 export default class CreateStopSection extends Vue {
 
 	/* Props */
 
 	/* Computed */
+	@Get('auth/loggedInUser')
+	loggedInUser: IUser;
 
 	/* Data */
 	newStop: IStop = new Stop();
-	showAddressFields: boolean = false;
-	ruleForm = {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-	};
+	preview: boolean = false;
+	previewImage: boolean = false;
+	valid: boolean = false;
+	error: string = null;
 
 	rules = {
 		name: [
-			{ required: true, message: 'Please input Activity name', trigger: 'blur' },
-			{ min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
+			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
+			{ min: 3, max: 60, message: 'Length should be 3 to 60 characters', trigger: 'blur' }
 		],
-		region: [
-			{ required: true, message: 'Please select Activity zone', trigger: 'change' }
+		address: [
+			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
+			{ min: 3, message: 'Please enter at least 3 characters', trigger: 'blur' }
 		],
-		type: [
-			{ type: 'array', required: true, message: 'Please select at least one activity type', trigger: 'change' }
+		imageUrl: [
+			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
+			{ min: 3, message: 'Please enter at least 3 characters', trigger: 'blur' }
 		],
-		resource: [
-			{ required: true, message: 'Please select activity resource', trigger: 'change' }
+		content: [
+			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
+			{ min: 3, message: 'Please enter at least 3 characters', trigger: 'blur' }
 		],
-		desc: [
-			{ required: true, message: 'Please input activity form', trigger: 'blur' }
-		]
 	};
 
 	/* Methods */
 
-	submitForm(formName) {
-        this.$refs[formName].validate(valid => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            return false;
-          }
-        });
+	validate() {
+		// @ts-ignore
+        this.$refs.new_stop_form.validate(valid => this.valid = valid);
+	}
+
+	handlePreview(val: boolean) {
+		this.validate();
+		if (val && this.valid) {
+			this.preview = true;
+		} else if (!val) {
+			this.preview = val;
+		}
 	}
 	  
-    resetForm(formName) {
-    	this.$refs[formName].resetFields();
-    }
+    resetForm() {
+		// @ts-ignore
+    	this.$refs.new_stop_form.resetFields();
+	}
+	
+	async create() {
+		this.validate();
+		if (!this.valid) return;
+		const result = await this.$store.dispatch('stop/createStop', this.newStop);
+		if (!result) this.error = 'Oops, something went wrong. Please try again!';
+		// if success, add message to a notif stack with success info
+		this.$router.push({ name: 'Stop List' });
+	}
 
-	/* Lifecycle Hooks */
-	beforeMount() {
+	mounted() {
+		this.newStop.authorID = this.loggedInUser.id;
+	}
 
+	beforeDestroy() {
+		this.resetForm();
 	}
 
 }
 </script>
 
 <style lang='scss' scoped>
+.new-stop-form {
 
+	.stop-summary {
+		margin: 2rem auto;
+	}
+	
+	.image-wrapper {
+		
+		.image {
+			width: 100%;
+			max-width: 100%;
+			height: auto;
+			object-fit: cover;
+		}
+	}
+}
 </style>

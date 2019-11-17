@@ -21,17 +21,64 @@ var users = []models.User{
 }
 
 var stops = []models.Stop{
+
+	// {
+	// 	uid: 'sajkdajknsdknjsa',
+	// 	name: "Stop Name",
+	// 	authorID: "asjdkjasdaklsjdklj12",
+	// 	content: "Such a cool place omg lol omg lorem ispum ups dolor set isjask!",
+	// 	trending: true,
+	// 	address: {
+	// 		state: 'SA',
+	// 		address: '1 Capitol Square',
+	// 		zipcode: 53701,
+	// 		country: 'USA',
+	// 		city: 'Madison'
+	// 	},
+	// 	coords: {
+	// 		lat: 8912381297398127938721,
+	// 		lng: 128938912398781293871293
+	// 	},
+	// 	votes: [
+	// 		{ uid: 'sakldjaskljdklsa', userVotes: 59, userID: 'ahsdjkhaskjdhjkashdjkhas' }
+	// 	],
+	// 	imageUrl: 'https://images.unsplash.com/photo-1572295727871-7638149ea3d7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60'
+	// },
+
+	// {
+	// 	uid: 'sdasadasdasdass',
+	// 	name: "Madison Stop",
+	// 	authorID: "sheila shasl222",
+	// 	content: "Super duper awesome place!",
+	// 	trending: false,
+	// 	address: {
+	// 		state: 'SA',
+	// 		address: '1 Capitol Square',
+	// 		zipcode: 53701,
+	// 		country: 'USA',
+	// 		city: 'Madison'
+	// 	},
+	// 	coords: {
+	// 		lat: 8912381297398127938721,
+	// 		lng: 128938912398781293871293
+	// 	},
+	// 	votes: [
+	// 		{ uid: 'sakldjaskljdklsa', userVotes: 19, userID: '213asdajksh' }
+	// 	],
+	// 	imageUrl: 'https://images.unsplash.com/photo-1561953131-4b07835d56e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80'
+	// },
+
 	models.Stop{
-		Name:     "Name 1",
-		Content:  "Hello world 1",
-		ImageUrl: "Image Url 1",
-		Address:  "Address 1",
+		Name:     "Madison State Capitol",
+		Content:  "The closest capitol design to the Washington DC one.",
+		ImageUrl: "https://images.unsplash.com/photo-1496144300411-8dd31ce145ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
+		Address:  "2 E Main St, Madison, WI 53703",
 	},
 	models.Stop{
-		Name:     "Name 2",
-		Content:  "Hello world 2",
-		ImageUrl: "Image Url 2",
-		Address:  "Address 2",
+		Name:     "Madison State Street",
+		Content:  "Street where you can find all kinds of entertainment.",
+		ImageUrl: "https://architectureunderdevelopment.files.wordpress.com/2011/06/middle-of-state-street.jpg",
+		Address:  "State Street, Madisom, WI 53703",
 	},
 }
 

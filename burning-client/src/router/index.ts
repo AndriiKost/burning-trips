@@ -1,18 +1,39 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import StopListScreen from '@/components/stops/StopListScreen.vue';
+import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
 import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
+import LoginScreen from '@/components/auth/LoginScreen.vue';
+import { loggedInGuard } from './middleware';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/stop",
-    component: StopListScreen
+    path: "/stops",
+    component: StopListScreen,
+    name: 'Stop List',
+    meta: {
+      allowGuest: true
+    }
   },
   {
-    path: "/stop/create",
-    component: CreateStopSection
+    path: "/stops/create",
+    component: CreateStopSection,
+    name: 'Create Stop'
+  },
+  {
+    path: "/stops/:id",
+    component: StopDetailsPage,
+    name: 'Stop Details',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: "/login",
+    component: LoginScreen,
+    name: 'Login'
   }
   // {
     // path: "/about",
@@ -29,5 +50,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
+
+router.beforeEach(loggedInGuard);
 
 export default router;

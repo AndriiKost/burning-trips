@@ -13,7 +13,6 @@ services:
     networks:
       - burning-network
 
-
   burning-postgres:
     image: postgres:latest
     container_name: burning_db
@@ -28,20 +27,13 @@ services:
       - burning_db:/var/lib/postgresql/data
     networks:
       - burning-network
-    
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_container
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    depends_on:
-      - burning-postgres
+
+  nginx:
+    build: ./nginx
     ports:
-      - "5050:80"
-    networks:
-      - burning-network
-    restart: unless-stopped
+      - 80:80
+    depends_on:
+      - app
 
 volumes:
   api:
