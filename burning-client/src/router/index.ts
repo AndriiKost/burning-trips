@@ -18,17 +18,17 @@ const routes = [
     }
   },
   {
+    path: "/stops/create",
+    component: CreateStopSection,
+    name: 'Create Stop'
+  },
+  {
     path: "/stops/:id",
     component: StopDetailsPage,
     name: 'Stop Details',
     meta: {
       allowGuest: true
     }
-  },
-  {
-    path: "/stops/create",
-    component: CreateStopSection,
-    name: 'Create Stop'
   },
   {
     path: "/login",
