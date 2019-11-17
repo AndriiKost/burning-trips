@@ -7,7 +7,7 @@ class RegionStore {
             uid: 'sajkdajknsdknjsa',
             name: "Stop Name",
             authorID: "asjdkjasdaklsjdklj12",
-            description: "Such a cool place omg lol omg lorem ispum ups dolor set isjask!",
+            content: "Such a cool place omg lol omg lorem ispum ups dolor set isjask!",
             trending: true,
             votes: [
                 { uid: 'sakldjaskljdklsa', userVotes: 59, userID: 'ahsdjkhaskjdhjkashdjkhas' }
@@ -17,7 +17,7 @@ class RegionStore {
                     uid: 'sajkdajknsdknjsa',
                     name: "Stop Name",
                     authorID: "asjdkjasdaklsjdklj12",
-                    description: "Such a cool place omg lol omg lorem ispum ups dolor set isjask!",
+                    content: "Such a cool place omg lol omg lorem ispum ups dolor set isjask!",
                     trending: true,
                     address: {
                         state: 'SA',
@@ -39,7 +39,7 @@ class RegionStore {
                     uid: 'sdasadasdasdass',
                     name: "Madison Stop",
                     authorID: "sheila shasl222",
-                    description: "Super duper awesome place!",
+                    content: "Super duper awesome place!",
                     trending: false,
                     address: {
                         state: 'SA',

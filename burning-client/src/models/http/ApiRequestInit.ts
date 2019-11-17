@@ -12,7 +12,9 @@ export default class ApiRequestInit implements RequestInit {
     url: string;
 
     constructor(url: string, method: string, data: any = null, options?: IApiRequestOptions) {
-        const token = Cookies.get(config.JWT_NAME);
+        let token = Cookies.get(config.JWT_NAME);
+        if (token) token = config.JWT_NAME + " " + token;
+        console.log("TOKEN => ", token);
         this.url = url;
         this.method = method;
         this.options = options || {};

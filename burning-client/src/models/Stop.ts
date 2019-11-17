@@ -1,7 +1,7 @@
 import { IStop } from '@/types/Stop';
 import { IVote } from '@/types/Vote';
-import { IAddress, ICoordinates } from '@/types/Geo';
-import { IUser } from '@/types/User';
+// import { IAddress, ICoordinates } from '@/types/Geo';
+// import { IUser } from '@/types/User';
 
 export default class Stop implements IStop {
     trending: boolean = false;

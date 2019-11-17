@@ -12,5 +12,9 @@ declare module 'http' {
         username: string;
         password: string;
     }
+
+    export interface ISignInResponse {
+        token: string;
+    }
     
 }

@@ -14,8 +14,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetLoggedInUser(w http.ResponseWriter, r *http.Request) {
+	uid, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	userModel := models.User{}
+	user, err := userModel.Find(server.DB, uint32(uid))
+	responses.JSON(w, http.StatusOK, user)
+}
 
+func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -41,15 +51,14 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(43800 * time.Minute)
 	http.SetCookie(w, &http.Cookie{
 		Name:    os.Getenv("JWT_TOKEN"),
 		Value:   token,
 		Expires: expirationTime,
-		Domain:  "localhost",
 	})
 
-	responses.JSON(w, http.StatusOK, user)
+	responses.JSON(w, http.StatusOK, token)
 }
 
 func (server *Server) SignIn(email, password string) (string, error, models.User) {

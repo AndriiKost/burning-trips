@@ -7,7 +7,7 @@
 			<div class="content-wrapper relative">
 				<a class="content no-dec" href="#">
 					<h2>{{ stop.name }}</h2>
-					<p>{{ stop.description }}</p>
+					<p>{{ stop.content }}</p>
 				</a>
 				<div class="bottom clearfix flex-row space-between">
 					<vote-section 

@@ -1,5 +1,6 @@
 import { make } from 'vuex-pathify';
 import { User } from '@/types/User';
+import { Store } from 'vuex';
 
 class GlobalState {
     user: User = {
@@ -19,7 +20,6 @@ mutations['NEW_MUTATIONS'] = function(state: GlobalState, arg: any) {
 }
 
 const actions = {
-
 }
 
 const getters = {
