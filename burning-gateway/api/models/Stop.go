@@ -15,8 +15,8 @@ type Stop struct {
 	ImageUrl   string    `gorm:"size:255;not null;" json:"imageUrl"`
 	Name       string    `gorm:"size:255;not null;unique" json:"name"`
 	Content    string    `gorm:"size:255;not null;" json:"content"`
-	Latitude   int       `json:"latitude"`
-	Longtitude int       `json:"longtitude"`
+	Latitude   float32       `json:"latitude"`
+	Longtitude float32       `json:"longtitude"`
 	Author     User      `json:"author"`
 	AuthorID   uint32    `gorm:"not null" json:"authorID"`
 	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`

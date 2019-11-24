@@ -3,6 +3,7 @@ module github.com/andriikost/burning-gateway
 go 1.13
 
 require (
+	github.com/aws/aws-sdk-go v1.25.41
 	github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
 	github.com/cosiner/argv v0.0.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
