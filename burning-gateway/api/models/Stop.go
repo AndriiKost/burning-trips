@@ -10,28 +10,18 @@ import (
 )
 
 type Stop struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
-	Address   string    `gorm:"size:255;not null;" json:"address"`
-	ImageUrl  string    `gorm:"size:255;not null;" json:"imageUrl"`
-	Name      string    `gorm:"size:255;not null;unique" json:"name"`
-	Content   string    `gorm:"size:255;not null;" json:"content"`
-	Author    User      `json:"author"`
-	AuthorID  uint32    `gorm:"not null" json:"authorID"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID         uint64    `gorm:"primary_key;auto_increment" json:"id"`
+	Address    string    `gorm:"size:255;not null;" json:"address"`
+	ImageUrl   string    `gorm:"size:255;not null;" json:"imageUrl"`
+	Name       string    `gorm:"size:255;not null;unique" json:"name"`
+	Content    string    `gorm:"size:255;not null;" json:"content"`
+	Latitude   int       `json:"latitude"`
+	Longtitude int       `json:"longtitude"`
+	Author     User      `json:"author"`
+	AuthorID   uint32    `gorm:"not null" json:"authorID"`
+	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
-
-// type Address struct {
-// 	ID       uint64 `gorm:"primary_key;auto_increment" json:"id"`
-// 	StopID   uint64 `gorm:"not null" json:"stopID"`
-// 	Address1 string `gorm:"not null" json:"address1"`
-// 	// TODO: address2 zipcode, city, state, country coords
-// }
-
-// func (a *Address) Prepare() {
-// 	a.StopID = 0
-// 	a.Address1 = html.EscapeString(strings.TrimSpace(a.Address1))
-// }
 
 func (stop *Stop) Prepare() {
 	stop.ID = 0

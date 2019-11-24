@@ -13,9 +13,17 @@
 			<el-form-item label="Stop Name" prop="name">
 				<el-input v-model="newStop.name"></el-input>
 			</el-form-item>
-			<el-form-item label="Address" prop="address">
-				<el-input v-model="newStop.address"></el-input>
+
+			<el-form-item label="Stop Address" prop="address">
+				<div class="el-input">
+					<input 
+						type="text" 
+						ref="autocomplete" 
+						class="el-input__inner"
+					>
+				</div>
 			</el-form-item>
+
 			<el-form-item label="Image Url" prop="imageUrl">
 				<el-input v-model="newStop.imageUrl"></el-input>
 			</el-form-item>
@@ -65,8 +73,8 @@ export default class CreateStopSection extends Vue {
 	preview: boolean = false;
 	previewImage: boolean = false;
 	valid: boolean = false;
-	error: string = null;
-
+	error: any = null;
+	autocomplete: any = null;
 	rules = {
 		name: [
 			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
@@ -110,14 +118,29 @@ export default class CreateStopSection extends Vue {
 	async create() {
 		this.validate();
 		if (!this.valid) return;
+		this.newStop.authorID = this.loggedInUser.id;
 		const result = await this.$store.dispatch('stop/createStop', this.newStop);
 		if (!result) this.error = 'Oops, something went wrong. Please try again!';
 		// if success, add message to a notif stack with success info
 		this.$router.push({ name: 'Stop List' });
 	}
 
+	initAutocomplete() {
+		this.autocomplete = new google.maps.places.Autocomplete((this.$refs.autocomplete), {types: ['geocode']});
+		this.autocomplete.addListener('place_changed', () => {
+			let place = this.autocomplete.getPlace();
+			let { formatted_address } = place;
+			let lat = place.geometry.location.lat();
+			let lon = place.geometry.location.lng();
+			
+			this.newStop.longtitude = lon;
+			this.newStop.latitude = lat;
+			this.newStop.address = formatted_address;
+		});
+	}
+
 	mounted() {
-		this.newStop.authorID = this.loggedInUser.id;
+		this.initAutocomplete();
 	}
 
 	beforeDestroy() {

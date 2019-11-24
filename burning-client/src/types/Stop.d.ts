@@ -3,7 +3,7 @@ import { IAddress, ICoordinates } from './Geo';
 import { IUser } from './User';
 
 export interface IStop extends IVotable {
-    address: string;
+    address?: string;
     authorID: number;
     content: string;
     id: number;
@@ -11,4 +11,6 @@ export interface IStop extends IVotable {
     name: string;
     coords?: ICoordinates;
     author?: IUser;
+    longtitude?: number;
+    latitude?: number;
 }

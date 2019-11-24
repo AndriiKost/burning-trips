@@ -13,6 +13,9 @@ export default class Stop implements IStop {
     authorID: number = 0;
     address: string = '';
 
+    longtitude: any = null;
+    latitude: any = null;
+
     // IAddress = {
     //     address: '',
     //     address2: '',

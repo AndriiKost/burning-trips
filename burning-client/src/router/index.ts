@@ -34,6 +34,11 @@ const routes = [
     path: "/login",
     component: LoginScreen,
     name: 'Login'
+  },
+  {
+    path: "*",
+    component: StopListScreen,
+    name: 'Stop List'
   }
   // {
     // path: "/about",

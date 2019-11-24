@@ -9,13 +9,13 @@ import (
 
 var users = []models.User{
 	models.User{
-		Username: "Steven victor",
-		Email:    "steven@gmail.com",
+		Username: "Andrii Kost",
+		Email:    "admin@gmail.com",
 		Password: "password",
 	},
 	models.User{
-		Username: "Martin Luther",
-		Email:    "luther@gmail.com",
+		Username: "Steven victor",
+		Email:    "steven@gmail.com",
 		Password: "password",
 	},
 }
@@ -69,16 +69,20 @@ var stops = []models.Stop{
 	// },
 
 	models.Stop{
-		Name:     "Madison State Capitol",
-		Content:  "The closest capitol design to the Washington DC one.",
-		ImageUrl: "https://images.unsplash.com/photo-1496144300411-8dd31ce145ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
-		Address:  "2 E Main St, Madison, WI 53703",
+		Name:       "Madison State Capitol",
+		Content:    "The closest capitol design to the Washington DC one.",
+		ImageUrl:   "https://images.unsplash.com/photo-1496144300411-8dd31ce145ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
+		Address:    "2 E Main St, Madison, WI 53703",
+		Latitude:   0,
+		Longtitude: 0,
 	},
 	models.Stop{
-		Name:     "Madison State Street",
-		Content:  "Street where you can find all kinds of entertainment.",
-		ImageUrl: "https://architectureunderdevelopment.files.wordpress.com/2011/06/middle-of-state-street.jpg",
-		Address:  "State Street, Madisom, WI 53703",
+		Name:       "Madison State Street",
+		Content:    "Street where you can find all kinds of entertainment.",
+		ImageUrl:   "https://architectureunderdevelopment.files.wordpress.com/2011/06/middle-of-state-street.jpg",
+		Address:    "State Street, Madisom, WI 53703",
+		Latitude:   0,
+		Longtitude: 0,
 	},
 }
 
