@@ -27,6 +27,21 @@
 			<el-form-item label="Image Url" prop="imageUrl">
 				<el-input v-model="newStop.imageUrl"></el-input>
 			</el-form-item>
+
+			<el-upload
+				class="upload-demo"
+				drag
+				:action="uploadUrl"
+				:on-preview="handlePreview"
+				:on-remove="handleRemove"
+				:file-list="fileList"
+				multiple
+			>
+				<i class="el-icon-upload"></i>
+				<div class="el-upload__text">Drop file here or <em>click to upload</em></div>
+				<div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>
+			</el-upload>
+
 			<el-form-item label="content" prop="content">
 				<el-input type="textarea" v-model="newStop.content"></el-input>
 			</el-form-item>
@@ -53,6 +68,7 @@ import Stop from '../../../models/Stop';
 import StopSummaryCard from '../StopSummaryCard.vue';
 import { Get } from 'vuex-pathify';
 import { IUser } from '../../../types/User';
+import config from '@/config/index';
 
 @Component({
 	name: 'CreateStopSection',
@@ -67,7 +83,11 @@ export default class CreateStopSection extends Vue {
 	/* Computed */
 	@Get('auth/loggedInUser')
 	loggedInUser: IUser;
-
+	
+	get uploadUrl() {
+		return `${config.API_URL}/file-upload`;
+	}
+ 
 	/* Data */
 	newStop: IStop = new Stop();
 	preview: boolean = false;
@@ -137,6 +157,10 @@ export default class CreateStopSection extends Vue {
 			this.newStop.latitude = lat;
 			this.newStop.address = formatted_address;
 		});
+	}
+
+	handleRemove() {
+		console.log('Needs to remove image')
 	}
 
 	mounted() {
