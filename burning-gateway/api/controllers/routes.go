@@ -25,6 +25,6 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateStop))).Methods("PUT")
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteStop)).Methods("DELETE")
 
-	// Picture upload routes
-	s.Router.HandleFunc("/file-upload", middlewares.SetMiddlewareJSON(s.UploadFile)).Methods("POST")
+	// File upload
+	s.Router.HandleFunc("/file-upload/get-presigned-url", middlewares.SetMiddlewareAuthentication((s.GetPresignedUploadUrl))).Methods("GET")
 }

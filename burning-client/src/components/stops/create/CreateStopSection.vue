@@ -29,13 +29,15 @@
 			</el-form-item>
 
 			<el-upload
+				v-if="uploadUrl"
 				class="upload-demo"
 				drag
-				:action="uploadUrl"
+				:http-request="uploadFile"
+				:auto-upload="false"
+				action=""
 				:on-preview="handlePreview"
 				:on-remove="handleRemove"
-				:file-list="fileList"
-				multiple
+				:file-list="attachments"
 			>
 				<i class="el-icon-upload"></i>
 				<div class="el-upload__text">Drop file here or <em>click to upload</em></div>
@@ -69,6 +71,7 @@ import StopSummaryCard from '../StopSummaryCard.vue';
 import { Get } from 'vuex-pathify';
 import { IUser } from '../../../types/User';
 import config from '@/config/index';
+import axios from 'axios';
 
 @Component({
 	name: 'CreateStopSection',
@@ -83,18 +86,16 @@ export default class CreateStopSection extends Vue {
 	/* Computed */
 	@Get('auth/loggedInUser')
 	loggedInUser: IUser;
-	
-	get uploadUrl() {
-		return `${config.API_URL}/file-upload`;
-	}
  
 	/* Data */
 	newStop: IStop = new Stop();
+	uploadUrl: string = '';
 	preview: boolean = false;
 	previewImage: boolean = false;
 	valid: boolean = false;
 	error: any = null;
 	autocomplete: any = null;
+	attachments = [];
 	rules = {
 		name: [
 			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
@@ -145,6 +146,27 @@ export default class CreateStopSection extends Vue {
 		this.$router.push({ name: 'Stop List' });
 	}
 
+	async getUploadUrl() {
+		const url = await this.$store.dispatch('upload/getUploadUrl');
+		this.uploadUrl = url;
+	}
+
+	handleFileChange(e) {
+		this.fileToUpload = e.target.files[0];
+	}
+
+	selectFile () {
+      	this.$refs.file.click()
+    }
+
+	uploadFile() {
+      let formData = new FormData()
+	  formData.append('file', this.fileToUpload)
+	  console.log(formData)
+
+	  axios.put(this.uploadUrl, formData).then((res) => console.log(res));
+	}
+
 	initAutocomplete() {
 		this.autocomplete = new google.maps.places.Autocomplete((this.$refs.autocomplete), {types: ['geocode']});
 		this.autocomplete.addListener('place_changed', () => {
@@ -165,6 +187,7 @@ export default class CreateStopSection extends Vue {
 
 	mounted() {
 		this.initAutocomplete();
+		this.getUploadUrl();
 	}
 
 	beforeDestroy() {
