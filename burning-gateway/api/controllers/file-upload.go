@@ -21,13 +21,35 @@ type PresignResp struct {
 
 func (server *Server) GetPresignedUploadUrl(w http.ResponseWriter, r *http.Request) {
 
-	var u string
-	var signedHeaders http.Header
-
 	vars := mux.Vars(r)
-	fmt.Println(vars)
 	key := vars["object-name"]
 
+	s3Svc := awsService()
+
+	// For creating PutObject presigned URLs
+	fmt.Println("Received request to presign PutObject for,", key)
+	sdkReq, _ := s3Svc.PutObjectRequest(&s3.PutObjectInput{
+		Bucket: aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
+		Key:    aws.String(key),
+	})
+	u, signedHeaders, err := sdkReq.PresignRequest(15 * time.Minute)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to presign request, %v", err)
+	}
+
+	// Create the response back to the client with the information on the
+	// presigned request and additional headers to include.
+	if err := json.NewEncoder(w).Encode(PresignResp{
+		URL:    u,
+		Header: signedHeaders,
+	}); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to encode presign response, %v", err)
+	}
+
+}
+
+func awsService() *s3.S3 {
 	creds := credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_SECRET"), "")
 
 	sess, err := session.NewSession(&aws.Config{
@@ -43,21 +65,5 @@ func (server *Server) GetPresignedUploadUrl(w http.ResponseWriter, r *http.Reque
 		Region: aws.String(os.Getenv("AWS_PRIMARY_REGION")),
 	})
 
-	// For creating PutObject presigned URLs
-	fmt.Println("Received request to presign PutObject for,", key)
-	sdkReq, _ := s3Svc.PutObjectRequest(&s3.PutObjectInput{
-		Bucket: aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
-		Key:    aws.String(key),
-	})
-	u, signedHeaders, err = sdkReq.PresignRequest(15 * time.Minute)
-
-	// Create the response back to the client with the information on the
-	// presigned request and additional headers to include.
-	if err := json.NewEncoder(w).Encode(PresignResp{
-		URL:    u,
-		Header: signedHeaders,
-	}); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to encode presign response, %v", err)
-	}
-
+	return s3Svc
 }

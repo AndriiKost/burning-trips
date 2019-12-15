@@ -1,4 +1,4 @@
-package aws
+package services
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-func getService() *s3.S3 {
+func awsService() *s3.S3 {
 	creds := credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_SECRET"), "")
 
 	sess, err := session.NewSession(&aws.Config{

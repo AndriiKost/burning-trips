@@ -24,29 +24,37 @@
 				</div>
 			</el-form-item>
 
-			<el-form-item label="Image Url" prop="imageUrl">
-				<el-input v-model="newStop.imageUrl"></el-input>
-			</el-form-item>
-
-			<el-upload
-				v-if="uploadUrl"
-				class="upload-demo"
-				drag
-				:http-request="uploadFile"
-				:auto-upload="false"
-				action=""
-				:on-preview="handlePreview"
-				:on-remove="handleRemove"
-				:file-list="attachments"
-			>
-				<i class="el-icon-upload"></i>
-				<div class="el-upload__text">Drop file here or <em>click to upload</em></div>
-				<div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>
-			</el-upload>
-
 			<el-form-item label="content" prop="content">
 				<el-input type="textarea" v-model="newStop.content"></el-input>
 			</el-form-item>
+
+			<!-- <el-upload
+				v-if="newStop.name"
+				class="upload-picture"
+				ref="upload"
+				:auto-upload="false"
+			>
+				<el-button slot="trigger" size="small" type="primary" @click="getUploadUrl">
+					select file
+				</el-button>
+				<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">
+					upload to server
+				</el-button>
+				<div class="el-upload__tip" slot="tip">
+					jpg/png files with a size less than 500kb
+				</div>
+			</el-upload> -->
+
+			  <div class="container" v-if="newStop.name">
+				<div class="large-12 medium-12 small-12 cell">
+					<label>
+						File
+						<input type="file" id="file" ref="file"/>
+					</label>
+					<div @click="submitFile">Submit</div>
+				</div>
+			</div>
+
 			<el-form-item label="Preview My Stop">
 				<el-switch :value="preview" @input="handlePreview"></el-switch>
 			</el-form-item>
@@ -89,13 +97,12 @@ export default class CreateStopSection extends Vue {
  
 	/* Data */
 	newStop: IStop = new Stop();
-	uploadUrl: string = '';
 	preview: boolean = false;
 	previewImage: boolean = false;
 	valid: boolean = false;
 	error: any = null;
 	autocomplete: any = null;
-	attachments = [];
+	file: File;
 	rules = {
 		name: [
 			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
@@ -130,6 +137,23 @@ export default class CreateStopSection extends Vue {
 			this.preview = val;
 		}
 	}
+
+	async submitFile() {
+		let formData = new FormData();
+		if (!this.file) this.file = this.$refs.file.files[0];
+		console.log(this.$refs.file.files, this.file)
+
+		const uploadUrl = await this.getUploadUrl(this.newStop.name, this.file.name);
+
+		formData.append('file', this.file);
+
+		const result = await axios.put(uploadUrl, formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+		console.log(result);
+	}
 	  
     resetForm() {
 		// @ts-ignore
@@ -146,26 +170,15 @@ export default class CreateStopSection extends Vue {
 		this.$router.push({ name: 'Stop List' });
 	}
 
-	async getUploadUrl() {
-		const url = await this.$store.dispatch('upload/getUploadUrl');
-		this.uploadUrl = url;
-	}
-
-	handleFileChange(e) {
-		this.fileToUpload = e.target.files[0];
+	async getUploadUrl(stopName: string, fileName: string): Promise<string> {
+		const fileNameToUpload = `${stopName}:${fileName}`;
+		const result = await this.$store.dispatch('upload/getUploadUrl', fileNameToUpload);
+		return result.URL;
 	}
 
 	selectFile () {
       	this.$refs.file.click()
     }
-
-	uploadFile() {
-      let formData = new FormData()
-	  formData.append('file', this.fileToUpload)
-	  console.log(formData)
-
-	  axios.put(this.uploadUrl, formData).then((res) => console.log(res));
-	}
 
 	initAutocomplete() {
 		this.autocomplete = new google.maps.places.Autocomplete((this.$refs.autocomplete), {types: ['geocode']});
@@ -187,7 +200,6 @@ export default class CreateStopSection extends Vue {
 
 	mounted() {
 		this.initAutocomplete();
-		this.getUploadUrl();
 	}
 
 	beforeDestroy() {

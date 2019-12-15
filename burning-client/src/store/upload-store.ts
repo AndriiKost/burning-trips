@@ -12,8 +12,8 @@ const mutations = make.mutations(state);
 
 const actions = {
 
-    async getUploadUrl(_) {
-        return await uploadService.getPresignedUploadUrl();
+    async getUploadUrl(_, fileNameToUpload: string) {
+        return await uploadService.getPresignedUploadUrl(fileNameToUpload);
     },
     
 }
