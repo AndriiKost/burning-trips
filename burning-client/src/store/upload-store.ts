@@ -14,7 +14,8 @@ const actions = {
 
     async getUploadUrl(_) {
         return await uploadService.getPresignedUploadUrl();
-    }
+    },
+    
 }
 
 const getters = {

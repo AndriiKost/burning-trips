@@ -26,5 +26,5 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteStop)).Methods("DELETE")
 
 	// File upload
-	s.Router.HandleFunc("/file-upload/get-presigned-url", middlewares.SetMiddlewareAuthentication((s.GetPresignedUploadUrl))).Methods("GET")
+	s.Router.HandleFunc("/file-upload/presign/{object-name}", middlewares.SetMiddlewareAuthentication((s.GetPresignedUploadUrl))).Methods("GET")
 }

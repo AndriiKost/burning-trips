@@ -1,42 +1,63 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/andriikost/burning-gateway/api/responses"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/gorilla/mux"
 )
+
+type PresignResp struct {
+	Method, URL string
+	Header      http.Header
+}
 
 func (server *Server) GetPresignedUploadUrl(w http.ResponseWriter, r *http.Request) {
 
-	awsAccessKey := os.Getenv("AWS_ACCESS_KEY")
-	awsSecret := os.Getenv("AWS_SECRET")
-	awsUploadBucket := os.Getenv("AWS_UPLOAD_BUCKET")
+	var u string
+	var signedHeaders http.Header
 
-	// token := "FwoGZXIvYXdzECMaDKECLcU3A+p3rp784SJqoM5eob/wNh2Ri2Dd5L3XFOaCfBescWuyERnBrUl/NBaszBW2jtPwMEff5Z/3B7HN++WWGGpJT7tjAURzokeb3fqJ/zk0WEFBuRtKGzcdvEKmPXYh54dgEsY78w0+rsq68J2spnPLS4fqNSiA8OruBTIoS3ThijFfGI89c3Km3kBtwW1O7Hq4ofTplNfQUcImRl+Kb342EGSXKQ=="
+	vars := mux.Vars(r)
+	fmt.Println(vars)
+	key := vars["object-name"]
 
-	creds := credentials.NewStaticCredentials(awsAccessKey, awsSecret, "")
+	creds := credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_SECRET"), "")
 
-	cfg := aws.NewConfig().WithRegion("us-east-2").WithCredentials(creds)
-	svc := s3.New(session.New(), cfg)
-
-	req, _ := svc.GetObjectRequest(&s3.GetObjectInput{
-		Bucket: aws.String(awsUploadBucket),
-		Key:    aws.String(awsAccessKey),
+	sess, err := session.NewSession(&aws.Config{
+		Region:      aws.String(os.Getenv("AWS_PRIMARY_REGION")),
+		Credentials: creds,
 	})
 
-	url, err := req.Presign(3000 * time.Second)
 	if err != nil {
-		panic(err)
+		fmt.Printf("failed to create a session for aws")
 	}
 
-	fmt.Println(url)
+	s3Svc := s3.New(sess, &aws.Config{
+		Region: aws.String(os.Getenv("AWS_PRIMARY_REGION")),
+	})
 
-	responses.JSON(w, http.StatusOK, url)
+	// For creating PutObject presigned URLs
+	fmt.Println("Received request to presign PutObject for,", key)
+	sdkReq, _ := s3Svc.PutObjectRequest(&s3.PutObjectInput{
+		Bucket: aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
+		Key:    aws.String(key),
+	})
+	u, signedHeaders, err = sdkReq.PresignRequest(15 * time.Minute)
+
+	// Create the response back to the client with the information on the
+	// presigned request and additional headers to include.
+	if err := json.NewEncoder(w).Encode(PresignResp{
+		URL:    u,
+		Header: signedHeaders,
+	}); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to encode presign response, %v", err)
+	}
+
 }
