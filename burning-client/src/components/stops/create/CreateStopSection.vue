@@ -24,27 +24,24 @@
 				</div>
 			</el-form-item>
 
-			<el-form-item label="Image Url" prop="imageUrl">
-				<el-input v-model="newStop.imageUrl"></el-input>
-			</el-form-item>
-
-			<el-upload
-				class="upload-demo"
-				drag
-				:action="uploadUrl"
-				:on-preview="handlePreview"
-				:on-remove="handleRemove"
-				:file-list="fileList"
-				multiple
-			>
-				<i class="el-icon-upload"></i>
-				<div class="el-upload__text">Drop file here or <em>click to upload</em></div>
-				<div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>
-			</el-upload>
-
 			<el-form-item label="content" prop="content">
 				<el-input type="textarea" v-model="newStop.content"></el-input>
 			</el-form-item>
+
+			<el-upload
+				v-if="newStop.name"
+				class="upload-demo"
+				:action="`http://localhost:8080/file-upload/upload-image/${newStop.name}`"
+				:on-preview="handlePreview"
+				:on-remove="handleRemove"
+				:before-upload="beforeUpload"
+				:file-list="fileList"
+				list-type="picture"
+				:on-success="onUploadSuccess"
+			>
+				<el-button size="small" type="primary">Upload Image</el-button>
+			</el-upload>
+
 			<el-form-item label="Preview My Stop">
 				<el-switch :value="preview" @input="handlePreview"></el-switch>
 			</el-form-item>
@@ -53,7 +50,13 @@
 				:stop="newStop"
 			/>
 			<el-form-item>
-				<el-button type="primary" @click="create">Create</el-button>
+				<el-button 
+					type="primary" 
+					@click="create" 
+					:loading="uploading"
+				>
+				Create
+			</el-button>
 				<el-button @click="resetForm">Reset</el-button>
 			</el-form-item>
 		</el-form>
@@ -69,6 +72,8 @@ import StopSummaryCard from '../StopSummaryCard.vue';
 import { Get } from 'vuex-pathify';
 import { IUser } from '../../../types/User';
 import config from '@/config/index';
+import axios from 'axios';
+import { IObjectUploadResponse } from '../../../types/Upload';
 
 @Component({
 	name: 'CreateStopSection',
@@ -83,10 +88,6 @@ export default class CreateStopSection extends Vue {
 	/* Computed */
 	@Get('auth/loggedInUser')
 	loggedInUser: IUser;
-	
-	get uploadUrl() {
-		return `${config.API_URL}/file-upload`;
-	}
  
 	/* Data */
 	newStop: IStop = new Stop();
@@ -95,6 +96,10 @@ export default class CreateStopSection extends Vue {
 	valid: boolean = false;
 	error: any = null;
 	autocomplete: any = null;
+	file: File;
+	fileList: File[] = [];
+	uploading: boolean = false;
+	
 	rules = {
 		name: [
 			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
@@ -134,6 +139,16 @@ export default class CreateStopSection extends Vue {
 		// @ts-ignore
     	this.$refs.new_stop_form.resetFields();
 	}
+
+	beforeUpload() {
+		this.uploading = true;
+	}
+
+	onUploadSuccess(res: IObjectUploadResponse, file: File, fileList: File[]) {
+		// if (!res.success) // Add failure message to the notification stack
+		this.newStop.imageUrl = res.objectUrl;
+		this.uploading = false;
+	}
 	
 	async create() {
 		this.validate();
@@ -161,6 +176,7 @@ export default class CreateStopSection extends Vue {
 
 	handleRemove() {
 		console.log('Needs to remove image')
+		// TODO
 	}
 
 	mounted() {

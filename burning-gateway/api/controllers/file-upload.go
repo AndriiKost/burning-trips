@@ -1,173 +1,153 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/andriikost/burning-gateway/api/responses"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/gorilla/mux"
 )
 
-// type FileUploadRequest struct {
-// 	fileName   string
-// 	filePrefix string
-// }
+type PresignResp struct {
+	Method, URL string
+	Header      http.Header
+}
 
-// func (fileUpload *FileUploadRequest) Prepare() {
-// 	fileUpload.fileName = html.EscapeString(strings.TrimSpace(fileUpload.fileName))
-// 	fileUpload.filePrefix = html.EscapeString(strings.TrimSpace(fileUpload.filePrefix))
-// }
+type ObjectUploadResponse struct {
+	ObjectUrl string `json:"objectUrl"`
+	Success   bool   `json:"success"`
+	Message   string `json:"message"`
+}
 
-// func (fileUpload *FileUploadRequest) Validate() error {
+const stopImagePrefix = "stops/"
 
-// 	if fileUpload.fileName == "" {
-// 		return errors.New("Required fileName")
-// 	}
-// 	if fileUpload.filePrefix == "" {
-// 		return errors.New("Required filePrefix")
-// 	}
-// 	return nil
-// }
+func (server *Server) GetPresignedUploadUrl(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	key := vars["object-name"]
+
+	s3Svc := awsService()
+
+	// For creating PutObject presigned URLs
+	fmt.Println("Received request to presign PutObject for,", key)
+	sdkReq, _ := s3Svc.PutObjectRequest(&s3.PutObjectInput{
+		Bucket: aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
+		Key:    aws.String(key),
+	})
+	url, signedHeaders, err := sdkReq.PresignRequest(15 * time.Minute)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to presign request, %v", err)
+	}
+
+	// Create the response back to the client with the information on the
+	// presigned request and additional headers to include.
+	if err := json.NewEncoder(w).Encode(PresignResp{
+		URL:    url,
+		Header: signedHeaders,
+	}); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to encode presign response, %v", err)
+	}
+
+}
+
+func awsService() *s3.S3 {
+	creds := credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_SECRET"), "")
+
+	sess, err := session.NewSession(&aws.Config{
+		Region:      aws.String(os.Getenv("AWS_PRIMARY_REGION")),
+		Credentials: creds,
+	})
+
+	if err != nil {
+		fmt.Printf("failed to create a session for aws")
+	}
+
+	s3Svc := s3.New(sess, &aws.Config{
+		Region: aws.String(os.Getenv("AWS_PRIMARY_REGION")),
+	})
+
+	return s3Svc
+}
 
 func (server *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("File Upload Endpoint Hit")
+	maxSize := int64(10240000)
+	vars := mux.Vars(r)
+	reqFileName := stopImagePrefix + vars["object-name"]
 
-	awsAccessKey := os.Getenv("AWS_ACCESS_KEY")
-	awsSecret := os.Getenv("AWS_SECRET")
-	awsUploadBucket := os.Getenv("AWS_UPLOAD_BUCKET")
-	token := "FwoGZXIvYXdzECMaDKECLcU3A+p3rp784SJqoM5eob/wNh2Ri2Dd5L3XFOaCfBescWuyERnBrUl/NBaszBW2jtPwMEff5Z/3B7HN++WWGGpJT7tjAURzokeb3fqJ/zk0WEFBuRtKGzcdvEKmPXYh54dgEsY78w0+rsq68J2spnPLS4fqNSiA8OruBTIoS3ThijFfGI89c3Km3kBtwW1O7Hq4ofTplNfQUcImRl+Kb342EGSXKQ=="
-
-	creds := credentials.NewStaticCredentials(awsAccessKey, awsSecret, token)
-
-	cfg := aws.NewConfig().WithRegion("us-east-1").WithCredentials(creds)
-	svc := s3.New(session.New(), cfg)
-
-	svc.
-
-		// Parse our multipart form, 10 << 20 specifies a maximum
-		// upload of 10 MB files.
-		r.ParseMultipartForm(10 << 20)
-	// FormFile returns the first file for the given key `myFile`
-	// it also returns the FileHeader so we can get the Filename,
-	// the Header and the size of the file
-	file, handler, err := r.FormFile("file")
+	err := r.ParseMultipartForm(maxSize)
 	if err != nil {
-		fmt.Println("Error Retrieving the File")
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
-	// fileSize := handler.Size
-	filename := handler.Filename
+	file, fileHeader, err := r.FormFile("file")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 	defer file.Close()
 
-	// new way
+	objectUrl, err := UploadFileToS3(file, fileHeader, reqFileName)
 
-	sess := session.Must(session.NewSession())
-
-	uploader := s3manager.NewUploader(sess)
-
-	f, err := os.Open(filename)
 	if err != nil {
-		// return fmt.Errorf("failed to open file %q, %v", filename, err)
+		log.Println(err)
+		return
 	}
 
-	// Upload the file to S3.
-	result, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(awsUploadBucket),
-		Key:    aws.String(awsAccessKey),
-		Body:   f,
+	uploadMessage := "Image uploaded successfully: " + objectUrl
+	fmt.Println(uploadMessage)
+
+	response := ObjectUploadResponse{objectUrl, true, uploadMessage}
+
+	responses.JSON(w, http.StatusOK, response)
+}
+
+func UploadFileToS3(file multipart.File, fileHeader *multipart.FileHeader, fileName string) (string, error) {
+
+	// get the file size and read
+	// the file content into a buffer
+	size := fileHeader.Size
+	buffer := make([]byte, size)
+	file.Read(buffer)
+
+	s3Svc := awsService()
+
+	// create a unique file name for the file
+	t := time.Now()
+	tempFileName := fileName + t.Format("20060102150405") + filepath.Ext(fileHeader.Filename)
+
+	// config settings: this is where you choose the bucket,
+	// filename, content-type and storage class of the file
+	// you're uploading
+	_, err := s3Svc.PutObject(&s3.PutObjectInput{
+		Bucket:               aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
+		Key:                  aws.String(tempFileName),
+		ACL:                  aws.String("public-read"), // could be private if you want it to be access by only authorized users
+		Body:                 bytes.NewReader(buffer),
+		ContentLength:        aws.Int64(int64(size)),
+		ContentType:          aws.String(http.DetectContentType(buffer)),
+		ContentDisposition:   aws.String("attachment"),
+		ServerSideEncryption: aws.String("AES256"),
+		StorageClass:         aws.String("INTELLIGENT_TIERING"),
 	})
 	if err != nil {
-		// return fmt.Errorf("failed to upload file, %v", err)
+		return "", err
 	}
-	fmt.Printf("file uploaded to, %s\n", result.Location)
 
-	// end
+	fileUrl := "https://" + os.Getenv("AWS_UPLOAD_BUCKET") + ".s3." + os.Getenv("AWS_PRIMARY_REGION") + ".amazonaws.com/" + tempFileName
 
-	// buffer := make([]byte, handler.Size)
-	// file.Read(buffer)
-	// fileBytes := bytes.NewReader(buffer)
-	// fileType := http.DetectContentType(buffer)
-
-	// path := "/stops/" + filename
-
-	// params := &s3.PutObjectInput{
-	// 	Bucket:        aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
-	// 	Key:           aws.String(path),
-	// 	Body:          fileBytes,
-	// 	ContentLength: aws.Int64(fileSize),
-	// 	ContentType:   aws.String(fileType),
-	// }
-
-	// resp, err := svc.PutObject(params)
-	// if err != nil {
-	// 	// handle error
-	// }
-	// fmt.Printf("response %s", awsutil.StringValue(resp))
-
-	responses.JSON(w, http.StatusOK, result.Location)
-
-	// START AWS
-	// var bucket, key string
-	// var timeout time.Duration
-
-	// flag.StringVar(&bucket, "b", os.Getenv("AWS_UPLOAD_BUCKET"), "Bucket name.")
-	// flag.StringVar(&key, "k", os.Getenv("AWS_ACCESS_KEY"), "Object key name.")
-	// flag.DurationVar(&timeout, "d", 10000, "Upload timeout.")
-	// flag.Parse()
-
-	// // All clients require a Session. The Session provides the client with
-	// // shared configuration such as region, endpoint, and credentials. A
-	// // Session should be shared where possible to take advantage of
-	// // configuration and credential caching. See the session package for
-	// // more information.
-	// sess := session.Must(session.NewSession(&aws.Config{
-	// 	Region: aws.String("us-east-1"),
-	// }))
-
-	// // Create a new instance of the service's client with a Session.
-	// // Optional aws.Config values can also be provided as variadic arguments
-	// // to the New function. This option allows you to provide service
-	// // specific configuration.
-	// svc := s3.New(sess)
-
-	// // Create a context with a timeout that will abort the upload if it takes
-	// // more than the passed in timeout.
-	// ctx := context.Background()
-	// var cancelFn func()
-	// if timeout > 0 {
-	// 	ctx, cancelFn = context.WithTimeout(ctx, timeout)
-	// }
-	// // Ensure the context is canceled to prevent leaking.
-	// // See context package for more information, https://golang.org/pkg/context/
-	// if cancelFn != nil {
-	// 	defer cancelFn()
-	// }
-
-	// // Uploads the object to S3. The Context will interrupt the request if the
-	// // timeout expires.
-	// putObjectOutput, err := svc.PutObjectWithContext(ctx, &s3.PutObjectInput{
-	// 	Bucket: aws.String(bucket),
-	// 	Key:    aws.String(key),
-	// 	Body:   os.Stdin,
-	// })
-	// fmt.Println(putObjectOutput)
-	// if err != nil {
-	// 	if aerr, ok := err.(awserr.Error); ok && aerr.Code() == request.CanceledErrorCode {
-	// 		// If the SDK can determine the request or retry delay was canceled
-	// 		// by a context the CanceledErrorCode error code will be returned.
-	// 		fmt.Fprintf(os.Stderr, "upload canceled due to timeout, %v\n", err)
-	// 	} else {
-	// 		fmt.Fprintf(os.Stderr, "failed to upload object, %v\n", err)
-	// 	}
-	// 	os.Exit(1)
-	// }
-
-	// fmt.Printf("successfully uploaded file to %s/%s\n", bucket, key)
+	return fileUrl, err
 }

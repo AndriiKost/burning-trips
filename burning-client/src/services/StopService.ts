@@ -20,6 +20,12 @@ class StopService extends BaseHttpService {
         if (!res.ok || !res) return null;
         return res.result;
     }
+
+    async getUploadUrl() {
+        const res = await this.get<any>(`/file-upload/get-presigned-url`);
+        if (!res.ok || !res) return null;
+        return res.result;
+    }
     
 }
 

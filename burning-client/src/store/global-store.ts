@@ -19,6 +19,7 @@ mutations['NEW_MUTATIONS'] = function(state: GlobalState, arg: any) {
 }
 
 const actions = {
+    
 }
 
 const getters = {

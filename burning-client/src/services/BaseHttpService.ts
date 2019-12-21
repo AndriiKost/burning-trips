@@ -12,6 +12,10 @@ export default class BaseHttpService {
         return this._makeRequest(url, 'POST', data, options);
     }
 
+    async put<T>(url: string, data: any, options?: IApiRequestOptions): Promise<IApiResponse<T>> {
+        return this._makeRequest(url, 'PUT', data, options);
+    }
+
     private async _makeRequest<T>(url: string, method: string, data?: any, options?: IApiRequestOptions): Promise<IApiResponse<T>> {
         if (url.indexOf('://') === -1) url = config.API_URL + url;
         let requestInit = new ApiRequestInit(url, method, data, options);
