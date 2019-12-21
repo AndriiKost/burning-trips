@@ -140,14 +140,14 @@ export default class CreateStopSection extends Vue {
     	this.$refs.new_stop_form.resetFields();
 	}
 
+	beforeUpload() {
+		this.uploading = true;
+	}
+
 	onUploadSuccess(res: IObjectUploadResponse, file: File, fileList: File[]) {
 		// if (!res.success) // Add failure message to the notification stack
 		this.newStop.imageUrl = res.objectUrl;
 		this.uploading = false;
-	}
-
-	beforeUpload() {
-		this.uploading = true;
 	}
 	
 	async create() {
@@ -159,16 +159,6 @@ export default class CreateStopSection extends Vue {
 		// if success, add message to a notif stack with success info
 		this.$router.push({ name: 'Stop List' });
 	}
-
-	async getUploadUrl(stopName: string, fileName: string): Promise<string> {
-		const fileNameToUpload = `${stopName}:${fileName}`;
-		const result = await this.$store.dispatch('upload/getUploadUrl', fileNameToUpload);
-		return result.URL;
-	}
-
-	selectFile () {
-      	this.$refs.file.click()
-    }
 
 	initAutocomplete() {
 		this.autocomplete = new google.maps.places.Autocomplete((this.$refs.autocomplete), {types: ['geocode']});
@@ -186,6 +176,7 @@ export default class CreateStopSection extends Vue {
 
 	handleRemove() {
 		console.log('Needs to remove image')
+		// TODO
 	}
 
 	mounted() {
