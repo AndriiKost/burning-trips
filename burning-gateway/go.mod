@@ -8,8 +8,11 @@ require (
 	github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
 	github.com/cosiner/argv v0.0.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fatih/color v1.7.0 // indirect
+	github.com/githubnemo/CompileDaemon v1.0.0 // indirect
 	github.com/go-delve/delve v1.3.2 // indirect
 	github.com/gorilla/mux v1.7.3
+	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/jinzhu/gorm v1.9.11
 	github.com/joho/godotenv v1.3.0
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect

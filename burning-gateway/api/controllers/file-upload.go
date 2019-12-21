@@ -1,12 +1,17 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/andriikost/burning-gateway/api/responses"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -32,7 +37,7 @@ func (server *Server) GetPresignedUploadUrl(w http.ResponseWriter, r *http.Reque
 		Bucket: aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
 		Key:    aws.String(key),
 	})
-	u, signedHeaders, err := sdkReq.PresignRequest(15 * time.Minute)
+	url, signedHeaders, err := sdkReq.PresignRequest(15 * time.Minute)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to presign request, %v", err)
@@ -41,7 +46,7 @@ func (server *Server) GetPresignedUploadUrl(w http.ResponseWriter, r *http.Reque
 	// Create the response back to the client with the information on the
 	// presigned request and additional headers to include.
 	if err := json.NewEncoder(w).Encode(PresignResp{
-		URL:    u,
+		URL:    url,
 		Header: signedHeaders,
 	}); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to encode presign response, %v", err)
@@ -66,4 +71,70 @@ func awsService() *s3.S3 {
 	})
 
 	return s3Svc
+}
+
+func (server *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
+	maxSize := int64(10240000)
+
+	err := r.ParseMultipartForm(maxSize)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Println(r.Form)
+
+	file, fileHeader, err := r.FormFile("file")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	defer file.Close()
+
+	fileName, err := UploadFileToS3(file, fileHeader)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	fmt.Fprintf(w, "Image uploaded successfully: %v", fileName)
+
+	responses.JSON(w, http.StatusOK, fileName)
+
+}
+
+func UploadFileToS3(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
+
+	// get the file size and read
+	// the file content into a buffer
+	size := fileHeader.Size
+	buffer := make([]byte, size)
+	file.Read(buffer)
+
+	s3Svc := awsService()
+
+	// create a unique file name for the file
+	tempFileName := "stops/" + filepath.Ext(fileHeader.Filename)
+
+	// config settings: this is where you choose the bucket,
+	// filename, content-type and storage class of the file
+	// you're uploading
+	_, err := s3Svc.PutObject(&s3.PutObjectInput{
+		Bucket:               aws.String(os.Getenv("AWS_UPLOAD_BUCKET")),
+		Key:                  aws.String(tempFileName),
+		ACL:                  aws.String("public-read"), // could be private if you want it to be access by only authorized users
+		Body:                 bytes.NewReader(buffer),
+		ContentLength:        aws.Int64(int64(size)),
+		ContentType:          aws.String(http.DetectContentType(buffer)),
+		ContentDisposition:   aws.String("attachment"),
+		ServerSideEncryption: aws.String("AES256"),
+		StorageClass:         aws.String("INTELLIGENT_TIERING"),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	return tempFileName, err
 }

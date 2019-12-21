@@ -28,32 +28,16 @@
 				<el-input type="textarea" v-model="newStop.content"></el-input>
 			</el-form-item>
 
-			<!-- <el-upload
-				v-if="newStop.name"
-				class="upload-picture"
-				ref="upload"
-				:auto-upload="false"
+			<el-upload
+				class="upload-demo"
+				action="http://localhost:8080/file-upload/upload-image"
+				:on-preview="handlePreview"
+				:on-remove="handleRemove"
+				:file-list="fileList"
+				list-type="picture"
 			>
-				<el-button slot="trigger" size="small" type="primary" @click="getUploadUrl">
-					select file
-				</el-button>
-				<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">
-					upload to server
-				</el-button>
-				<div class="el-upload__tip" slot="tip">
-					jpg/png files with a size less than 500kb
-				</div>
-			</el-upload> -->
-
-			  <div class="container" v-if="newStop.name">
-				<div class="large-12 medium-12 small-12 cell">
-					<label>
-						File
-						<input type="file" id="file" ref="file"/>
-					</label>
-					<div @click="submitFile">Submit</div>
-				</div>
-			</div>
+				<el-button size="small" type="primary">Upload Image</el-button>
+			</el-upload>
 
 			<el-form-item label="Preview My Stop">
 				<el-switch :value="preview" @input="handlePreview"></el-switch>
@@ -103,6 +87,7 @@ export default class CreateStopSection extends Vue {
 	error: any = null;
 	autocomplete: any = null;
 	file: File;
+	fileList: File[] = [];
 	rules = {
 		name: [
 			{ required: true, message: 'Please enter a Stop Name', trigger: 'blur' },
@@ -136,23 +121,6 @@ export default class CreateStopSection extends Vue {
 		} else if (!val) {
 			this.preview = val;
 		}
-	}
-
-	async submitFile() {
-		let formData = new FormData();
-		if (!this.file) this.file = this.$refs.file.files[0];
-		console.log(this.$refs.file.files, this.file)
-
-		const uploadUrl = await this.getUploadUrl(this.newStop.name, this.file.name);
-
-		formData.append('file', this.file);
-
-		const result = await axios.put(uploadUrl, formData, {
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
-		});
-		console.log(result);
 	}
 	  
     resetForm() {
