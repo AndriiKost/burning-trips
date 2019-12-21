@@ -27,5 +27,5 @@ func (s *Server) initializeRoutes() {
 
 	// File upload
 	s.Router.HandleFunc("/file-upload/presign/{object-name}", middlewares.SetMiddlewareAuthentication((s.GetPresignedUploadUrl))).Methods("GET")
-	s.Router.HandleFunc("/file-upload/upload-image", middlewares.SetMiddlewareJSON((s.UploadFile))).Methods("POST")
+	s.Router.HandleFunc("/file-upload/upload-image/{object-name}", middlewares.SetMiddlewareJSON((s.UploadFile))).Methods("POST")
 }

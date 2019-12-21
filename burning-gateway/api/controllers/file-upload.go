@@ -24,6 +24,14 @@ type PresignResp struct {
 	Header      http.Header
 }
 
+type ObjectUploadResponse struct {
+	ObjectUrl string `json:"objectUrl"`
+	Success   bool   `json:"success"`
+	Message   string `json:"message"`
+}
+
+const stopImagePrefix = "stops/"
+
 func (server *Server) GetPresignedUploadUrl(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
@@ -75,14 +83,14 @@ func awsService() *s3.S3 {
 
 func (server *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
 	maxSize := int64(10240000)
+	vars := mux.Vars(r)
+	reqFileName := stopImagePrefix + vars["object-name"]
 
 	err := r.ParseMultipartForm(maxSize)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-
-	log.Println(r.Form)
 
 	file, fileHeader, err := r.FormFile("file")
 	if err != nil {
@@ -92,20 +100,22 @@ func (server *Server) UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	defer file.Close()
 
-	fileName, err := UploadFileToS3(file, fileHeader)
+	objectUrl, err := UploadFileToS3(file, fileHeader, reqFileName)
 
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	fmt.Fprintf(w, "Image uploaded successfully: %v", fileName)
+	uploadMessage := "Image uploaded successfully: " + objectUrl
+	fmt.Println(uploadMessage)
 
-	responses.JSON(w, http.StatusOK, fileName)
+	response := ObjectUploadResponse{objectUrl, true, uploadMessage}
 
+	responses.JSON(w, http.StatusOK, response)
 }
 
-func UploadFileToS3(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
+func UploadFileToS3(file multipart.File, fileHeader *multipart.FileHeader, fileName string) (string, error) {
 
 	// get the file size and read
 	// the file content into a buffer
@@ -116,7 +126,8 @@ func UploadFileToS3(file multipart.File, fileHeader *multipart.FileHeader) (stri
 	s3Svc := awsService()
 
 	// create a unique file name for the file
-	tempFileName := "stops/" + filepath.Ext(fileHeader.Filename)
+	t := time.Now()
+	tempFileName := fileName + t.Format("20060102150405") + filepath.Ext(fileHeader.Filename)
 
 	// config settings: this is where you choose the bucket,
 	// filename, content-type and storage class of the file
@@ -136,5 +147,7 @@ func UploadFileToS3(file multipart.File, fileHeader *multipart.FileHeader) (stri
 		return "", err
 	}
 
-	return tempFileName, err
+	fileUrl := "https://" + os.Getenv("AWS_UPLOAD_BUCKET") + ".s3." + os.Getenv("AWS_PRIMARY_REGION") + ".amazonaws.com/" + tempFileName
+
+	return fileUrl, err
 }
