@@ -10,17 +10,18 @@ import (
 )
 
 type Stop struct {
-	ID         uint64    `gorm:"primary_key;auto_increment" json:"id"`
-	Address    string    `gorm:"size:255;not null;" json:"address"`
-	ImageUrl   string    `gorm:"size:255;not null;" json:"imageUrl"`
-	Name       string    `gorm:"size:255;not null;unique" json:"name"`
-	Content    string    `gorm:"size:255;not null;" json:"content"`
-	Latitude   float32       `json:"latitude"`
-	Longtitude float32       `json:"longtitude"`
-	Author     User      `json:"author"`
-	AuthorID   uint32    `gorm:"not null" json:"authorID"`
-	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID         uint64     `gorm:"primary_key;auto_increment" json:"id"`
+	Address    string     `gorm:"size:255;not null;" json:"address"`
+	ImageUrl   string     `gorm:"size:255;not null;" json:"imageUrl"`
+	Name       string     `gorm:"size:255;not null;unique" json:"name"`
+	Content    string     `gorm:"size:255;not null;" json:"content"`
+	Latitude   float32    `json:"latitude"`
+	Longtitude float32    `json:"longtitude"`
+	Author     User       `json:"author"`
+	Votes      []StopVote `json:"votes"`
+	AuthorID   uint32     `gorm:"not null" json:"authorID"`
+	CreatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 func (stop *Stop) Prepare() {
@@ -48,9 +49,9 @@ func (stop *Stop) Validate() error {
 	return nil
 }
 
-func (stop *Stop) Find(db *gorm.DB, pid uint64) (*Stop, error) {
+func (stop *Stop) Find(db *gorm.DB, sid uint64) (*Stop, error) {
 	var err error
-	err = db.Debug().Model(&Stop{}).Where("id = ?", pid).Take(&stop).Error
+	err = db.Debug().Model(&Stop{}).Where("id = ?", sid).Take(&stop).Error
 	if err != nil {
 		return &Stop{}, err
 	}
@@ -121,9 +122,9 @@ func (stop *Stop) Save(db *gorm.DB) (*Stop, error) {
 	return stop, nil
 }
 
-func (stop *Stop) Delete(db *gorm.DB, pid uint64, uid uint32) (int64, error) {
+func (stop *Stop) Delete(db *gorm.DB, sid uint64, uid uint32) (int64, error) {
 
-	db = db.Debug().Model(&Stop{}).Where("id = ? and author_id = ?", pid, uid).Take(&Stop{}).Delete(&Stop{})
+	db = db.Debug().Model(&Stop{}).Where("id = ? and author_id = ?", sid, uid).Take(&Stop{}).Delete(&Stop{})
 
 	if db.Error != nil {
 		if gorm.IsRecordNotFoundError(db.Error) {

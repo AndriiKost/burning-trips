@@ -11,19 +11,22 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/auth/login", middlewares.SetMiddlewareJSON(s.Login)).Methods("POST")
 	s.Router.HandleFunc("/auth/loggedInUser", middlewares.SetMiddlewareJSON(s.GetLoggedInUser)).Methods("GET")
 
-	//Users routes
+	// Users routes
 	s.Router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.CreateUser)).Methods("POST")
 	s.Router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.GetUsers)).Methods("GET")
 	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareJSON(s.GetUser)).Methods("GET")
 	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateUser))).Methods("PUT")
 	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteUser)).Methods("DELETE")
 
-	//Stops routes
+	// Stops routes
 	s.Router.HandleFunc("/stops", middlewares.SetMiddlewareJSON(s.CreateStop)).Methods("POST")
 	s.Router.HandleFunc("/stops", middlewares.SetMiddlewareJSON(s.GetStops)).Methods("GET")
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareJSON(s.GetStop)).Methods("GET")
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateStop))).Methods("PUT")
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteStop)).Methods("DELETE")
+
+	// Votes
+	s.Router.HandleFunc("/votes/stop-votes", middlewares.SetMiddlewareAuthentication(s.UpdateVote)).Methods("POST")
 
 	// File upload
 	s.Router.HandleFunc("/file-upload/presign/{object-name}", middlewares.SetMiddlewareAuthentication((s.GetPresignedUploadUrl))).Methods("GET")

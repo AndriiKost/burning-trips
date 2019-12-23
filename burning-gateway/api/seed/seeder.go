@@ -39,13 +39,22 @@ var stops = []models.Stop{
 	},
 }
 
+var stopVote = []models.StopVote{
+	models.StopVote{
+		Count: 15,
+	},
+	models.StopVote{
+		Count: 10,
+	}
+}
+
 func Load(db *gorm.DB) {
 
-	err := db.Debug().DropTableIfExists(&models.Stop{}, &models.User{}).Error
+	err := db.Debug().DropTableIfExists(&models.Stop{}, &models.User{}, &models.StopVote{}).Error
 	if err != nil {
 		log.Fatalf("cannot drop table: %v", err)
 	}
-	err = db.Debug().AutoMigrate(&models.User{}, &models.Stop{}).Error
+	err = db.Debug().AutoMigrate(&models.User{}, &models.Stop{}, &models.StopVote{}).Error
 	if err != nil {
 		log.Fatalf("cannot migrate table: %v", err)
 	}
@@ -53,6 +62,16 @@ func Load(db *gorm.DB) {
 	err = db.Debug().Model(&models.Stop{}).AddForeignKey("author_id", "users(id)", "cascade", "cascade").Error
 	if err != nil {
 		log.Fatalf("attaching foreign key error: %v", err)
+	}
+
+	err = db.Debug().Model(&models.StopVote{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade").Error
+	if err != nil {
+		log.Fatalf("attaching foreign key user_id -> users(id) error: %v", err)
+	}
+
+	err = db.Debug().Model(&models.StopVote{}).AddForeignKey("stop_id", "stops(id)", "cascade", "cascade").Error
+	if err != nil {
+		log.Fatalf("attaching foreign stop_id stops(id) -> key error: %v", err)
 	}
 
 	for i, _ := range users {
@@ -65,6 +84,14 @@ func Load(db *gorm.DB) {
 		err = db.Debug().Model(&models.Stop{}).Create(&stops[i]).Error
 		if err != nil {
 			log.Fatalf("cannot seed stops table: %v", err)
+		}
+
+		stopVote[i].UserID = users[i].ID
+		stopVote[i].StopID = stops[i].ID
+
+		err = db.Debug().Model(&models.StopVote{}).Create(&stopVote[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed stop votes table: %v", err)
 		}
 	}
 }
