@@ -185,7 +185,7 @@ func (server *Server) DeleteStop(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
 		return
 	}
-	_, err = stop.Delete(server.DB, sid, uid)
+	_, err = stop.Delete(server.DB, sid)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return

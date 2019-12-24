@@ -43,6 +43,7 @@ export default class StopListScreen extends Vue {
 
    async init() {
       await this.$store.dispatch('stop/getAllStops');
+      console.log(this.stops[0].votes)
    }
 
    /* Lifecycle Hooks */

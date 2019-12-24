@@ -39,18 +39,21 @@ var stops = []models.Stop{
 	},
 }
 
-var stopVote = []models.StopVote{
+var stopVotes = []models.StopVote{
 	models.StopVote{
 		Count: 15,
 	},
 	models.StopVote{
 		Count: 10,
-	}
+	},
+	models.StopVote{
+		Count: 5,
+	},
 }
 
 func Load(db *gorm.DB) {
 
-	err := db.Debug().DropTableIfExists(&models.Stop{}, &models.User{}, &models.StopVote{}).Error
+	err := db.Debug().DropTableIfExists(&models.StopVote{}, &models.Stop{}, &models.User{}).Error
 	if err != nil {
 		log.Fatalf("cannot drop table: %v", err)
 	}
@@ -86,10 +89,12 @@ func Load(db *gorm.DB) {
 			log.Fatalf("cannot seed stops table: %v", err)
 		}
 
-		stopVote[i].UserID = users[i].ID
-		stopVote[i].StopID = stops[i].ID
+		for j, _ := range stopVotes {
+			stopVotes[j].UserID = users[i].ID
+			stopVotes[j].StopID = stops[i].ID
+		}
 
-		err = db.Debug().Model(&models.StopVote{}).Create(&stopVote[i]).Error
+		err = db.Debug().Model(&models.StopVote{}).Create(&stopVotes[i]).Error
 		if err != nil {
 			log.Fatalf("cannot seed stop votes table: %v", err)
 		}

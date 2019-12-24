@@ -1,10 +1,14 @@
 export interface IVote {
     id: number;
-    userID: number;
-    userVotes: number;
+    userId: number;
+    count: number;
 }
 
 export interface IVotable {
     trending: boolean;
     votes: IVote[];
+}
+
+export interface IStopVote extends IVote {
+    stopId: number;
 }

@@ -2,6 +2,9 @@ import { make } from 'vuex-pathify';
 import { IStop } from '@/types/Stop';
 import { Store } from 'vuex';
 import stopService from '@/services/StopService';
+import voteService from '@/services/VoteService';
+import Stop from '@/models/Stop';
+import { IStopVote } from '@/types/Vote';
 
 class StopStore {
     stops: Array<IStop> = [];
@@ -29,6 +32,10 @@ const actions = {
 
     async getStop(_, stopID: number) {
         return await stopService.getStop(stopID);
+    },
+
+    async updateStopVote({ commit }: Store<StopStore>, vote: IStopVote) {
+        return await voteService.updateStopVote(vote);
     }
 }
 

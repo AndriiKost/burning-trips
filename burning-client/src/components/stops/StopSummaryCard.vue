@@ -30,7 +30,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Get, Sync } from 'vuex-pathify';
 import { IStop } from '../../types/Stop';
 import { IUser } from '../../types/User';
-import { IVote } from '../../types/Vote';
+import { IStopVote } from '../../types/Vote';
 import VoteSection from '@/components/global/VoteSection.vue';
 
 @Component({
@@ -50,12 +50,13 @@ export default class StopSummaryCard extends Vue {
 	readonly user: IUser;
 
 	get totalVotes() {
-		return this.stop.votes ? this.stop.votes.reduce((acc, cur) => acc += cur.userVotes, 0) : 0;
+		return this.stop.votes ? this.stop.votes.reduce((acc, cur) => acc += cur.count, 0) : 0;
 	}
 
-	updateVotes(userVotes: number) {
-		const userVote: IVote = { userID: this.user.id, userVotes, id: 0 };
-		// update votes
+	async updateVotes(count: number) {
+		const stopVote: IStopVote = { userId: this.user.id, count, id: 0, stopId: this.stop.id };
+		const result = await this.$store.dispatch('stop/updateStopVote', stopVote);
+		console.log(result);
 	}
 
 	/* Lifecycle Hooks */

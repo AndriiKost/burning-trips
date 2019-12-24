@@ -33,6 +33,7 @@ func (stop *Stop) Prepare() {
 	stop.Address = html.EscapeString(strings.TrimSpace(stop.Address))
 	stop.CreatedAt = time.Now()
 	stop.UpdatedAt = time.Now()
+	stop.Votes = []StopVote{}
 }
 
 func (stop *Stop) Validate() error {
@@ -60,6 +61,10 @@ func (stop *Stop) Find(db *gorm.DB, sid uint64) (*Stop, error) {
 		if err != nil {
 			return &Stop{}, err
 		}
+		err = db.Debug().Model(&[]StopVote{}).Where("stop_id = ?", stop.ID).Find(&stop.Votes).Error
+		if err != nil {
+			return &Stop{}, err
+		}
 	}
 	return stop, nil
 }
@@ -74,6 +79,10 @@ func (stop *Stop) FindAll(db *gorm.DB) (*[]Stop, error) {
 	if len(stops) > 0 {
 		for i, _ := range stops {
 			err := db.Debug().Model(&User{}).Where("id = ?", stops[i].AuthorID).Take(&stops[i].Author).Error
+			if err != nil {
+				return &[]Stop{}, err
+			}
+			err = db.Debug().Model(&StopVote{}).Where("stop_id = ?", stops[i].ID).Find(&stops[i].Votes).Error
 			if err != nil {
 				return &[]Stop{}, err
 			}
@@ -103,6 +112,10 @@ func (stop *Stop) Update(db *gorm.DB) (*Stop, error) {
 		if err != nil {
 			return &Stop{}, err
 		}
+		err = db.Debug().Model(&[]StopVote{}).Where("stop_id = ?", stop.ID).Find(&stop.Votes).Error
+		if err != nil {
+			return &Stop{}, err
+		}
 	}
 	return stop, nil
 }
@@ -118,13 +131,17 @@ func (stop *Stop) Save(db *gorm.DB) (*Stop, error) {
 		if err != nil {
 			return &Stop{}, err
 		}
+		err = db.Debug().Model(&StopVote{}).Where("stop_id = ?", stop.ID).Find(&stop.Votes).Error
+		if err != nil {
+			return &Stop{}, err
+		}
 	}
 	return stop, nil
 }
 
-func (stop *Stop) Delete(db *gorm.DB, sid uint64, uid uint32) (int64, error) {
+func (stop *Stop) Delete(db *gorm.DB, sid uint64) (int64, error) {
 
-	db = db.Debug().Model(&Stop{}).Where("id = ? and author_id = ?", sid, uid).Take(&Stop{}).Delete(&Stop{})
+	db = db.Debug().Model(&Stop{}).Where("id = ?", sid).Take(&Stop{}).Delete(&Stop{})
 
 	if db.Error != nil {
 		if gorm.IsRecordNotFoundError(db.Error) {
@@ -132,5 +149,7 @@ func (stop *Stop) Delete(db *gorm.DB, sid uint64, uid uint32) (int64, error) {
 		}
 		return 0, db.Error
 	}
+
+	db = db.Debug().Model(&StopVote{}).Where("stop_id = ?", sid).Find(&StopVote{}).Delete(&StopVote{})
 	return db.RowsAffected, nil
 }
