@@ -49,7 +49,7 @@ func (server *Server) CreateStop(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, formattedError)
 		return
 	}
-	w.Header().Set("Lacation", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, stopCreated.ID))
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, stopCreated.ID))
 	responses.JSON(w, http.StatusCreated, stopCreated)
 }
 
@@ -185,7 +185,7 @@ func (server *Server) DeleteStop(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
 		return
 	}
-	_, err = stop.Delete(server.DB, sid, uid)
+	_, err = stop.Delete(server.DB, sid)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return

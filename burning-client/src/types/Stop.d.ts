@@ -1,8 +1,8 @@
-import { IVotable } from './Vote';
+import { IVotable, IStopVote } from './Vote';
 import { IAddress, ICoordinates } from './Geo';
 import { IUser } from './User';
 
-export interface IStop extends IVotable {
+export interface IStop {
     address?: string;
     authorID: number;
     content: string;
@@ -13,4 +13,5 @@ export interface IStop extends IVotable {
     author?: IUser;
     longtitude?: number;
     latitude?: number;
+    votes: IStopVote[];
 }

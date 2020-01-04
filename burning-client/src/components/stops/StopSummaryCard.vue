@@ -12,8 +12,9 @@
 				<div class="bottom clearfix flex-row space-between">
 					<vote-section 
 						:total-votes="totalVotes" 
-						:trending="stop.trending" 
-						@update-votes="updateVotes"
+						:trending="stop.trending"
+						:cur-user-votes="curUserVoteCount"
+						@save-votes="save"
 					/>
 					<el-button type="text" class="button-primary">
 						Read More
@@ -30,7 +31,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Get, Sync } from 'vuex-pathify';
 import { IStop } from '../../types/Stop';
 import { IUser } from '../../types/User';
-import { IVote } from '../../types/Vote';
+import { IStopVote } from '../../types/Vote';
 import VoteSection from '@/components/global/VoteSection.vue';
 
 @Component({
@@ -49,13 +50,27 @@ export default class StopSummaryCard extends Vue {
 	@Get('auth/loggedInUser')
 	readonly user: IUser;
 
-	get totalVotes() {
-		return this.stop.votes ? this.stop.votes.reduce((acc, cur) => acc += cur.userVotes, 0) : 0;
+	get totalVotes(): Number {
+		if (!this.stop.votes || this.stop.votes.length < 1) return 0;
+		return this.stop.votes.reduce((acc, cur) => acc += cur.count, 0);
 	}
 
-	updateVotes(userVotes: number) {
-		const userVote: IVote = { userID: this.user.id, userVotes, id: 0 };
-		// update votes
+	get curUserVote(): IStopVote {
+		return this.stop.votes.find(v => v.userId === this.user.id) as IStopVote;
+	}
+
+	get curUserVoteCount(): Number {
+		return this.curUserVote ? this.curUserVote.count : 0;
+	}
+
+	async save(count: number) {
+		const stopVote: IStopVote = { userId: this.user.id, count, id: 0, stopId: this.stop.id };
+		if (this.curUserVote) {
+			// update existing votes
+			stopVote.id = this.curUserVote.id;
+		}
+		const result = await this.$store.dispatch('stop/updateStopVote', stopVote);
+		return this.$emit('update-votes', result);
 	}
 
 	/* Lifecycle Hooks */
