@@ -27,7 +27,6 @@ func (server *Server) UpdateVote(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error during stop vote extraction from request body")
 		return
 	}
-	stopVote.Prepare()
 	err = stopVote.Validate()
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -43,7 +42,7 @@ func (server *Server) UpdateVote(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
 		return
 	}
-	stopVoteCreated, err := stopVote.Update(server.DB)
+	stopVoteCreated, err := stopVote.SaveStopVote(server.DB)
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
 		responses.ERROR(w, http.StatusInternalServerError, formattedError)

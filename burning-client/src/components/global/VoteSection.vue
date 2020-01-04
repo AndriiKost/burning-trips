@@ -42,11 +42,14 @@ export default class VoteSection extends Vue {
     @Prop({ type: Boolean, default: false })
     readonly trending: Boolean;
 
+    @Prop({ type: Number, default: 0 })
+    readonly curUserVotes: Number;
+
     /* Computed */
 
     /* Data */
     timer: any = null;
-    curVotes: number = 0;
+    curVotes: number = this.curUserVotes;
     showUserVotes: boolean = false;
 
     /* Methods */
@@ -56,7 +59,7 @@ export default class VoteSection extends Vue {
 		if (this.curVotes < this.voteLimit) this.curVotes++;
 		this.timer = setTimeout(() => {
 			this.showUserVotes = false;
-			this.$emit('update-votes', this.curVotes);
+			this.$emit('save-votes', this.curVotes);
 		}, 2000);
 	}
 

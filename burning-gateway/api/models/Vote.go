@@ -82,10 +82,16 @@ func (stopVote *StopVote) FindUserStopVotes(db *gorm.DB, stopId uint64, userId u
 	return stopVote, nil
 }
 
-func (stopVote *StopVote) Update(db *gorm.DB) (*StopVote, error) {
+func (stopVote *StopVote) SaveStopVote(db *gorm.DB) (*StopVote, error) {
 	var err error
 
-	err = db.Debug().Model(&StopVote{}).Create(&stopVote).Error
+	if stopVote.ID != 0 {
+		err = db.Debug().Model(&StopVote{}).Update(&stopVote).Error
+	} else {
+		stopVote.Prepare()
+		err = db.Debug().Model(&StopVote{}).Create(&stopVote).Error
+	}
+
 	if err != nil {
 		return &StopVote{}, err
 	}

@@ -12,8 +12,9 @@
 				<div class="bottom clearfix flex-row space-between">
 					<vote-section 
 						:total-votes="totalVotes" 
-						:trending="stop.trending" 
-						@update-votes="updateVotes"
+						:trending="stop.trending"
+						:cur-user-votes="curUserVoteCount"
+						@save-votes="save"
 					/>
 					<el-button type="text" class="button-primary">
 						Read More
@@ -49,14 +50,27 @@ export default class StopSummaryCard extends Vue {
 	@Get('auth/loggedInUser')
 	readonly user: IUser;
 
-	get totalVotes() {
-		return this.stop.votes ? this.stop.votes.reduce((acc, cur) => acc += cur.count, 0) : 0;
+	get totalVotes(): Number {
+		if (!this.stop.votes || this.stop.votes.length < 1) return 0;
+		return this.stop.votes.reduce((acc, cur) => acc += cur.count, 0);
 	}
 
-	async updateVotes(count: number) {
+	get curUserVote(): IStopVote {
+		return this.stop.votes.find(v => v.userId === this.user.id) as IStopVote;
+	}
+
+	get curUserVoteCount(): Number {
+		return this.curUserVote ? this.curUserVote.count : 0;
+	}
+
+	async save(count: number) {
 		const stopVote: IStopVote = { userId: this.user.id, count, id: 0, stopId: this.stop.id };
+		if (this.curUserVote) {
+			// update existing votes
+			stopVote.id = this.curUserVote.id;
+		}
 		const result = await this.$store.dispatch('stop/updateStopVote', stopVote);
-		console.log(result);
+		return this.$emit('update-votes', result);
 	}
 
 	/* Lifecycle Hooks */
