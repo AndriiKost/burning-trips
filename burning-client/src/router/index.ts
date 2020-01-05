@@ -1,9 +1,10 @@
+import LoginScreen from '@/components/auth/LoginScreen.vue';
+import RouteScreen from '@/components/routes/RouteScreen.vue';
+import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
+import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
+import StopScreen from '@/components/stops/StopScreen.vue';
 import Vue from "vue";
 import VueRouter from "vue-router";
-import StopListScreen from '@/components/stops/StopListScreen.vue';
-import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
-import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
-import LoginScreen from '@/components/auth/LoginScreen.vue';
 import { loggedInGuard } from './middleware';
 
 Vue.use(VueRouter);
@@ -11,8 +12,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/stops",
-    component: StopListScreen,
-    name: 'Stop List',
+    component: StopScreen,
+    name: 'Stop Screen',
     meta: {
       allowGuest: true
     }
@@ -31,14 +32,22 @@ const routes = [
     }
   },
   {
+    path: "/routes",
+    component: RouteScreen,
+    name: 'Routes Screen',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
     path: "/login",
     component: LoginScreen,
     name: 'Login'
   },
   {
     path: "*",
-    component: StopListScreen,
-    name: 'Stop List'
+    component: RouteScreen,
+    name: 'Routes Screen'
   }
   // {
     // path: "/about",

@@ -82,6 +82,15 @@ export default class StopSummaryCard extends Vue {
 @import 'src/scss/variables.scss';
 .stop-summary {
 	max-width: 450px;
+
+	&.short-summary {
+		.image-wrapper {
+			.image {
+
+			}
+		}
+	}
+
 	.image-wrapper {
 		.image {
 			width: 100%;

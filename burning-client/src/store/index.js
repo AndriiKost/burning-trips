@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import pathify from 'vuex-pathify';
 import regionStore from './region-store';
 import stopStore from './stop-store';
+import routeStore from './route-store';
 import globalStore from './global-store';
 import authStore from './auth-store';
 import uploadStore from './upload-store';
@@ -15,7 +16,8 @@ export default new Vuex.Store({
 		region: regionStore,
 		stop: stopStore,
 		auth: authStore,
-		upload: uploadStore
+		upload: uploadStore,
+		route: routeStore
 	},
 	plugins: [pathify.plugin]
 });
