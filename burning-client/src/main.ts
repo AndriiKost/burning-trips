@@ -1,6 +1,5 @@
 import ElementUI from 'element-ui';
 import Vue from "vue";
-import 'vue-stripe-menu/dist/vue-stripe-menu.css';
 import AppContent from './components/layout/AppContent.vue';
 import config from './config';
 import "./registerServiceWorker";

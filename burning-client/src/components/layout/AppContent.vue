@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <navigation-menu />
     <div id="nav">
       <router-link to="/">Home</router-link>
       <!-- <router-link to="/about">About</router-link> -->
     </div>
     <router-view />
+    <navigation-menu />
   </div>
 </template>
 
@@ -32,5 +32,10 @@ export default class AppContent extends Vue {
 </script>
 
 <style lang='scss'>
+body {
+  height: 100%;
+}
+
+
 
 </style>
