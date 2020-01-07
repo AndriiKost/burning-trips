@@ -12,3 +12,7 @@ export interface IVotable {
 export interface IStopVote extends IVote {
     stopId: number;
 }
+
+export interface IRouteVote extends IVote {
+    routeId: number;
+}

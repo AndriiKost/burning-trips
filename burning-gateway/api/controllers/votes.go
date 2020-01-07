@@ -13,7 +13,7 @@ import (
 	"github.com/andriikost/burning-gateway/api/utils/formaterror"
 )
 
-func (server *Server) UpdateVote(w http.ResponseWriter, r *http.Request) {
+func (server *Server) UpdateStopVote(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -50,4 +50,43 @@ func (server *Server) UpdateVote(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, stopVote.ID))
 	responses.JSON(w, http.StatusCreated, stopVoteCreated)
+}
+
+func (server *Server) UpdateRouteVote(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		fmt.Println("Error during reading request body")
+		return
+	}
+	routeVote := models.RouteVote{}
+	err = json.Unmarshal(body, &routeVote)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		fmt.Println("Error during route vote extraction from request body")
+		return
+	}
+	err = routeVote.Validate()
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		fmt.Println("Error during stop validation")
+		return
+	}
+	uid, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+	if uid != routeVote.UserID {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
+		return
+	}
+	routeVoteCreated, err := routeVote.SaveRouteVote(server.DB)
+	if err != nil {
+		formattedError := formaterror.FormatError(err.Error())
+		responses.ERROR(w, http.StatusInternalServerError, formattedError)
+		return
+	}
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, routeVote.ID))
+	responses.JSON(w, http.StatusCreated, routeVoteCreated)
 }

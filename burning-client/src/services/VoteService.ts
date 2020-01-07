@@ -1,11 +1,16 @@
+import { IRouteVote, IStopVote } from '@/types/Vote';
 import BaseHttpService from './BaseHttpService';
-import { IStop } from '../types/Stop';
-import { IStopVote } from '@/types/Vote';
 
 class VoteService extends BaseHttpService {
 
     async updateStopVote(vote: IStopVote) {
-        const res = await this.post<IStop>('/votes/stop-votes', vote);
+        const res = await this.post<IStopVote>('/votes/stop-votes', vote);
+        if (!res.ok || !res) return null
+        return res.result;
+    }
+
+    async updateRouteVote(vote: IRouteVote) {
+        const res = await this.post<IRouteVote>('/votes/route-votes', vote);
         if (!res.ok || !res) return null
         return res.result;
     }

@@ -25,8 +25,16 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateStop))).Methods("PUT")
 	s.Router.HandleFunc("/stops/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteStop)).Methods("DELETE")
 
+	// Routes routes
+	s.Router.HandleFunc("/routes", middlewares.SetMiddlewareJSON(s.CreateRoute)).Methods("POST")
+	s.Router.HandleFunc("/routes", middlewares.SetMiddlewareJSON(s.GetRoutes)).Methods("GET")
+	s.Router.HandleFunc("/routes/{id}", middlewares.SetMiddlewareJSON(s.GetRoute)).Methods("GET")
+	s.Router.HandleFunc("/routes/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateRoute))).Methods("PUT")
+	s.Router.HandleFunc("/routes/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteRoute)).Methods("DELETE")
+
 	// Votes
-	s.Router.HandleFunc("/votes/stop-votes", middlewares.SetMiddlewareAuthentication(s.UpdateVote)).Methods("POST")
+	s.Router.HandleFunc("/votes/stop-votes", middlewares.SetMiddlewareAuthentication(s.UpdateStopVote)).Methods("POST")
+	s.Router.HandleFunc("/votes/route-votes", middlewares.SetMiddlewareAuthentication(s.UpdateRouteVote)).Methods("POST")
 
 	// File upload
 	s.Router.HandleFunc("/file-upload/presign/{object-name}", middlewares.SetMiddlewareAuthentication((s.GetPresignedUploadUrl))).Methods("GET")
