@@ -7,28 +7,14 @@
 	  @select="handleSelect"
 	  router
 	>
-		<el-menu-item index="stops">
+		<el-menu-item 
+			v-for="menuItem in navMenuItems" 
+			:key="menuItem.label" 
+			:index="menuItem.link"
+		>
 			<div class="flex flex-center flex-column">
-				<i class="el-icon el-icon-sm el-icon-place"></i>
-				<span class="nav-label">Stops</span>
-			</div>
-		</el-menu-item>
-		<el-menu-item index="routes">
-			<div class="flex flex-center flex-column">
-				<i class="el-icon el-icon-sm el-icon-guide"></i>
-				<span class="nav-label">Routes</span>
-			</div>
-		</el-menu-item>
-		<el-menu-item index="stories">
-			<div class="flex flex-center flex-column">
-				<i class="el-icon el-icon-sm el-icon-reading"></i>
-				<span class="nav-label">Stories</span>
-			</div>
-		</el-menu-item>
-		<el-menu-item index="account">
-			<div class="flex flex-center flex-column">
-				<i class="el-icon el-icon-sm el-icon-user"></i>
-				<span class="nav-label">Account</span>
+				<i :class="`el-icon el-icon-sm el-icon-${menuItem.icon}`"></i>
+				<span class="nav-label">{{ menuItem.label }}</span>
 			</div>
 		</el-menu-item>
 	</el-menu>
@@ -38,6 +24,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { INavigationMenuItem } from '@/types/UiTypes';
+import { IUser } from '@/types/User';
+import { Get } from 'vuex-pathify';
 
 @Component({
    name: 'NavigationMenu'
@@ -46,10 +35,29 @@ export default class NavigationMenu extends Vue {
 
    	/* Props */
 
-   	/* Computed */
+	/* Computed */
+	@Get('auth/loggedInUser')
+	loggedInUser: IUser;
 
 	/* Data */
-	activeIndex = '1';
+	activeIndex: string = null;
+	navMenuItems: INavigationMenuItem[] = [
+		{
+			label: 'Stops',
+			icon: 'place',
+			link: 'stops'
+		},
+		{
+			label: 'Routes',
+			icon: 'guide',
+			link: 'routes'
+		},
+		{
+			label: 'Stories',
+			icon: 'reading',
+			link: 'stories'
+		},
+	];
 
    	/* Methods */
   	handleOpen(key, keyPath) {
@@ -62,9 +70,31 @@ export default class NavigationMenu extends Vue {
 
   	handleSelect(key, keyPath) {
 		console.log(key, keyPath);
-  	}
+	  }
+	  
+	preselectMenuIndex() {
+		const routePath = this.$route.path;
+		const activeIndex = routePath.replace('/', ' ').trim().split(' ')[0];
+		this.activeIndex = activeIndex;
+	}
 
-   	/* Lifecycle Hooks */
+	/* Lifecycle Hooks */
+	beforeMount() {
+		this.preselectMenuIndex();
+		if (this.loggedInUser) {
+			this.navMenuItems.push({
+				icon: 'user',
+				link: 'account',
+				label: 'Account'
+			})
+		} else {
+			this.navMenuItems.push({
+				icon: 'user',
+				link: 'signin',
+				label: 'Sign In'
+			})
+		}
+	}
 
 }
 </script>
