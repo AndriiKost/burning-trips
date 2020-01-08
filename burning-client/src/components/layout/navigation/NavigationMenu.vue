@@ -9,26 +9,26 @@
 	>
 		<el-menu-item index="stops">
 			<div class="flex flex-center flex-column">
-				<i class="icon el-icon-place"></i>
+				<i class="el-icon el-icon-sm el-icon-place"></i>
 				<span class="nav-label">Stops</span>
 			</div>
 		</el-menu-item>
 		<el-menu-item index="routes">
 			<div class="flex flex-center flex-column">
-				<i class="icon el-icon-guide"></i>
+				<i class="el-icon el-icon-sm el-icon-guide"></i>
 				<span class="nav-label">Routes</span>
-			</div>
-		</el-menu-item>
-		<el-menu-item index="account">
-			<div class="flex flex-center flex-column">
-				<i class="icon el-icon-user"></i>
-				<span class="nav-label">Account</span>
 			</div>
 		</el-menu-item>
 		<el-menu-item index="stories">
 			<div class="flex flex-center flex-column">
-				<i class="icon el-icon-reading"></i>
+				<i class="el-icon el-icon-sm el-icon-reading"></i>
 				<span class="nav-label">Stories</span>
+			</div>
+		</el-menu-item>
+		<el-menu-item index="account">
+			<div class="flex flex-center flex-column">
+				<i class="el-icon el-icon-sm el-icon-user"></i>
+				<span class="nav-label">Account</span>
 			</div>
 		</el-menu-item>
 	</el-menu>
@@ -45,13 +45,11 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 export default class NavigationMenu extends Vue {
 
    	/* Props */
-   	isCollapse: boolean = true;
-	activeIndex= '1';
-	activeIndex2= '1';
 
    	/* Computed */
 
-   	/* Data */
+	/* Data */
+	activeIndex = '1';
 
    	/* Methods */
   	handleOpen(key, keyPath) {
@@ -88,8 +86,7 @@ export default class NavigationMenu extends Vue {
 				border-bottom: none;
 				border-top: 2px solid #3a1f5d;
 			}
-			.icon {
-				font-size: 22px;
+			.el-icon {
 				margin-bottom: 3px;
 				color: $blue;
 			}

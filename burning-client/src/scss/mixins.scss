@@ -58,6 +58,12 @@ a.no-dec {
 }
 
 // Icons
+.el-icon {
+    
+    &.el-icon-sm {
+        font-size: 22px;
+    }
+}
 .icon-trending {
     width: 2rem;
     height: 2rem;

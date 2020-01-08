@@ -5,7 +5,7 @@
 			:key="route.id"
          class="route-summary-wrapper"
 		>
-         <route-summary-card :route="route" @update-votes="updateUserVote" />
+         <route-summary-card v-if="route" :route="route" @update-votes="updateUserVote" />
 		</div>
       <add-button @click.native="addNewRoute" />
    </div>
