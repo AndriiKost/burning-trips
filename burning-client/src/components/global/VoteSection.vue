@@ -1,5 +1,5 @@
 <template>
-    <div class="vote-section flex-row space-between">
+    <div class="vote-section flex flex-row space-between">
         <div class="icon-wrapper relative">
             <div 
                 v-if="trending" 

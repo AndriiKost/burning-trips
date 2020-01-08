@@ -9,7 +9,7 @@
 					<h2>{{ stop.name }}</h2>
 					<p>{{ stop.content }}</p>
 				</a>
-				<div class="bottom clearfix flex-row space-between">
+				<div class="bottom clearfix flex flex-row space-between">
 					<vote-section 
 						:total-votes="totalVotes" 
 						:trending="stop.trending"

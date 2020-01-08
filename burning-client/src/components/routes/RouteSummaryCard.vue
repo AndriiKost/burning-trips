@@ -9,7 +9,7 @@
 					<h2>{{ route.name }}</h2>
 					<p>{{ route.content }}</p>
 				</a>
-				<div class="bottom clearfix flex-row space-between">
+				<div class="bottom clearfix flex flex-row space-between">
 					<vote-section 
 						:total-votes="totalVotes" 
 						:trending="route.trending"
