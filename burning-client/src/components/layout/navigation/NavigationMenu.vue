@@ -2,14 +2,35 @@
   <div class="menu-wrapper">
 	<el-menu 
 	  :default-active="activeIndex" 
-	  class="nav-menu" 
+	  class="nav-menu flex flex-row space-between" 
 	  mode="horizontal" 
 	  @select="handleSelect"
 	  router
 	>
-	  <el-menu-item index="stops">Stops</el-menu-item>
-	  <el-menu-item index="routes">Routes</el-menu-item>
-	  <el-menu-item index="profile">Profile</el-menu-item>
+		<el-menu-item index="stops">
+			<div class="flex flex-center flex-column">
+				<i class="icon el-icon-place"></i>
+				<span class="nav-label">Stops</span>
+			</div>
+		</el-menu-item>
+		<el-menu-item index="routes">
+			<div class="flex flex-center flex-column">
+				<i class="icon el-icon-guide"></i>
+				<span class="nav-label">Routes</span>
+			</div>
+		</el-menu-item>
+		<el-menu-item index="account">
+			<div class="flex flex-center flex-column">
+				<i class="icon el-icon-user"></i>
+				<span class="nav-label">Account</span>
+			</div>
+		</el-menu-item>
+		<el-menu-item index="stories">
+			<div class="flex flex-center flex-column">
+				<i class="icon el-icon-reading"></i>
+				<span class="nav-label">Stories</span>
+			</div>
+		</el-menu-item>
 	</el-menu>
   </div>
 </template>
@@ -51,14 +72,33 @@ export default class NavigationMenu extends Vue {
 </script>
 
 <style lang='scss'>
+@import 'src/scss/variables.scss';
 .menu-wrapper {
- position:fixed;
- bottom:0;
- left:0;
- right:0;
-  .el-menu--horizontal > .el-menu-item.is-active {
-	border-bottom: none;
-	border-top: 2px solid #3a1f5d;
-  }
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+  	.el-menu--horizontal {
+
+		.el-menu-item {
+			height: 100%;
+			padding-top: 7px;
+			padding-bottom: 5px;
+			&.is-active {
+				border-bottom: none;
+				border-top: 2px solid #3a1f5d;
+			}
+			.icon {
+				font-size: 22px;
+				margin-bottom: 3px;
+				color: $blue;
+			}
+		}
+  	}
+  	.nav-label {
+		line-height: 12px;
+		font-size: 12px;
+		color: $blue;
+  	}
 }
 </style>

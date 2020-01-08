@@ -33,7 +33,7 @@ export default class AddButton extends Vue {
 	display: block;
 	&.bottom-right {
 		position: fixed;
-		bottom: 1rem;
+		bottom: 4rem;
 		right: 1rem;
 	}
 }

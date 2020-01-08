@@ -1,8 +1,10 @@
+import AccountScreen from '@/components/account/AccountScreen.vue';
 import LoginScreen from '@/components/auth/LoginScreen.vue';
 import RouteScreen from '@/components/routes/RouteScreen.vue';
 import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
 import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
 import StopScreen from '@/components/stops/StopScreen.vue';
+import StoryScreen from '@/components/stories/StoryScreen.vue';
 import Vue from "vue";
 import VueRouter from "vue-router";
 import { loggedInGuard } from './middleware';
@@ -27,6 +29,19 @@ const routes = [
     path: "/stops/:id",
     component: StopDetailsPage,
     name: 'Stop Details',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: '/account',
+    component: AccountScreen,
+    name: 'Account Screen',
+  },
+  {
+    path: '/stories',
+    component: StoryScreen,
+    name: 'Story Screen',
     meta: {
       allowGuest: true
     }

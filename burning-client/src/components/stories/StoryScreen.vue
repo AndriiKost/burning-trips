@@ -1,14 +1,8 @@
 <template>
-    <div>
-        <h1>Account Screen</h1>
+   <div>
+        <h1>Story Screen</h1>
         <h2>TODO</h2>
-        <!-- <email-change-section
-            
-        />
-        <restore-password-section
-
-        /> -->
-    </div>
+   </div>
 </template>
 
 <script lang="ts">
@@ -16,9 +10,9 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 
 @Component({
-   name: 'AccountScreen'
+   name: 'StoryScreen'
 })
-export default class AccountScreen extends Vue {
+export default class StoryScreen extends Vue {
 
    /* Props */
 
