@@ -31,7 +31,6 @@ func (route *Route) Prepare() {
 	route.CreatedAt = time.Now()
 	route.UpdatedAt = time.Now()
 	route.Votes = []RouteVote{}
-	route.Stops = []Stop{}
 }
 
 func (route *Route) Validate() error {
