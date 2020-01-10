@@ -65,6 +65,31 @@ var stops = []models.Stop{
 	},
 }
 
+var stories = []models.Story{
+	models.Story{
+		Title:    "Some new Story",
+		Content:  "<p>Some html here</p>",
+		ImageUrl: "https://vuejsexamples.com/wysiwyg-editor-for-vuetify-component-simplifies-integration-tiptap-with-vuetify/",
+	},
+	models.Story{
+		Title:    "Some new Story 2",
+		Content:  "<p>Some html here 2 blah</p>",
+		ImageUrl: "https://vuejsexamples.com/wysiwyg-editor-for-vuetify-component-simplifies-integration-tiptap-with-vuetify/",
+	},
+}
+
+var storyVotes = []models.StoryVote{
+	models.StoryVote{
+		Count: 15,
+	},
+	models.StoryVote{
+		Count: 10,
+	},
+	models.StoryVote{
+		Count: 9,
+	},
+}
+
 var stopVotes = []models.StopVote{
 	models.StopVote{
 		Count: 15,
@@ -104,11 +129,11 @@ var routeVotes = []models.RouteVote{
 
 func Load(db *gorm.DB) {
 
-	err := db.Debug().DropTableIfExists(&models.StopVote{}, &models.RouteVote{}, &models.Stop{}, &models.Route{}, &models.User{}).Error
+	err := db.Debug().DropTableIfExists(&models.StopVote{}, &models.RouteVote{}, &models.StoryVote{}, &models.Stop{}, &models.Route{}, &models.Story{}, &models.User{}).Error
 	if err != nil {
 		log.Fatalf("cannot drop table: %v", err)
 	}
-	err = db.Debug().AutoMigrate(&models.User{}, &models.Stop{}, &models.StopVote{}, &models.Route{}, &models.RouteVote{}).Error
+	err = db.Debug().AutoMigrate(&models.User{}, &models.Stop{}, &models.StopVote{}, &models.Route{}, &models.RouteVote{}, &models.Story{}, &models.StoryVote{}).Error
 	if err != nil {
 		log.Fatalf("cannot migrate table: %v", err)
 	}
@@ -124,6 +149,11 @@ func Load(db *gorm.DB) {
 	}
 
 	err = db.Debug().Model(&models.Route{}).AddForeignKey("author_id", "users(id)", "cascade", "cascade").Error
+	if err != nil {
+		log.Fatalf("attaching foreign key error: %v", err)
+	}
+
+	err = db.Debug().Model(&models.Story{}).AddForeignKey("author_id", "users(id)", "cascade", "cascade").Error
 	if err != nil {
 		log.Fatalf("attaching foreign key error: %v", err)
 	}
@@ -146,6 +176,16 @@ func Load(db *gorm.DB) {
 	err = db.Debug().Model(&models.RouteVote{}).AddForeignKey("route_id", "routes(id)", "cascade", "cascade").Error
 	if err != nil {
 		log.Fatalf("attaching foreign route_id routes(id) -> key error: %v", err)
+	}
+
+	err = db.Debug().Model(&models.StoryVote{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade").Error
+	if err != nil {
+		log.Fatalf("attaching foreign key user_id -> users(id) error: %v", err)
+	}
+
+	err = db.Debug().Model(&models.StoryVote{}).AddForeignKey("story_id", "stories(id)", "cascade", "cascade").Error
+	if err != nil {
+		log.Fatalf("attaching foreign story_id stories(id) -> key error: %v", err)
 	}
 
 	for i, _ := range users {
@@ -186,6 +226,24 @@ func Load(db *gorm.DB) {
 		err = db.Debug().Model(&models.RouteVote{}).Create(&routeVotes[i]).Error
 		if err != nil {
 			log.Fatalf("cannot seed route votes table: %v", err)
+		}
+	}
+
+	for i, _ := range stories {
+		stories[i].AuthorID = users[i].ID
+		err = db.Debug().Model(&models.Story{}).Create(&stories[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed stories tavle %v", err)
+		}
+
+		for j, _ := range storyVotes {
+			storyVotes[j].UserID = users[i].ID
+			storyVotes[j].StoryID = routes[i].ID
+		}
+
+		err = db.Debug().Model(&models.StoryVote{}).Create(&storyVotes[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed story votes table: %v", err)
 		}
 	}
 }

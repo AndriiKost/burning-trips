@@ -1,4 +1,4 @@
-import { IRouteVote, IStopVote } from '@/types/Vote';
+import { IRouteVote, IStopVote, IStoryVote } from '@/types/Vote';
 import BaseHttpService from './BaseHttpService';
 
 class VoteService extends BaseHttpService {
@@ -11,6 +11,12 @@ class VoteService extends BaseHttpService {
 
     async updateRouteVote(vote: IRouteVote) {
         const res = await this.post<IRouteVote>('/votes/route-votes', vote);
+        if (!res.ok || !res) return null
+        return res.result;
+    }
+
+    async updateStoryVote(vote: IStoryVote) {
+        const res = await this.post<IStoryVote>('/votes/story-votes', vote);
         if (!res.ok || !res) return null
         return res.result;
     }

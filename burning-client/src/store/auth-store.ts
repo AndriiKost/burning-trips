@@ -1,14 +1,13 @@
-import Cookies from 'js-cookie';
-import { make, commit } from 'vuex-pathify';
-import { IUser } from '../types/User';
-import _svc from '@/services/AuthService';
-import { Store } from 'vuex';
-import { ISignInRequest } from 'http';
 import config from '@/config';
-import authService from '@/services/AuthService';
+import { default as authService, default as _svc } from '@/services/AuthService';
+import { ISignInRequest } from 'http';
+import Cookies from 'js-cookie';
+import { Store } from 'vuex';
+import { make } from 'vuex-pathify';
+import { IUser } from '../types/User';
 
 class AuthStore {
-    loggedInUser: IUser;
+    loggedInUser: IUser = null;
 }
 
 const state = new AuthStore();

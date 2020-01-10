@@ -16,3 +16,7 @@ export interface IStopVote extends IVote {
 export interface IRouteVote extends IVote {
     routeId: number;
 }
+
+export interface IStoryVote extends IVote {
+    storyId: number;
+}
