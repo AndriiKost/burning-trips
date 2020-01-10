@@ -1,9 +1,11 @@
 <template>
    <div>
         <h1>Story Screen</h1>
-        <div v-for="story in stories" :key="story.id">
-           {{ story.title }}
-        </div>
+         <story-summary-card 
+            :story="story" 
+            v-for="story in stories" 
+            :key="story.id"
+         />
    </div>
 </template>
 
@@ -12,9 +14,13 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { IStory } from '@/types/Story';
 import { Sync, Get } from 'vuex-pathify';
+import StorySummaryCard from './StorySummaryCard.vue';
 
 @Component({
-   name: 'StoryScreen'
+   name: 'StoryScreen',
+   components: {
+      StorySummaryCard
+   }
 })
 export default class StoryScreen extends Vue {
 
