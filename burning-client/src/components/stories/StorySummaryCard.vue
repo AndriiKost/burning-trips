@@ -5,7 +5,8 @@
        </div>
        <div class="content">
            <h4>{{ story.title }}</h4>
-           <p>{{ story.description }}</p>
+           <!-- <p>{{ story.content }}</p> -->
+           <div v-html="story.content"></div>
        </div>
         <vote-section  
             :total-votes="totalVotes" 
@@ -52,6 +53,7 @@ export default class StorySummaryCard extends Vue {
     }
     
     get curUserVoteCount(): Number {
+        
 		return this.curUserVote ? this.curUserVote.count : 0;
 	}
 

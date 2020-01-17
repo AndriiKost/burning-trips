@@ -4,6 +4,7 @@ import RouteScreen from '@/components/routes/RouteScreen.vue';
 import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
 import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
 import StopScreen from '@/components/stops/StopScreen.vue';
+import StoryDetails from '@/components/stories/StoryDetails.vue';
 import StoryScreen from '@/components/stories/StoryScreen.vue';
 import Vue from "vue";
 import VueRouter from "vue-router";
@@ -42,6 +43,14 @@ const routes = [
     path: '/stories',
     component: StoryScreen,
     name: 'Story Screen',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: '/story/details/:storyId',
+    component: StoryDetails,
+    name: 'Story Details',
     meta: {
       allowGuest: true
     }
