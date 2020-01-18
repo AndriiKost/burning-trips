@@ -1,20 +1,37 @@
 <template>
    <div class="story-summary-wrapper">
-       <div>
-           <img :src="story.imageUrl" :alt="`${story.title} image`">
-       </div>
-       <div class="content">
-           <h4>{{ story.title }}</h4>
-           <!-- <p>{{ story.content }}</p> -->
-           <div v-html="story.content"></div>
-       </div>
-        <vote-section  
-            :total-votes="totalVotes" 
-            :trending="story.trending"
-            :cur-user-votes="curUserVoteCount"
-            @save-votes="saveVotes"
-        />
-   </div>
+        <el-card :body-style="{ padding: '0px' }" shadow="always">
+            <a class="image-wrapper no-dec" :href="`/story/${story.id}`" @click.prevent="goToStoryDetails">
+                <div class="flex flex-row flex-wrap">
+                    <img 
+                        :src="story.imageUrl" 
+                        :alt="`${story.title} image`"
+                    />
+                </div>
+            </a>
+            <div class="content-wrapper relative">
+                <a class="content no-dec" href="#">
+                    <h2>{{ story.title }}</h2>
+                    <p>{{ briefContent }}</p>
+                    <div class="stop-count-section" v-if="story.stops && story.stops.length">
+                        <i class="el-icon el-icon-sm el-icon-place" />
+                        <span v-if="story.stops">{{ story.stops.length }} Featured Stops</span>
+                    </div>
+                </a>
+                <div class="bottom clearfix flex flex-row space-between">
+                    <vote-section  
+                        :total-votes="totalVotes" 
+                        :trending="story.trending"
+                        :cur-user-votes="curUserVoteCount"
+                        @save-votes="saveVotes"
+                    />
+                    <el-button type="text" class="button-primary">
+                        Read More
+                    </el-button>
+                </div>
+            </div>
+        </el-card>
+    </div>
 </template>
 
 <script lang="ts">
@@ -25,6 +42,7 @@ import VoteSection from '@/components/global/VoteSection.vue';
 import { IStoryVote } from '../../types/Vote';
 import { Get } from 'vuex-pathify';
 import { IUser } from '../../types/User';
+import { stripHtml } from '@/utils/functions';
 
 @Component({
    name: 'StorySummaryCard',
@@ -37,6 +55,9 @@ export default class StorySummaryCard extends Vue {
    /* Props */
    @Prop({ type: Object as () => IStory, required: true })
    readonly story: IStory;
+
+   @Prop({ type: Number, default: 150 })
+   readonly briefContentLimit: number;
 
    /* Computed */
 	@Get('auth/loggedInUser')
@@ -53,13 +74,21 @@ export default class StorySummaryCard extends Vue {
     }
     
     get curUserVoteCount(): Number {
-        
 		return this.curUserVote ? this.curUserVote.count : 0;
-	}
+    }
+    
+    get briefContent(): string {
+        const contentString: string = stripHtml(this.story.content);
+        const briefContent = contentString.substring(0, this.briefContentLimit);
+        return `${briefContent}...`;
+    }
 
    /* Data */
 
    /* Methods */
+   async goToStoryDetails() {
+       await this.$router.push(`/story/details/${this.story.id}`);
+   }
 
    async saveVotes() {
     //    TODO

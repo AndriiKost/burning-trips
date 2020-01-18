@@ -50,7 +50,7 @@ const routes = [
   {
     path: '/story/details/:storyId',
     component: StoryDetails,
-    name: 'Story Details',
+    name: 'story-details',
     meta: {
       allowGuest: true
     }

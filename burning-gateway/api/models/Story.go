@@ -21,6 +21,14 @@ type Story struct {
 	UpdatedAt time.Time   `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
+// TODO: Store Story Content as  []Section{}
+type Section struct {
+	ID        uint64 `gorm:"primary_key;auto_increment" json:"id"`
+	ImageUrl  string `gorm:"size:255" json:"imageUrl"`
+	Title     string `gorm:"size:255" json:"title"`
+	Paragraph string `gorm:"size:max;non null;" json:"content"`
+}
+
 func (story *Story) Prepare() {
 	story.ID = 0
 	story.ImageUrl = html.EscapeString(strings.TrimSpace(story.ImageUrl))

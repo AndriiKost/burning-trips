@@ -4,12 +4,12 @@
             <h1>{{ story.title }}</h1>
             <div v-html="story.content"></div>
         </div>
-        <!-- <vote-section  
+        <vote-section  
             :total-votes="totalVotes" 
             :trending="story.trending"
             :cur-user-votes="curUserVoteCount"
             @save-votes="saveVotes"
-        /> -->
+        />
     </div>
 </template>
 

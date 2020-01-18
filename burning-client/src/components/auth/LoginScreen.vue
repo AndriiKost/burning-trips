@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="margin-top: 3rem;padding-right: 1rem;">
 		<el-form 
 			:model="userToSign" 
 			:rules="rules" 
@@ -11,7 +11,7 @@
 				<el-input v-model="userToSign.email"></el-input>
 			</el-form-item>
             <el-form-item label="Password" prop="password">
-				<el-input v-model="userToSign.password"></el-input>
+				<el-input v-model="userToSign.password" type="password"></el-input>
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" @click="signIn">
