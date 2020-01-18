@@ -25,7 +25,7 @@
 						:total-votes="totalVotes" 
 						:trending="route.trending"
 						:cur-user-votes="curUserVoteCount"
-						@save-votes="save"
+						@save-votes="saveVotes"
 					/>
 					<el-button type="text" class="button-primary">
 						Read More
@@ -82,7 +82,7 @@ export default class RouteSummaryCard extends Vue {
 	}
 
 	/* Methods */
-	async save(count: number) {
+	async saveVotes(count: number) {
 		const routeVote: IRouteVote = { userId: this.user.id, count, id: 0, routeId: this.route.id };
 		if (this.curUserVote) {
 			// update existing votes

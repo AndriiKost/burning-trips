@@ -10,7 +10,7 @@
                 </div>
             </a>
             <div class="content-wrapper relative">
-                <a class="content no-dec" href="#">
+                <a class="image-wrapper no-dec" :href="`/story/${story.id}`" @click.prevent="goToStoryDetails">
                     <h2>{{ story.title }}</h2>
                     <p>{{ briefContent }}</p>
                     <div class="stop-count-section" v-if="story.stops && story.stops.length">
@@ -19,13 +19,13 @@
                     </div>
                 </a>
                 <div class="bottom clearfix flex flex-row space-between">
-                    <vote-section  
+                    <!-- <vote-section  
                         :total-votes="totalVotes" 
                         :trending="story.trending"
                         :cur-user-votes="curUserVoteCount"
                         @save-votes="saveVotes"
-                    />
-                    <el-button type="text" class="button-primary">
+                    /> -->
+                    <el-button type="text" class="button-primary" @click.prevent="goToStoryDetails">
                         Read More
                     </el-button>
                 </div>
@@ -90,9 +90,22 @@ export default class StorySummaryCard extends Vue {
        await this.$router.push(`/story/details/${this.story.id}`);
    }
 
-   async saveVotes() {
-    //    TODO
-   }
+	/* Methods */
+	async saveVotes(count: number) {
+        if (!this.user) this.$router.push('/login');
+		const storyVote: IStoryVote = { 
+            userId: this.user.id, 
+            count, 
+            id: 0, 
+            storyId: this.story.id 
+        };
+		if (this.curUserVote) {
+			// update existing votes
+			storyVote.id = this.curUserVote.id;
+		}
+		const result = await this.$store.dispatch('route/updateRouteVote', routeVote);
+		return this.$emit('update-votes', result);
+	}
 
    /* Lifecycle Hooks */
 

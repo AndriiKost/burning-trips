@@ -1,11 +1,10 @@
 <template>
    <div>
-        <h1>Story Screen</h1>
-         <story-summary-card 
-            :story="story" 
-            v-for="story in stories" 
-            :key="story.id"
-         />
+      <story-summary-card 
+         :story="story" 
+         v-for="story in stories" 
+         :key="story.id"
+      />
    </div>
 </template>
 

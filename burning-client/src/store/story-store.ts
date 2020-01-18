@@ -34,7 +34,7 @@ const actions = {
         return await storyService.getStory(id);
     },
 
-    async updateStoryVote({ commit }: Store<StoryStore>, vote: IStoryVote) {
+    async updateStoryVote(_: Store<StoryStore>, vote: IStoryVote) {
         return await voteService.updateStoryVote(vote);
     }
 }

@@ -7,7 +7,7 @@
       </div>
     </section>
     <router-view />
-    <navigation-menu />
+    <!-- <navigation-menu /> -->
   </div>
 </template>
 
