@@ -8,6 +8,7 @@
     </section>
     <router-view />
     <!-- <navigation-menu /> -->
+    <app-footer />
   </div>
 </template>
 
@@ -15,11 +16,13 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import NavigationMenu from './navigation/NavigationMenu.vue';
+import AppFooter from './AppFooter.vue';
 
 @Component({
    name: 'AppContent',
    components: {
-      NavigationMenu
+      NavigationMenu,
+      AppFooter
    }
 })
 export default class AppContent extends Vue {
@@ -35,11 +38,18 @@ export default class AppContent extends Vue {
 
 <style lang='scss'>
 @import 'src/scss/variables.scss';
+@import 'src/scss/mixins.scss';
+@import 'src/scss/global.scss';
+html {
+    position: relative;
+    min-height: 100%;
+}
 body {
   height: 100%;
   padding: 0;
-  margin: 0;
+   margin: 0 0 3rem; /* bottom = footer height */
 }
+
 #header {
   border-bottom: 2px solid $blue;
   img {

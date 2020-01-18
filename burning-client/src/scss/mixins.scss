@@ -1,4 +1,40 @@
-// Global styles
+/*==========================================
+ === Media Queries
+/==========================================*/
+
+@mixin desktop() {
+    @media only screen and (min-width: 1200px) {
+        @content;
+    }
+}
+
+@mixin tablet() {
+    @media only screen and (min-width: 1199px) {
+        @content;
+    }
+}
+
+@mixin mobile() {
+    @media only screen and (min-width: 767px) {
+        @content;
+    }
+}
+
+/*==========================================
+ === Colors
+/==========================================*/
+@function lighten($color, $percentage) {
+    @return scale-color($color, $lightness: $percentage);
+}
+
+@function darken($color, $percentage) {
+    @return scale-color($color, $lightness: $percentage * -1);
+}
+
+/*==========================================
+ === Global styles
+/==========================================*/
+
 html, body {
     overflow-x: hidden;
     font-family: 'Lato', sans-serif;

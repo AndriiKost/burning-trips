@@ -69,7 +69,6 @@ export default class VoteSection extends Vue {
 </script>
 
 <style lang='scss' scoped>
-@import 'src/scss/variables.scss';
 .vote-section {
     .icon-btn {
         color: darken($red, 10%);
