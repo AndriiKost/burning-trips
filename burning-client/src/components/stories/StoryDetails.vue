@@ -1,5 +1,5 @@
 <template>
-    <div v-if="story">
+    <div v-if="story" class="story-content-wrapper">
         <div class="story-content">
             <h1>{{ story.title }}</h1>
             <div v-html="story.content"></div>
@@ -46,24 +46,27 @@ export default class StoryDetails extends Vue {
 </script>
 
 <style lang='scss'>
-.story-content {
-    h1 {
-        font-size: 2rem;
-        margin: 0 0 2rem 0;
-    }
-    h2 {
-        margin: 2rem 0 .5rem 0;
-        color: rgba(0, 0, 0, 0.8);
-        font-size: 1.8rem;
-    }
-    p {
-        color: rgba(0, 0, 0, 0.6);
-        font: 1.6rem;
-    }
-    img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
+.story-content-wrapper {
+    margin: 3rem 1.5rem;
+    .story-content {
+        h1 {
+            font-size: 2rem;
+            margin: 0 0 2rem 0;
+        }
+        h2 {
+            margin: 2rem 0 .5rem 0;
+            color: rgba(0, 0, 0, 0.8);
+            font-size: 1.8rem;
+        }
+        p {
+            color: rgba(0, 0, 0, 0.6);
+            font: 1.6rem;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
     }
 }
 </style>

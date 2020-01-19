@@ -11,7 +11,7 @@ import (
 type Story struct {
 	ID        uint64      `gorm:"primary_key;auto_increment" json:"id"`
 	ImageUrl  string      `gorm:"size:255;not null;" json:"imageUrl"`
-	Title     string      `gorm:"size:255;not null;unique" json:"title"`
+	Title     string      `gorm:"size:255;not null;" json:"title"`
 	Content   string      `gorm:"size:max;not null;" json:"content"`
 	Author    User        `json:"author"`
 	Votes     []StoryVote `json:"votes"`

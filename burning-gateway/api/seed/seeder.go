@@ -114,7 +114,7 @@ var stories = []models.Story{
 		ImageUrl: "https://vuejsexamples.com/wysiwyg-editor-for-vuetify-component-simplifies-integration-tiptap-with-vuetify/",
 	},
 	models.Story{
-		Title: "Top 5 Places To Visit in Prague",
+		Title: "Some Othere title",
 		Content: `
 		<p>The largest city and the capital in the Czech Republic, Prague is known as one of the most historic and picturesque cities in Europe. This is where a thousand years of history is still breathing perfectly, where unique architectural styles meet in ancient medieval streets to create a picture that is simply unforgettable. Prague is not only one of the most visited destinations in the continent of Europe but the whole world. Let’s focus on top 5 places that will help you to capture the essence of Prague!</p>
 		
