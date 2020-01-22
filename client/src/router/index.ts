@@ -1,3 +1,4 @@
+import EditStoryScreen from '@/components/stories/EditStoryScreen.vue';
 import StoryDetails from '@/components/stories/StoryDetails.vue';
 import StoryScreen from '@/components/stories/StoryScreen.vue';
 import Vue from "vue";
@@ -44,6 +45,14 @@ const routes = [
     path: '/story/details/:storyId',
     component: StoryDetails,
     name: 'story-details',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: '/story/edit/:storyId',
+    component: EditStoryScreen,
+    name: 'story-edit',
     meta: {
       allowGuest: true
     }

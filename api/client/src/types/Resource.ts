@@ -1,1 +1,0 @@
-export type ResourceType = 'Story' | 'Stop' | 'Region';

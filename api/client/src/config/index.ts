@@ -1,7 +1,0 @@
-export default {    
-    API_URL: process.env.VUE_APP_API_URL,
-    BASE_URL: process.env.VUE_APP_BASE_URL,
-    JWT_NAME: process.env.VUE_APP_JWT_NAME,
-    GOOGLE_PLACES_API: process.env.VUE_APP_GOOGLE_PLACES_API,
-    AWS_LAMBDA_GETSIGNEDURL_ENDPOINT: process.env.VUE_APP_AWS_LAMBDA_GETSIGNEDURL_ENDPOINT,
-}

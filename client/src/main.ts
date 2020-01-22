@@ -1,4 +1,5 @@
 import VoteSection from '@/components/global/VoteSection.vue';
+import CKEditor from '@ckeditor/ckeditor5-vue';
 import ElementUI from 'element-ui';
 import Vue from "vue";
 import AppContent from './components/layout/AppContent.vue';
@@ -8,6 +9,7 @@ import './scss/global.scss';
 import store from './store';
 
 Vue.component('vote-section', VoteSection);
+Vue.use(CKEditor);
 
 Vue.use(ElementUI);
 
