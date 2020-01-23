@@ -40,8 +40,9 @@ func (server *Server) Initialize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, D
 }
 
 func (server *Server) Run(addr string) {
+	fmt.Printf("New log##")
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080"},
+		AllowedOrigins:   []string{"http://192.168.1.219:8080"},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS", "PUT"},
 		AllowCredentials: true,
 		Debug:            true,

@@ -18,11 +18,13 @@ services:
     container_name: burning_client
     build: ./client
     ports:
-      - 8080:8080
+      - 8080:80
 
   burning-postgres:
     image: postgres:latest
     container_name: burning_db
+    env_file:
+      - ./.env
     environment:
       - POSTGRES_USER=${DB_USER}  
       - POSTGRES_PASSWORD=${DB_PASSWORD}
