@@ -1,10 +1,12 @@
 <template>
-   <div>
-      <story-summary-card 
-         :story="story" 
+   <div class="story-screen-wrapper">
+      <div
          v-for="story in stories" 
          :key="story.id"
-      />
+         class="ssc-wrapper"
+      >
+         <story-summary-card :story="story" />
+      </div>
    </div>
 </template>
 
@@ -44,6 +46,10 @@ export default class StoryScreen extends Vue {
 }
 </script>
 
-<style lang='scss' scoped>
-
+<style lang='scss'>
+.story-screen-wrapper {
+   .ssc-wrapper {
+      margin-top: 2rem;
+   }
+}
 </style>

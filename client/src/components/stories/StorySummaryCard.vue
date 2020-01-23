@@ -1,6 +1,6 @@
 <template>
-   <div class="story-summary-wrapper">
-        <el-card :body-style="{ padding: '0px' }" shadow="always">
+    <el-card :body-style="{ padding: '0px' }" shadow="always">
+        <div class="ss-card">
             <a class="image-wrapper no-dec" :href="`/story/${story.id}`" @click.prevent="goToStoryDetails">
                 <div class="flex flex-row flex-wrap">
                     <img 
@@ -30,8 +30,8 @@
                     </el-button>
                 </div>
             </div>
-        </el-card>
-    </div>
+        </div>
+    </el-card>
 </template>
 
 <script lang="ts">
@@ -112,6 +112,8 @@ export default class StorySummaryCard extends Vue {
 }
 </script>
 
-<style lang='scss' scoped>
-
+<style lang='scss'>
+.ss-card {
+    padding: 1rem;
+}
 </style>

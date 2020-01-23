@@ -34,7 +34,7 @@ const routes = [
   //   name: 'Account Screen',
   // },
   {
-    path: '/stories',
+    path: '/',
     component: StoryScreen,
     name: 'Story Screen',
     meta: {
