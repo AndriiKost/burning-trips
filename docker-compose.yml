@@ -1,54 +1,61 @@
-version: "3"
-
+version: '3'
 services:
-
-  # Nginx reverse proxy
-  burning-nginx:
-    image: nginx:latest
-    depends_on: 
-      - burning-client
-      - burning-web-api
+  app:
+    container_name: burning_app
+    build: ./api
+    ports: 
+      - 8081:8081
+    restart: on-failure
     volumes:
-      - ./burning-nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./burning-nginx/error.log:/var/log/nginx/error.log
-      - ./burning-nginx/cache:/etc/nginx/cache
-    ports:
-      - 80:80
-      - 443:443
-    restart: always
-
+      - api:/usr/src/app/
+    depends_on:
+      - burning-postgres
+    networks:
+      - burning-network
+      
   # Vue App
-  burning-client:
-    image: burning-client
-    build:
-      context: ./burning-client
+  client:
+    container_name: burning_client
+    build: ./client
     ports:
       - 8080:80
 
-  # Web Api
-  burning-web-api:
-    image: burning-web-api
-    build: 
-      context: burning-web-api
-    depends_on:
-      - burning-database
+  burning-postgres:
+    image: postgres:latest
+    container_name: burning_db
     env_file:
-      - ./burning-web-api/.env.production
+      - ./.env
+    environment:
+      - POSTGRES_USER=${DB_USER}  
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST} 
     ports:
-      - 8081:8081
-    # command: bash -c "./wait-for-ut.sh burning-database:27017 -- sh start.sh"
-
-
-  # MongoDB
-  burning-database:
-    image: mongo
-    env_file:
-      - ./burning-database/vars.env
-    ports:
-      - '27017-27019:27017-27019'
+      - '5432:5432'
     volumes:
-      - ./burning-database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./burning-database:/data/db
+      - burning_db:/var/lib/postgresql/data
+    networks:
+      - burning-network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    #   - ./burning-nginx/error.log:/var/log/nginx/error.log
+    #   - ./burning-nginx/cache:/etc/nginx/cache
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - app
+      - client
+    restart: always
 
 volumes:
-  burning-database:
+  api:
+  burning_db:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  burning-network:
+    driver: bridge
