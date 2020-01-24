@@ -33,7 +33,7 @@ func (story *Story) Prepare() {
 	story.ID = 0
 	story.ImageUrl = html.EscapeString(strings.TrimSpace(story.ImageUrl))
 	story.Title = html.EscapeString(strings.TrimSpace(story.Title))
-	story.Content = html.EscapeString(strings.TrimSpace(story.Content))
+	story.Content = strings.TrimSpace(story.Content)
 	story.Author = User{}
 	story.Stops = []Stop{}
 	story.Votes = []StoryVote{}

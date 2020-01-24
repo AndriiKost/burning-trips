@@ -1,8 +1,11 @@
+import LoginScreen from '@/components/auth/LoginScreen.vue';
+import CreateStoryScreen from '@/components/stories/CreateStoryScreen.vue';
 import EditStoryScreen from '@/components/stories/EditStoryScreen.vue';
 import StoryDetails from '@/components/stories/StoryDetails.vue';
 import StoryScreen from '@/components/stories/StoryScreen.vue';
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { loggedInGuard } from './middleware';
 
 Vue.use(VueRouter);
 
@@ -50,6 +53,11 @@ const routes = [
     }
   },
   {
+    path: '/story/create',
+    component: CreateStoryScreen,
+    name: 'story-create'
+  },
+  {
     path: '/story/edit/:storyId',
     component: EditStoryScreen,
     name: 'story-edit',
@@ -73,11 +81,11 @@ const routes = [
   //     allowGuest: true
   //   }
   // },
-  // {
-  //   path: "/login",
-  //   component: LoginScreen,
-  //   name: 'Login'
-  // },
+  {
+    path: "/login",
+    component: LoginScreen,
+    name: 'Login'
+  },
   // {
   //   path: "*",
   //   component: RouteScreen,
@@ -102,6 +110,6 @@ const router = new VueRouter({
   routes
 });
 
-// router.beforeEach(loggedInGuard);
+router.beforeEach(loggedInGuard);
 
 export default router;

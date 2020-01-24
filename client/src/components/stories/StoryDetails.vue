@@ -2,7 +2,10 @@
     <div v-if="story" class="story-content-wrapper">
         <div class="story-content">
             <h1>{{ story.title }}</h1>
-            <div v-html="story.content"></div>
+            <div v-html="storyContent"></div>
+            <!-- <div>
+                {{ story.content }}
+            </div> -->
         </div>
         <!-- <vote-section  
             :total-votes="totalVotes" 
@@ -26,6 +29,11 @@ export default class StoryDetails extends Vue {
    /* Props */
 
    /* Computed */
+   get storyContent() {
+       const contentHtml = this.story.content.trim();
+       console.log(contentHtml);
+       return contentHtml;
+   }
 
    /* Data */
    story: IStory = null;
