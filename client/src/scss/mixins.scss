@@ -47,9 +47,17 @@ h1, h2, h3, h4, h5, h6, p {
 
 a.no-dec {
     text-decoration: none;
+    color: inherit;
 }
 
 // Global classes
+.spacer-sm {
+    margin: 1rem 0;
+}
+
+.spacer-md {
+    margin: 2rem 0;
+}
 
 .flex {
     display: flex;

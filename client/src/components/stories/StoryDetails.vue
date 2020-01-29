@@ -7,19 +7,23 @@
                 {{ story.content }}
             </div> -->
         </div>
-        <!-- <vote-section  
+        <div class="spacer-md"></div>
+        <vote-section  
             :total-votes="totalVotes" 
             :trending="story.trending"
             :cur-user-votes="curUserVoteCount"
             @save-votes="saveVotes"
-        /> -->
+        />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { IStory } from '../../types/Story';
+import { IStory } from '@/types/Story';
+import { IUser } from '@/types/User';
+import { IStoryVote } from '@/types/Vote';
+import { Get } from 'vuex-pathify';
 
 @Component({
    name: 'StoryDetails'
@@ -29,9 +33,25 @@ export default class StoryDetails extends Vue {
    /* Props */
 
    /* Computed */
+   @Get('auth/loggedInUser')
+   user: IUser;
+
+    get totalVotes(): Number {
+		if (!this.story.votes || this.story.votes.length < 1) return 0;
+		return this.story.votes.reduce((acc, cur) => acc += cur.count, 0);
+    }
+    
+    get curUserVote(): IStoryVote {
+        if (!this.user) return null;
+		return this.story.votes.find(v => v.userId === this.user.id) as IStoryVote;
+    }
+    
+    get curUserVoteCount(): Number {
+		return this.curUserVote ? this.curUserVote.count : 0;
+    }
+
    get storyContent() {
        const contentHtml = this.story.content.trim();
-       console.log(contentHtml);
        return contentHtml;
    }
 
@@ -44,6 +64,20 @@ export default class StoryDetails extends Vue {
        const story: IStory = await this.$store.dispatch('story/getStory', storyId);
        this.story = story;
    }
+
+	async saveVotes(count: number) {
+        if (!this.user) this.$router.push('/login');
+        const id = this.curUserVote ? this.curUserVote.id : 0;
+        console.log(this.story);
+		let storyVote: IStoryVote = { 
+            userId: this.user.id, 
+            count, 
+            id,
+            storyId: this.story.id 
+        };
+		const result = await this.$store.dispatch('story/updateStoryVote', storyVote);
+		return this.$emit('update-votes', result);
+	}
 
    /* Lifecycle Hooks */
    created() {

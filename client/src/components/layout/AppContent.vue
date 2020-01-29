@@ -1,13 +1,14 @@
 <template>
 	<div id="app">
 		<section id="header">
-			<div class="flex flex-row">
+			<div class="flex flex-row space-between">
 				<router-link to="/">
 					<div class="flex flex-row">
 						<img src="https://burningbucket.s3.us-east-2.amazonaws.com/logo.png" alt="burning trips logo" />
 						<span>Burning Trips</span>
 					</div>
 				</router-link>
+				<!-- <top-navigation /> -->
 			</div>
 		</section>
 		<section id="content">
@@ -23,19 +24,23 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import NavigationMenu from './navigation/NavigationMenu.vue';
 import AppFooter from './AppFooter.vue';
+import TopNavigation from './navigation/TopNavigation.vue';
 
 @Component({
-	 name: 'AppContent',
-	 components: {
-			NavigationMenu,
-			AppFooter
-	 }
+	name: 'AppContent',
+	components: {
+		NavigationMenu,
+		TopNavigation,
+		AppFooter
+	}
 })
 export default class AppContent extends Vue {
 
 	 /* Props */
 
 	 /* Computed */
+
+	/* Data */
 
 	 /* Lifecycle Hooks */
 

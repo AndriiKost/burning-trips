@@ -20,11 +20,16 @@
 				<el-button type="primary" @click="signIn">
                     Login
                 </el-button>
-				<el-button @click="$router.push('/register')">
+				<!-- <el-button @click="$router.push('/register')">
                     Create Account
-                </el-button>
+                </el-button> -->
 			</el-form-item>
 		</el-form>
+		<p>
+			At this time, account creation is by invites only.
+			If you are interested in participating in BETA, please send an inquiry to 
+			<a href="mailto:inquiry@burningtrips.com">burningtrips@gmail.com</a>.
+		</p>
 	</div>
 </template>
 

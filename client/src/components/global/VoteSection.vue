@@ -1,16 +1,12 @@
 <template>
     <div class="vote-section flex flex-row space-between">
         <div class="icon-wrapper relative">
-            <div 
-                v-if="trending" 
-                class="icon-trending icon-btn inline-block" 
-                @click="handleVote"
-            ></div>
-            <div 
-                v-else 
-                class="icon-camera icon-btn inline-block" 
-                @click="handleVote"
-            ></div>
+            <el-button 
+                circle 
+                @click="handleVote" 
+                icon="el-icon-camera-solid" 
+                style="font-size: 22px;padding: 8px;"
+            ></el-button>
             <transition name="el-fade-in">
                 <span v-show="showUserVotes" class="user-votes bg">
                     +{{ curVotes }}
@@ -71,6 +67,8 @@ export default class VoteSection extends Vue {
 <style lang='scss' scoped>
 @import 'src/scss/variables.scss';
 .vote-section {
+    width: 65px;
+
     .icon-btn {
         // color: darken($red, 10%);
         font-size: 1.75rem;

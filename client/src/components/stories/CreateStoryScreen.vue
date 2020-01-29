@@ -3,10 +3,8 @@
        <h2>
            Create Your Story
        </h2>
-       <p>
-
-       </p>
-		<el-input style="margin-bottom: 1rem;" placeholder="Story Name" v-model="activeStory.title"></el-input>
+		<el-input style="margin-bottom: 1rem;" placeholder="Story Headline" v-model="activeStory.title"></el-input>
+        <el-input style="margin-bottom: 1rem;" placeholder="Main Image Url" v-model="activeStory.imageUrl"></el-input>
 		<ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
         <el-row style="margin-top:2rem;">
             <el-button icon="el-icon-upload" type="primary" @click="createStory">
