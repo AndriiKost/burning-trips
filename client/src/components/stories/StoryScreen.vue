@@ -16,7 +16,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { IStory } from '@/types/Story';
 import { Sync, Get } from 'vuex-pathify';
 import StorySummaryCard from './StorySummaryCard.vue';
-import { IStoryVote } from '../../../../api/client/src/types/Vote';
+import { IStoryVote } from '@/types/Vote';
 
 @Component({
    name: 'StoryScreen',

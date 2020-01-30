@@ -9,8 +9,8 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { IStory } from '@/src/types/Story';
-import { IUser } from '@/src/types/User';
+import { IStory } from '@/types/Story';
+import { IUser } from '@/types/User';
 import { Get } from 'vuex-pathify';
 import Story from '@/models/Story';
 
