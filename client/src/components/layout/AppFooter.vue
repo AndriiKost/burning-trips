@@ -28,8 +28,6 @@ export default class  extends Vue {
 </script>
 
 <style lang='scss'>
-@import 'src/scss/mixins.scss';
-@import 'src/scss/variables.scss';
 #appFooter {
     position: absolute;
     left: 0;

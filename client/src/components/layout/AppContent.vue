@@ -48,9 +48,6 @@ export default class AppContent extends Vue {
 </script>
 
 <style lang='scss'>
-@import 'src/scss/variables.scss';
-@import 'src/scss/mixins.scss';
-@import 'src/scss/global.scss';
 html {
 		position: relative;
 		min-height: 100%;
