@@ -8,6 +8,8 @@ services:
     restart: on-failure
     volumes:
       - api:/usr/src/app/
+    depends_on:
+      - burning-postgres
     networks:
       - burning-network
       
@@ -17,6 +19,23 @@ services:
     build: ./client
     ports:
       - 8080:80
+
+  burning-postgres:
+    image: postgres:latest
+    container_name: burning_db
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_USER=${DB_USER}  
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST} 
+    ports:
+      - '5432:5432'
+    volumes:
+      - burning_db:/var/lib/postgresql/data
+    networks:
+      - burning-network
 
   nginx:
     image: nginx:latest
@@ -34,9 +53,9 @@ services:
 
 volumes:
   api:
+  burning_db:
 
 # Networks to be created to facilitate communication between containers
 networks:
   burning-network:
     driver: bridge
-
