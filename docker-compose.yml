@@ -26,10 +26,10 @@ services:
     env_file:
       - ./.env
     environment:
-      - POSTGRES_USER=${DB_USER}  
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST} 
+      - POSTGRES_USER=andrii_burning  
+      - POSTGRES_PASSWORD=admin_burning
+      - POSTGRES_DB=burning_db
+      - DATABASE_HOST=burning-postgres 
     ports:
       - '5432:5432'
     volumes:

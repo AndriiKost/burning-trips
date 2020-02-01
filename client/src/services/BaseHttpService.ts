@@ -25,7 +25,7 @@ export default class BaseHttpService {
 		try {
 			let res = await fetch(request);
 			response = res as IApiResponse<T>;
-			if (res.ok) response.result = await res.json();
+			if (res && res.ok) response.result = await res.json();
 			else this._handleBadResponse<T>(requestInit, res, options.supressErrors);
 			return response;
 		} catch(err) {
