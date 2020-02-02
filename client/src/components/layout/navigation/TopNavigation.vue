@@ -23,9 +23,9 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 
 @Component({
-   name: ''
+   name: 'TopNavigation'
 })
-export default class  extends Vue {
+export default class TopNavigation extends Vue {
 
    /* Props */
 

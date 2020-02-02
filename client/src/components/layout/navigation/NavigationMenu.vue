@@ -100,7 +100,6 @@ export default class NavigationMenu extends Vue {
 </script>
 
 <style lang='scss'>
-@import 'src/scss/variables.scss';
 .menu-wrapper {
 	position:fixed;
 	bottom:0;
