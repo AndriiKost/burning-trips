@@ -31,7 +31,7 @@ func Run() {
 		os.Getenv("DB_NAME"),
 	)
 
-	seed.Load(server.DB)
+	// seed.Load(server.DB)
 
 	server.Run(":8081")
 
