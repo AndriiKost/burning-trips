@@ -68,7 +68,6 @@ export default class StoryDetails extends Vue {
 	async saveVotes(count: number) {
         if (!this.user) this.$router.push('/login');
         const id = this.curUserVote ? this.curUserVote.id : 0;
-        console.log(this.story);
 		let storyVote: IStoryVote = { 
             userId: this.user.id, 
             count, 
@@ -90,6 +89,9 @@ export default class StoryDetails extends Vue {
 <style lang='scss'>
 .story-content-wrapper {
     margin: 3rem 1.5rem;
+    @include mobile {
+        margin: 3rem .5rem;
+    }
     .story-content {
         h1 {
             font-size: 2rem;
@@ -109,6 +111,13 @@ export default class StoryDetails extends Vue {
             height: auto;
             object-fit: cover;
         }
+
+        .image {
+            width: 100%;
+            margin: 2rem 0;
+            padding: 0;
+        }
+    
     }
 }
 </style>
