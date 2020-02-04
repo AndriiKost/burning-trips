@@ -27,6 +27,7 @@
                         :trending="story.trending"
                         :cur-user-votes="curUserVoteCount"
                         @save-votes="saveVotes"
+                        icon="el-icon-reading"
                     />
                     <el-button type="text" class="button-primary" @click.prevent="goToStoryDetails">
                         Read More

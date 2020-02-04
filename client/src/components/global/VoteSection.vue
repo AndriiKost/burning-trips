@@ -4,7 +4,7 @@
             <el-button 
                 circle 
                 @click="handleVote" 
-                icon="el-icon-camera-solid" 
+                :icon="icon" 
                 style="font-size: 28px;padding: 8px;"
             ></el-button>
             <transition name="el-fade-in">
@@ -40,6 +40,9 @@ export default class VoteSection extends Vue {
 
     @Prop({ type: Number, default: 0 })
     readonly curUserVotes: number;
+
+    @Prop({ type: String, default: 'el-icon-camera-solid' })
+    readonly icon: string;
 
     /* Computed */
 

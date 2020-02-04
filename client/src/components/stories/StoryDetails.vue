@@ -13,6 +13,7 @@
             :trending="story.trending"
             :cur-user-votes="curUserVoteCount"
             @save-votes="saveVotes"
+            icon="el-icon-reading"
         />
     </div>
 </template>
@@ -88,24 +89,29 @@ export default class StoryDetails extends Vue {
 
 <style lang='scss'>
 .story-content-wrapper {
-    margin: 3rem 1.5rem;
-    @include mobile {
-        margin: 3rem .5rem;
-    }
+
     .story-content {
+        @include mobile {
+            margin: 3rem 1rem 3rem 1rem;
+        }
+
         h1 {
             font-size: 2rem;
             margin: 0 0 2rem 0;
         }
+
         h2 {
-            margin: 2rem 0 .5rem 0;
+            margin: 2rem 0 1rem 0;
             color: rgba(0, 0, 0, 0.8);
             font-size: 1.8rem;
         }
+
         p {
-            color: rgba(0, 0, 0, 0.6);
-            font: 1.6rem;
+            color: lighten($dark-grey, 15%);
+            font-size: 1.1rem;
+            line-height: 1.8rem;
         }
+
         img {
             width: 100%;
             height: auto;
