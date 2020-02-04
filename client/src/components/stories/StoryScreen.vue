@@ -1,5 +1,5 @@
 <template>
-   <div class="story-screen-wrapper">
+   <div class="story-screen-wrapper container">
       <div
          v-for="story in stories" 
          :key="story.id"
@@ -59,6 +59,11 @@ export default class StoryScreen extends Vue {
 .story-screen-wrapper {
    .ssc-wrapper {
       margin-top: 2rem;
+      @include desktop {
+         max-width: 750px;
+         margin-left: auto;
+         margin-right: auto;
+      }
    }
 }
 </style>

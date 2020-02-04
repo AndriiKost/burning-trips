@@ -79,10 +79,6 @@ body {
 	}
 }
 #content {
-	// margin: 3rem 1.5rem;
 	margin: 1.5rem .75rem;
-	@include mobile {
-		margin: 1.5rem 75rem;
-	};
 }
 </style>

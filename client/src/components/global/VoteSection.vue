@@ -86,7 +86,7 @@ export default class VoteSection extends Vue {
         font-size: .85rem;
         width: 35px;
         height: 35px;
-        background: lighten($dark-grey, 20%);
+        background: lighten($dark-grey, 30%);
         color: #fff;
     }
 }
