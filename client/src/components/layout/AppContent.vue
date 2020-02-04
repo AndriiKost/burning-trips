@@ -49,8 +49,8 @@ export default class AppContent extends Vue {
 
 <style lang='scss'>
 html {
-		position: relative;
-		min-height: 100%;
+	position: relative;
+	min-height: 100%;
 }
 body {
 	height: 100%;
@@ -79,6 +79,10 @@ body {
 	}
 }
 #content {
-	margin: 3rem 1.5rem;
+	// margin: 3rem 1.5rem;
+	margin: 1.5rem .75rem;
+	@include mobile {
+		margin: 1.5rem 75rem;
+	};
 }
 </style>

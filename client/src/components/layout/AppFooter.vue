@@ -36,7 +36,7 @@ export default class  extends Vue {
     width: 100%;
     background: rgba(238, 238, 238, 0.795);
     box-shadow: 0px 0px 9px 3px rgba(104, 103, 103, 0.25);
-    padding: .5rem 1rem;
+    padding: .5rem 0;
 
     p {
         &.main {
