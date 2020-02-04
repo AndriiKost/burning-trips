@@ -1,5 +1,5 @@
 <template>
-    <div v-if="story" class="story-content-wrapper">
+    <div v-if="story" class="story-content-wrapper container">
         <div class="story-content">
             <h1>{{ story.title }}</h1>
             <div v-html="storyContent"></div>

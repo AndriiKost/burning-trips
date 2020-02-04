@@ -12,6 +12,7 @@ import (
 	"github.com/andriikost/burning-gateway/api/models"
 	"github.com/andriikost/burning-gateway/api/responses"
 	"github.com/andriikost/burning-gateway/api/utils/formaterror"
+	"mvdan.cc/xurls/v2"
 	"github.com/gorilla/mux"
 )
 
@@ -43,6 +44,15 @@ func (server *Server) CreateStory(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
 		return
 	}
+
+	if len(story.ImageUrl) < 1 {
+		rxStrict := xurls.Strict()
+		imageUrls := rxStrict.FindAllString(story.Content, -1)
+		if len(imageUrls) > 0 {
+			story.ImageUrl = imageUrls[0]
+		}
+	}
+
 	storyCreated, err := story.Create(server.DB)
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
@@ -80,6 +90,7 @@ func (server *Server) GetStory(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
+
 	responses.JSON(w, http.StatusOK, storyReceived)
 }
 

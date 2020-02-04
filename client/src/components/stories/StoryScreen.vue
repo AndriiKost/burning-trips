@@ -59,6 +59,7 @@ export default class StoryScreen extends Vue {
 .story-screen-wrapper {
    .ssc-wrapper {
       margin-top: 2rem;
+      margin-bottom: 2rem;
       @include desktop {
          max-width: 750px;
          margin-left: auto;
