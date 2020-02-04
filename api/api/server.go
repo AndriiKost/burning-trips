@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/andriikost/burning-gateway/api/controllers"
-	"github.com/andriikost/burning-gateway/api/seed"
 	"github.com/joho/godotenv"
 )
 
