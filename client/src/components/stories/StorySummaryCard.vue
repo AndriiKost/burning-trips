@@ -95,9 +95,8 @@ export default class StorySummaryCard extends Vue {
 
 	/* Methods */
 	async saveVotes(count: number) {
-        if (!this.user) this.$router.push('/login');
+        if (!this.user) return this.$router.push('/login');
         const id = this.curUserVote ? this.curUserVote.id : 0;
-        console.log(this.story);
 		let storyVote: IStoryVote = {
             userId: this.user.id,
             count,
