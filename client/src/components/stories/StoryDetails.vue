@@ -3,18 +3,15 @@
         <div class="story-content">
             <h1>{{ story.title }}</h1>
             <div v-html="storyContent"></div>
-            <!-- <div>
-                {{ story.content }}
-            </div> -->
+            <div class="spacer-md"></div>
+            <vote-section  
+                :total-votes="totalVotes" 
+                :trending="story.trending"
+                :cur-user-votes="curUserVoteCount"
+                @save-votes="saveVotes"
+                icon="el-icon-reading"
+            />
         </div>
-        <div class="spacer-md"></div>
-        <vote-section  
-            :total-votes="totalVotes" 
-            :trending="story.trending"
-            :cur-user-votes="curUserVoteCount"
-            @save-votes="saveVotes"
-            icon="el-icon-reading"
-        />
     </div>
 </template>
 
