@@ -4,3 +4,4 @@ node_modules/
 aws/
 *.csv
 data/
+*.pem
