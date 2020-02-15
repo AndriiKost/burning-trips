@@ -11,3 +11,12 @@ $--color-danger: $red !default;
 $--color-info: lighten($dark-grey, 20%) !default;
 
 @import "~element-ui/packages/theme-chalk/src/index";
+
+h1 {
+
+}
+
+h2 {
+    font-weight: 400;
+    margin-bottom: 1rem;
+}

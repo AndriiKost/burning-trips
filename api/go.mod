@@ -32,4 +32,5 @@ require (
 	google.golang.org/api v0.3.1
 	gopkg.in/go-playground/assert.v1 v1.2.1
 	gopkg.in/yaml.v2 v2.2.5 // indirect
+	mvdan.cc/xurls/v2 v2.1.0
 )

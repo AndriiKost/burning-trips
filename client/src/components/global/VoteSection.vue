@@ -1,20 +1,16 @@
 <template>
     <div class="vote-section flex flex-row space-between">
         <div class="icon-wrapper relative">
-            <div 
-                v-if="trending" 
-                class="icon-trending icon-btn inline-block" 
-                @click="handleVote"
-            ></div>
-            <div 
-                v-else 
-                class="icon-camera icon-btn inline-block" 
-                @click="handleVote"
-            ></div>
+            <el-button 
+                circle 
+                @click="handleVote" 
+                :icon="icon" 
+                style="font-size: 28px;padding: 8px;"
+            ></el-button>
             <transition name="el-fade-in">
-                <span v-show="showUserVotes" class="user-votes bg">
+                <div v-show="showUserVotes" class="user-votes bg flex flex-center">
                     +{{ curVotes }}
-                </span>
+                </div>
             </transition>
         </div>
         <span class="vote-amount bg">
@@ -45,6 +41,9 @@ export default class VoteSection extends Vue {
     @Prop({ type: Number, default: 0 })
     readonly curUserVotes: number;
 
+    @Prop({ type: String, default: 'el-icon-camera-solid' })
+    readonly icon: string;
+
     /* Computed */
 
     /* Data */
@@ -68,9 +67,10 @@ export default class VoteSection extends Vue {
 }
 </script>
 
-<style lang='scss' scoped>
-@import 'src/scss/variables.scss';
+<style lang='scss'>
 .vote-section {
+    width: 75px;
+
     .icon-btn {
         // color: darken($red, 10%);
         font-size: 1.75rem;
@@ -82,12 +82,15 @@ export default class VoteSection extends Vue {
     }
     .user-votes {
         position: absolute;
-        top: -2rem;
-        left: 0;
+        top: -2.5rem;
+        left: 6px;
         color: $red;
-        padding: .25rem;
         border-radius: 50%;
         font-size: .85rem;
+        width: 35px;
+        height: 35px;
+        background: lighten($dark-grey, 30%);
+        color: #fff;
     }
 }
 </style>

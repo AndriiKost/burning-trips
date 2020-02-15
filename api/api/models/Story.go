@@ -15,7 +15,7 @@ type Story struct {
 	Content   string      `gorm:"size:max;not null;" json:"content"`
 	Author    User        `json:"author"`
 	Votes     []StoryVote `json:"votes"`
-	Stops     []Stop      `json:"stops"`
+	// Stops     []Stop      `json:"stops"`
 	AuthorID  uint32      `gorm:"not null" json:"authorID"`
 	CreatedAt time.Time   `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time   `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
@@ -33,9 +33,9 @@ func (story *Story) Prepare() {
 	story.ID = 0
 	story.ImageUrl = html.EscapeString(strings.TrimSpace(story.ImageUrl))
 	story.Title = html.EscapeString(strings.TrimSpace(story.Title))
-	story.Content = html.EscapeString(strings.TrimSpace(story.Content))
+	story.Content = strings.TrimSpace(story.Content)
 	story.Author = User{}
-	story.Stops = []Stop{}
+	// story.Stops = []Stop{}
 	story.Votes = []StoryVote{}
 	story.CreatedAt = time.Now()
 	story.UpdatedAt = time.Now()

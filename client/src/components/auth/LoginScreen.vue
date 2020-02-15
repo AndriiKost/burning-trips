@@ -1,5 +1,8 @@
 <template>
 	<div style="margin-top: 3rem;padding-right: 1rem;">
+		<div style="margin: 1rem 2rem;">
+			<h2>Please Sign In</h2>
+		</div>
 		<el-form 
 			:model="userToSign" 
 			:rules="rules" 
@@ -11,17 +14,22 @@
 				<el-input v-model="userToSign.email"></el-input>
 			</el-form-item>
             <el-form-item label="Password" prop="password">
-				<el-input v-model="userToSign.password" type="password"></el-input>
+				<el-input v-model="userToSign.password" type="password" show-password></el-input>
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" @click="signIn">
                     Login
                 </el-button>
-				<el-button @click="$router.push('/register')">
+				<!-- <el-button @click="$router.push('/register')">
                     Create Account
-                </el-button>
+                </el-button> -->
 			</el-form-item>
 		</el-form>
+		<p>
+			At this time, account creation is by invites only.
+			If you are interested in participating in BETA, please send an inquiry to 
+			<a href="mailto:inquiry@burningtrips.com">burningtrips@gmail.com</a>.
+		</p>
 	</div>
 </template>
 
@@ -30,16 +38,12 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { IUserToSign } from '@/types/User';
 import { Get } from 'vuex-pathify';
+import { IUser } from '@/types/User';
 
 @Component({
    name: 'LoginScreen'
 })
 export default class LoginScreen extends Vue {
-
-    /* Computed */
-
-    @Get('auth/dummy')
-    dummy: string;
 
     /* Data */
     userToSign: IUserToSign = {
@@ -55,7 +59,7 @@ export default class LoginScreen extends Vue {
 		],
 		password: [
 			{ required: true, message: 'Please enter your credentials', trigger: 'blur' },
-			{ min: 8, max: 36, message: 'Password should 3 to 32 characters', trigger: 'blur' }
+			{ min: 8, max: 36, message: 'Password should be 8 to 32 characters', trigger: 'blur' }
 		],
 	};
 
@@ -76,6 +80,6 @@ export default class LoginScreen extends Vue {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 
 </style>

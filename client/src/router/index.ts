@@ -1,8 +1,12 @@
-import EditStoryScreen from '@/components/stories/EditStoryScreen.vue';
+import LoginScreen from '@/components/auth/LoginScreen.vue';
+import CreateStoryScreen from '@/components/stories/CreateStoryScreen.vue';
 import StoryDetails from '@/components/stories/StoryDetails.vue';
 import StoryScreen from '@/components/stories/StoryScreen.vue';
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { loggedInGuard } from './middleware';
+
+// const EditStoryScreen = () => import('@/components/stories/EditStoryScreen.vue');
 
 Vue.use(VueRouter);
 
@@ -34,7 +38,7 @@ const routes = [
   //   name: 'Account Screen',
   // },
   {
-    path: '/stories',
+    path: '/',
     component: StoryScreen,
     name: 'Story Screen',
     meta: {
@@ -50,9 +54,14 @@ const routes = [
     }
   },
   {
+    path: '/story/create',
+    component: CreateStoryScreen,
+    name: 'story-create'
+  },
+  {
     path: '/story/edit/:storyId',
-    component: EditStoryScreen,
     name: 'story-edit',
+    component: () => import(/*wepackChunkName: "edit-stroye-screen" */ '@/components/stories/EditStoryScreen.vue'),
     meta: {
       allowGuest: true
     }
@@ -73,11 +82,11 @@ const routes = [
   //     allowGuest: true
   //   }
   // },
-  // {
-  //   path: "/login",
-  //   component: LoginScreen,
-  //   name: 'Login'
-  // },
+  {
+    path: "/login",
+    component: LoginScreen,
+    name: 'Login'
+  },
   // {
   //   path: "*",
   //   component: RouteScreen,
@@ -102,6 +111,6 @@ const router = new VueRouter({
   routes
 });
 
-// router.beforeEach(loggedInGuard);
+router.beforeEach(loggedInGuard);
 
 export default router;

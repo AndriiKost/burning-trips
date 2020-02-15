@@ -1,10 +1,12 @@
 <template>
-   <div>
-      <story-summary-card 
-         :story="story" 
+   <div class="story-screen-wrapper container">
+      <div
          v-for="story in stories" 
          :key="story.id"
-      />
+         class="ssc-wrapper"
+      >
+         <story-summary-card :story="story" @update-votes="updateUserVote" />
+      </div>
    </div>
 </template>
 
@@ -14,6 +16,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { IStory } from '@/types/Story';
 import { Sync, Get } from 'vuex-pathify';
 import StorySummaryCard from './StorySummaryCard.vue';
+import { IStoryVote } from '@/types/Vote';
 
 @Component({
    name: 'StoryScreen',
@@ -36,6 +39,14 @@ export default class StoryScreen extends Vue {
       await this.$store.dispatch('story/getAllStories');
    }
 
+   updateUserVote(userVote: IStoryVote) {
+      this.stories.forEach(stop => {
+         stop.votes.some(v => v.id === userVote.id)
+            ? stop.votes.forEach(v => v.id === userVote.id ? v.count = userVote.count : null)
+            : stop.votes.push(userVote);
+      });
+   }
+
    /* Lifecycle Hooks */
    async created() {
       await this.init();
@@ -44,6 +55,16 @@ export default class StoryScreen extends Vue {
 }
 </script>
 
-<style lang='scss' scoped>
-
+<style lang='scss'>
+.story-screen-wrapper {
+   .ssc-wrapper {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      @include desktop {
+         max-width: 750px;
+         margin-left: auto;
+         margin-right: auto;
+      }
+   }
+}
 </style>

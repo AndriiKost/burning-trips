@@ -1,14 +1,17 @@
 <template>
-   <div class="story-summary-wrapper">
-        <el-card :body-style="{ padding: '0px' }" shadow="always">
-            <a class="image-wrapper no-dec" :href="`/story/${story.id}`" @click.prevent="goToStoryDetails">
-                <div class="flex flex-row flex-wrap">
-                    <img 
-                        :src="story.imageUrl" 
-                        :alt="`${story.title} image`"
-                    />
-                </div>
-            </a>
+    <el-card :body-style="{ padding: '0px' }" shadow="always">
+        <a 
+            class="image-wrapper no-dec block ss-image-wrapper" 
+            :href="`/story/${story.id}`" 
+            @click.prevent="goToStoryDetails" 
+        >
+            <img 
+                class="ss-image"
+                :src="story.imageUrl" 
+                :alt="`${story.title} image`"
+            />
+        </a>
+        <div class="ss-card">
             <div class="content-wrapper relative">
                 <a class="image-wrapper no-dec" :href="`/story/${story.id}`" @click.prevent="goToStoryDetails">
                     <h2>{{ story.title }}</h2>
@@ -18,20 +21,21 @@
                         <span v-if="story.stops">{{ story.stops.length }} Featured Stops</span>
                     </div>
                 </a>
-                <div class="bottom clearfix flex flex-row space-between">
-                    <!-- <vote-section  
+                <div class="bottom clearfix flex flex-row space-between" style="margin-top: 1rem;">
+                    <vote-section  
                         :total-votes="totalVotes" 
                         :trending="story.trending"
                         :cur-user-votes="curUserVoteCount"
                         @save-votes="saveVotes"
-                    /> -->
+                        icon="el-icon-reading"
+                    />
                     <el-button type="text" class="button-primary" @click.prevent="goToStoryDetails">
                         Read More
                     </el-button>
                 </div>
             </div>
-        </el-card>
-    </div>
+        </div>
+    </el-card>
 </template>
 
 <script lang="ts">
@@ -92,18 +96,15 @@ export default class StorySummaryCard extends Vue {
 
 	/* Methods */
 	async saveVotes(count: number) {
-        if (!this.user) this.$router.push('/login');
-		const storyVote: IStoryVote = { 
-            userId: this.user.id, 
-            count, 
-            id: 0, 
-            storyId: this.story.id 
+        if (!this.user) return this.$router.push('/login');
+        const id = this.curUserVote ? this.curUserVote.id : 0;
+		let storyVote: IStoryVote = {
+            userId: this.user.id,
+            count,
+            id,
+            storyId: this.story.id
         };
-		if (this.curUserVote) {
-			// update existing votes
-			storyVote.id = this.curUserVote.id;
-		}
-		const result = await this.$store.dispatch('route/updateRouteVote', storyVote);
+		const result = await this.$store.dispatch('story/updateStoryVote', storyVote);
 		return this.$emit('update-votes', result);
 	}
 
@@ -112,6 +113,20 @@ export default class StorySummaryCard extends Vue {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
+.ss-image-wrapper {
+    max-height: 200px;
+    width: auto;
 
+    .ss-image {
+        width: 100%;
+        height: auto;
+        max-height: 100%;
+        object-fit: cover;
+    }
+}
+.ss-card {
+    padding: 1rem;
+
+}
 </style>

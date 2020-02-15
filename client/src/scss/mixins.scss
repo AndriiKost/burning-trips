@@ -9,13 +9,13 @@
 }
 
 @mixin tablet() {
-    @media only screen and (min-width: 1199px) {
+    @media only screen and (max-width: 1199px) {
         @content;
     }
 }
 
 @mixin mobile() {
-    @media only screen and (min-width: 767px) {
+    @media only screen and (max-width: 767px) {
         @content;
     }
 }
@@ -47,9 +47,17 @@ h1, h2, h3, h4, h5, h6, p {
 
 a.no-dec {
     text-decoration: none;
+    color: inherit;
 }
 
 // Global classes
+.spacer-sm {
+    margin: 1rem 0;
+}
+
+.spacer-md {
+    margin: 2rem 0;
+}
 
 .flex {
     display: flex;
@@ -67,6 +75,12 @@ a.no-dec {
 .flex-center { 
     align-items: center;
     justify-content: center;
+}
+
+.container {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .no-wrap {
@@ -91,6 +105,14 @@ a.no-dec {
 
 .relative {
     position: relative;
+}
+
+.text-center {
+    text-align: center;;
+}
+
+.pull-right {
+    float: right;
 }
 
 // Icons

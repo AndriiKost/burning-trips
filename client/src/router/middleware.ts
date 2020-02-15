@@ -1,5 +1,5 @@
-import { Route } from 'vue-router';
 import store from '@/store';
+import { Route } from 'vue-router';
 
 export async function loggedInGuard(to: Route, from: Route, next: any) {
     const isLoggedIn = await store.dispatch('auth/initSession')
@@ -11,4 +11,9 @@ export async function loggedInGuard(to: Route, from: Route, next: any) {
         next();
     }
     // TODO: redirect after logging ing
+}
+
+export function preventDuplicate(to: Route, from: Route, next: any) {
+    if (to.fullPath === from.fullPath) return next();
+    else next();
 }

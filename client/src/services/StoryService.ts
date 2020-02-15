@@ -5,26 +5,34 @@ class StoryService extends BaseHttpService {
 
     async createStory(story: IStory) {
         const res = await this.post<IStory>('/story', story);
-        if (!res.ok || !res) return null
-        return res.result;
+        if (res && res.ok) {
+            return res.result;
+        }
+        return null
     }
 
     async getAllStories() {
         const res = await this.get<IStory[]>('/story');
-        if (!res.ok || !res) return [];
-        return res.result;
+        if (res && res.ok) {
+            return res.result;
+        }
+        return [];
     }
 
     async getStory(id: number) {
         const res = await this.get<IStory>(`/story/${id}`);
-        if (!res.ok || !res) return null;
-        return res.result;
+        if (res && res.ok) {
+            return res.result;
+        }
+        return null;
     }
 
     async getUploadUrl() {
         const res = await this.get<any>(`/file-upload/get-presigned-url`);
-        if (!res.ok || !res) return null;
-        return res.result;
+        if (res && res.ok) {
+            return res.result;
+        }
+        return null;
     }
     
 }

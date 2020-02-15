@@ -28,14 +28,16 @@ export default class  extends Vue {
 </script>
 
 <style lang='scss'>
-@import 'src/scss/mixins.scss';
-@import 'src/scss/variables.scss';
 #appFooter {
     position: absolute;
     left: 0;
     bottom: 0;
     height: 3rem;
     width: 100%;
+    background: rgba(238, 238, 238, 0.795);
+    box-shadow: 0px 0px 9px 3px rgba(104, 103, 103, 0.25);
+    padding: .5rem 0;
+
     p {
         &.main {
             font-size: .8rem;
