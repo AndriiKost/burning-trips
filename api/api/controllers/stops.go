@@ -15,6 +15,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type SearchQuery struct {
+	Latitude   float32 `json:"latitude"`
+	Longtitude float32 `json:"longtitude"`
+}
+
 func (server *Server) CreateStop(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
@@ -51,6 +56,26 @@ func (server *Server) CreateStop(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, stopCreated.ID))
 	responses.JSON(w, http.StatusCreated, stopCreated)
+}
+
+func (server *Server) SearchStops(w http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+
+	var query models.SearchQuery
+
+	err := decoder.Decode(&query)
+	if err != nil {
+		panic(err)
+	}
+
+	stop := models.Stop{}
+
+	stops, err := stop.SearchStops(server.DB, query)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, stops)
 }
 
 func (server *Server) GetStops(w http.ResponseWriter, r *http.Request) {

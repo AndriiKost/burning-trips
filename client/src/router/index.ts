@@ -1,4 +1,9 @@
 import LoginScreen from '@/components/auth/LoginScreen.vue';
+import ExploreResultScreen from '@/components/explore/ExploreResultScreen.vue';
+import ExploreScreen from '@/components/explore/ExploreScreen.vue';
+import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
+import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
+import StopScreen from '@/components/stops/StopScreen.vue';
 import CreateStoryScreen from '@/components/stories/CreateStoryScreen.vue';
 import StoryDetails from '@/components/stories/StoryDetails.vue';
 import StoryScreen from '@/components/stories/StoryScreen.vue';
@@ -11,40 +16,32 @@ import { loggedInGuard } from './middleware';
 Vue.use(VueRouter);
 
 const routes = [
-  // {
-  //   path: "/stops",
-  //   component: StopScreen,
-  //   name: 'Stop Screen',
-  //   meta: {
-  //     allowGuest: true
-  //   }
-  // },
-  // {
-  //   path: "/stops/create",
-  //   component: CreateStopSection,
-  //   name: 'Create Stop'
-  // },
-  // {
-  //   path: "/stops/:id",
-  //   component: StopDetailsPage,
-  //   name: 'Stop Details',
-  //   meta: {
-  //     allowGuest: true
-  //   }
-  // },
+  {
+    path: "/stops",
+    component: StopScreen,
+    name: 'Stop Screen',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: "/stops/create",
+    component: CreateStopSection,
+    name: 'Create Stop'
+  },
+  {
+    path: "/stops/:id",
+    component: StopDetailsPage,
+    name: 'Stop Details',
+    meta: {
+      allowGuest: true
+    }
+  },
   // {
   //   path: '/account',
   //   component: AccountScreen,
   //   name: 'Account Screen',
   // },
-  {
-    path: '/',
-    component: StoryScreen,
-    name: 'Story Screen',
-    meta: {
-      allowGuest: true
-    }
-  },
   {
     path: '/story/details/:storyId',
     component: StoryDetails,
@@ -62,6 +59,22 @@ const routes = [
     path: '/story/edit/:storyId',
     name: 'story-edit',
     component: () => import(/*wepackChunkName: "edit-stroye-screen" */ '@/components/stories/EditStoryScreen.vue'),
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: '/explore',
+    component: ExploreResultScreen,
+    name: 'Explore Result Screen',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: '/',
+    component: ExploreScreen,
+    name: 'Explore Screen',
     meta: {
       allowGuest: true
     }

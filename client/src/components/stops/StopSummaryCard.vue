@@ -51,12 +51,17 @@ export default class StopSummaryCard extends Vue {
 	readonly user: IUser;
 
 	get totalVotes(): Number {
-		if (!this.stop.votes || this.stop.votes.length < 1) return 0;
-		return this.stop.votes.reduce((acc, cur) => acc += cur.count, 0);
+		if (this.stop.votes && this.stop.votes.length > 0) {
+			return this.stop.votes.reduce((acc, cur) => acc += cur.count, 0);
+		}
+		return 0;
 	}
 
 	get curUserVote(): IStopVote {
-		return this.stop.votes.find(v => v.userId === this.user.id) as IStopVote;
+		if (this.stop.votes && this.stop.votes.length > 0) {
+			return this.stop.votes.find(v => v.userId === this.user.id) as IStopVote;
+		}
+		return null;
 	}
 
 	get curUserVoteCount(): Number {

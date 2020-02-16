@@ -2,23 +2,24 @@ package models
 
 import (
 	"errors"
-	"github.com/jinzhu/gorm"
 	"html"
 	"strings"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Story struct {
-	ID        uint64      `gorm:"primary_key;auto_increment" json:"id"`
-	ImageUrl  string      `gorm:"size:255;not null;" json:"imageUrl"`
-	Title     string      `gorm:"size:255;not null;" json:"title"`
-	Content   string      `gorm:"size:max;not null;" json:"content"`
-	Author    User        `json:"author"`
-	Votes     []StoryVote `json:"votes"`
+	ID       uint64      `gorm:"primary_key;auto_increment" json:"id"`
+	ImageUrl string      `gorm:"size:255;not null;" json:"imageUrl"`
+	Title    string      `gorm:"size:255;not null;" json:"title"`
+	Content  string      `gorm:"size:max;not null;" json:"content"`
+	Author   User        `json:"author"`
+	Votes    []StoryVote `json:"votes"`
 	// Stops     []Stop      `json:"stops"`
-	AuthorID  uint32      `gorm:"not null" json:"authorID"`
-	CreatedAt time.Time   `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time   `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	AuthorID  uint32    `gorm:"not null" json:"authorID"`
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 // TODO: Store Story Content as  []Section{}
@@ -77,7 +78,7 @@ func (story *Story) Find(db *gorm.DB, sid uint64) (*Story, error) {
 func (story *Story) FindAll(db *gorm.DB) (*[]Story, error) {
 	var err error
 	stories := []Story{}
-	err = db.Debug().Model(&Story{}).Limit(100).Find(&stories).Error
+	err = db.Model(&Story{}).Limit(100).Order("updated_at desc").Find(&stories).Error
 	if err != nil {
 		return &[]Story{}, err
 	}
@@ -93,6 +94,7 @@ func (story *Story) FindAll(db *gorm.DB) (*[]Story, error) {
 			}
 		}
 	}
+
 	return &stories, nil
 }
 

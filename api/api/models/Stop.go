@@ -25,6 +25,13 @@ type Stop struct {
 	UpdatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
+type SearchQueryByCoords struct {
+	min_lat float32
+	max_lat float32
+	min_lng float32
+	max_lng float32
+}
+
 func (stop *Stop) Prepare() {
 	stop.ID = 0
 	stop.Name = html.EscapeString(strings.TrimSpace(stop.Name))
@@ -74,7 +81,7 @@ func (stop *Stop) Find(db *gorm.DB, sid uint64) (*Stop, error) {
 func (stop *Stop) FindAll(db *gorm.DB) (*[]Stop, error) {
 	var err error
 	stops := []Stop{}
-	err = db.Debug().Model(&Stop{}).Limit(100).Find(&stops).Error
+	err = db.Debug().Model(&Stop{}).Limit(10).Find(&stops).Error
 	if err != nil {
 		return &[]Stop{}, err
 	}
@@ -154,4 +161,10 @@ func (stop *Stop) Delete(db *gorm.DB, sid uint64) (int64, error) {
 
 	db = db.Debug().Model(&StopVote{}).Where("stop_id = ?", sid).Find(&StopVote{}).Delete(&StopVote{})
 	return db.RowsAffected, nil
+}
+
+func (stop *Stop) SearchStops(db *gorm.DB, query SearchQueryByCoords) ([]Stop, error) {
+	var stops []Stop
+	db = db.Model(&Stop{}).Where("latitude BETWEEN ? AND ?", query.min_lat, query.max_lat).Where("longitude BETWEEN ? AND ?", query.min_lng, query.max_lng).Find(&stops)
+	return stops, nil
 }
