@@ -25,11 +25,9 @@ type Stop struct {
 	UpdatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
-type SearchQueryByCoords struct {
-	min_lat float32
-	max_lat float32
-	min_lng float32
-	max_lng float32
+type SearchQuery struct {
+	Latitude   float32 `json:"latitude"`
+	Longtitude float32 `json:"longtitude"`
 }
 
 func (stop *Stop) Prepare() {
@@ -163,8 +161,21 @@ func (stop *Stop) Delete(db *gorm.DB, sid uint64) (int64, error) {
 	return db.RowsAffected, nil
 }
 
-func (stop *Stop) SearchStops(db *gorm.DB, query SearchQueryByCoords) ([]Stop, error) {
+func (stop *Stop) SearchStops(db *gorm.DB, query SearchQuery) ([]Stop, error) {
+	min_lat, max_lat := getLatMinMax(query)
+	min_lng, max_lng := getLngMinMax(query)
 	var stops []Stop
-	db = db.Model(&Stop{}).Where("latitude BETWEEN ? AND ?", query.min_lat, query.max_lat).Where("longitude BETWEEN ? AND ?", query.min_lng, query.max_lng).Find(&stops)
+	db = db.Model(&Stop{}).Where("latitude BETWEEN ? AND ?", min_lat, max_lat).Where("longitude BETWEEN ? AND ?", min_lng, max_lng).Find(&stops)
 	return stops, nil
+}
+
+func getLatMinMax(query SearchQuery) (float32, float32) {
+	min_lat := query.Latitude - 0.1
+	max_lat := query.Latitude + 0.1
+	return min_lat, max_lat
+}
+func getLngMinMax(query SearchQuery) (float32, float32) {
+	min_lng := query.Longtitude - 0.1
+	max_lng := query.Longtitude + 0.1
+	return min_lng, max_lng
 }

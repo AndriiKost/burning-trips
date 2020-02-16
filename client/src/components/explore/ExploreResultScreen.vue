@@ -26,16 +26,19 @@ export default class ExploreResultScreen extends Vue {
 		await this.$store.dispatch('explore/searchStops', this.searchQuery);
 	}
 
+	async init() {
+		const lng = this.$route.query.lng as string;
+		const lat = this.$route.query.lat as string;
+		if (!lat || !lng) return;
+		const latitude = parseFloat(lat)
+		const longtitude = parseFloat(lng);
+		this.searchQuery = { longtitude, latitude }
+		await this.search();
+	}
+
 	/* Lifecycle Hooks */
 	async created() {
-		const { lng, lat } = this.$route.query;
-		if (lng && lat) {
-			this.searchQuery = {
-				longtitude: lng,
-				latitude: lat
-			}
-			await this.search();
-		}
+		await this.init();
 	}
 
 }
