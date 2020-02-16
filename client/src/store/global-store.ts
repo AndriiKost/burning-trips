@@ -9,9 +9,6 @@ const state = new GlobalState();
 
 const mutations = make.mutations(state);
 
-mutations['NEW_MUTATIONS'] = function(state: GlobalState, arg: any) {
-}
-
 const actions = {
     
 }

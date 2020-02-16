@@ -1,22 +1,36 @@
 <template>
 	<div>
-
+		<div 
+			v-for="stop in stops"
+			:key="stop.id"
+			class="stop-summary-wrapper"
+		>
+			<stop-summary-card :stop="stop" @update-votes="updateUserVote" />
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { ISearchQuery } from '@/types/ISearchQuery';
+import StopSummaryCard from '@/components/stops/StopSummaryCard.vue';
+import { ISearchQuery, ISearchResult } from '@/types/Explore';
+import { Get } from 'vuex-pathify';
+import { IStop } from '../../types/Stop';
 
 @Component({
-	name: 'ExploreResultScreen'
+	name: 'ExploreResultScreen',
+	components: {
+		StopSummaryCard
+	}
 })
 export default class ExploreResultScreen extends Vue {
 
 	/* Props */
 
 	/* Computed */
+	@Get('explore/stops')
+	stops: IStop[];
 
 	/* Data */
 	searchQuery: ISearchQuery = null;

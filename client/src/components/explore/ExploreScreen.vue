@@ -23,7 +23,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import AddressAutocomplete from '@/components/global/AddressAutocomplete.vue';
-import { ISearchQuery } from '@/types/ISearchQuery';
+import { ISearchQuery } from '@/types/Explore';
 
 @Component({
    name: 'ExploreScreen',

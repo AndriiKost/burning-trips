@@ -1,27 +1,24 @@
 import exploreService from '@/services/ExploreService';
-import { ISearchQuery, ISearchResult } from '@/types/Explore';
+import { ISearchQuery } from '@/types/Explore';
 import { IStop } from '@/types/Stop';
 import { Store } from 'vuex';
-import { commit, make } from 'vuex-pathify';
+import { make } from 'vuex-pathify';
 
-class ExploreStore {
-    searchResult: any = [];
+class ExploreState {
+    stops: IStop[] = [];
 }
 
-const state = new ExploreStore();
+const state = new ExploreState();
 
 const mutations = make.mutations(state);
 
-mutations['NEW_MUTATIONS'] = function(state: ExploreStore, arg: any) {
-}
-
 const actions = {
 
-    async searchStops(_: Store<ExploreStore>, query: ISearchQuery): Promise<ISearchResult<IStop>> {
-        const searchResult = await exploreService.searchStops(query);
-        if (searchResult.result && searchResult.result.length > 0) {
-            commit('searchResult', searchResult);
-            return searchResult;
+    async searchStops({ commit }: Store<ExploreState>, query: ISearchQuery): Promise<IStop[]> {
+        const stops = await exploreService.searchStops(query);
+        if (stops && stops.length > 0) {
+            commit('SET_STOPS', stops);
+            return stops;
         }
     },
 
