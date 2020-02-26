@@ -45,8 +45,8 @@ export default class ExploreResultScreen extends Vue {
 		const lat = this.$route.query.lat as string;
 		if (!lat || !lng) return;
 		const latitude = parseFloat(lat)
-		const longtitude = parseFloat(lng);
-		this.searchQuery = { longtitude, latitude }
+		const longitude = parseFloat(lng);
+		this.searchQuery = { longitude, latitude }
 		await this.search();
 	}
 

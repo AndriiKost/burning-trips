@@ -160,7 +160,7 @@ export default class CreateStopSection extends Vue {
 	onLocationClick(place) {
 		let lat = place.geometry.location.lat();
 		let lon = place.geometry.location.lng();
-		this.newStop.longtitude = lon;
+		this.newStop.longitude = lon;
 		this.newStop.latitude = lat;
 		this.newStop.address = place.formatted_address;
 	}

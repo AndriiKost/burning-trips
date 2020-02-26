@@ -1,5 +1,5 @@
 export interface ISearchQuery {
-    longtitude: number;
+    longitude: number;
     latitude: number;
 }
 

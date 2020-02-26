@@ -10,24 +10,24 @@ import (
 )
 
 type Stop struct {
-	ID         uint64     `gorm:"primary_key;auto_increment" json:"id"`
-	Address    string     `gorm:"size:255;not null;" json:"address"`
-	ImageUrl   string     `gorm:"size:255;not null;" json:"imageUrl"`
-	Name       string     `gorm:"size:255;not null;unique" json:"name"`
-	Content    string     `gorm:"size:255;not null;" json:"content"`
-	Latitude   float32    `json:"latitude"`
-	Longtitude float32    `json:"longtitude"`
-	Author     User       `json:"author"`
-	Votes      []StopVote `json:"votes"`
-	Routes     []Route    `gorm:"many2many:stop_route" json:"stops"`
-	AuthorID   uint32     `gorm:"not null" json:"authorID"`
-	CreatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID        uint64     `gorm:"primary_key;auto_increment" json:"id"`
+	Address   string     `gorm:"size:255;not null;" json:"address"`
+	ImageUrl  string     `gorm:"size:255;not null;" json:"imageUrl"`
+	Name      string     `gorm:"size:255;not null;unique" json:"name"`
+	Content   string     `gorm:"size:255;not null;" json:"content"`
+	Latitude  float32    `json:"latitude"`
+	Longitude float32    `json:"longitude"`
+	Author    User       `json:"author"`
+	Votes     []StopVote `json:"votes"`
+	Routes    []Route    `gorm:"many2many:stop_route" json:"stops"`
+	AuthorID  uint32     `gorm:"not null" json:"authorID"`
+	CreatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 type SearchQuery struct {
-	Latitude   float32 `json:"latitude"`
-	Longtitude float32 `json:"longtitude"`
+	Latitude  float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
 }
 
 func (stop *Stop) Prepare() {
@@ -175,7 +175,7 @@ func getLatMinMax(query SearchQuery) (float32, float32) {
 	return min_lat, max_lat
 }
 func getLngMinMax(query SearchQuery) (float32, float32) {
-	min_lng := query.Longtitude - 0.1
-	max_lng := query.Longtitude + 0.1
+	min_lng := query.Longitude - 0.1
+	max_lng := query.Longitude + 0.1
 	return min_lng, max_lng
 }

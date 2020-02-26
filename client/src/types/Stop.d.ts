@@ -11,7 +11,7 @@ export interface IStop {
     name: string;
     coords?: ICoordinates;
     author?: IUser;
-    longtitude?: number;
+    longitude?: number;
     latitude?: number;
     votes: IStopVote[];
 }

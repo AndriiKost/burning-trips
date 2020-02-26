@@ -1,14 +1,14 @@
 <template>
 	<div class="stop-summary">
 		<el-card :body-style="{ padding: '0px' }" shadow="always">
-			<a class="image-wrapper no-dec" :href="`/stops/${stop.id}`">
+			<router-link class="image-wrapper no-dec" :to="`/stops/${stop.id}`">
 				<img :src="stop.imageUrl" class="image" />
-			</a>
+			</router-link>
 			<div class="content-wrapper relative">
-				<a class="content no-dec" href="#">
+				<router-link class="content no-dec" :to="`/stops/${stop.id}`">
 					<h2>{{ stop.name }}</h2>
 					<p>{{ stop.content }}</p>
-				</a>
+				</router-link>
 				<div class="bottom clearfix flex flex-row space-between">
 					<vote-section 
 						:total-votes="totalVotes" 
@@ -69,6 +69,10 @@ export default class StopSummaryCard extends Vue {
 	}
 
 	async save(count: number) {
+		if (!this.user) {
+			localStorage.setItem('redirectTo', window.location.pathname + window.location.search);
+			this.$router.push('/login');
+		}
 		const stopVote: IStopVote = { userId: this.user.id, count, id: 0, stopId: this.stop.id };
 		if (this.curUserVote) {
 			// update existing votes

@@ -73,8 +73,11 @@ export default class LoginScreen extends Vue {
     async signIn() {
         this.validate();
         if (!this.valid) return;
-		const loggedIn = await this.$store.dispatch('auth/signIn', this.userToSign);
-		if (loggedIn) this.$router.push('stops');
+		const status = await this.$store.dispatch('auth/signIn', this.userToSign);
+		if (!status) return;
+		let redirectTo = localStorage.getItem('redirectTo');
+		if (!redirectTo) redirectTo = '/';
+		this.$router.push(redirectTo);
     }
 
 }
