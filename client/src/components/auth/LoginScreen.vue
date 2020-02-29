@@ -28,7 +28,7 @@
 		<p>
 			At this time, account creation is by invites only.
 			If you are interested in participating in BETA, please send an inquiry to 
-			<a href="mailto:inquiry@burningtrips.com">burningtrips@gmail.com</a>.
+			<a href="mailto:info@burningtrips.com">info@burningtrips.com</a>.
 		</p>
 	</div>
 </template>

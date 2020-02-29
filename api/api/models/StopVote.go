@@ -3,22 +3,21 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/jinzhu/gorm"
 )
 
 type StopVote struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
-	UserID    uint32    `gorm:"primary_key" json:"userId"`
-	StopID    uint64    `gorm:"primary_key" json:"stopId"`
+	UserID    uint32    `json:"userId"`
+	StopID    uint64    `json:"stopId"`
 	Count     uint32    `gorm:"default:0" json:"count"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 func (stopVote *StopVote) Prepare() {
-	stopVote.ID = 0
 	stopVote.CreatedAt = time.Now()
 	stopVote.UpdatedAt = time.Now()
 }
@@ -40,15 +39,6 @@ func (stopVote *StopVote) Validate() error {
 	return nil
 }
 
-func (stopVote *StopVote) Find(db *gorm.DB, vid uint64) (*StopVote, error) {
-	var err error
-	err = db.Debug().Model(&StopVote{}).Where("id = ?", vid).Take(&stopVote).Error
-	if err != nil {
-		return &StopVote{}, err
-	}
-	return stopVote, nil
-}
-
 func (stopVote *StopVote) FindAll(db *gorm.DB) (*[]StopVote, error) {
 	var err error
 	stopVotes := []StopVote{}
@@ -63,33 +53,45 @@ func (stopVote *StopVote) FindStopVotes(db *gorm.DB, stopId uint64) (*StopVote, 
 	var err error
 	err = db.Debug().Model(&StopVote{}).Where("stop_id = ?", stopId).Take(&stopVote).Error
 	if err != nil {
-		return &StopVote{}, err
+		if strings.Contains(err.Error(), "not found") {
+			return nil, nil
+		}
+		return nil, err
 	}
 	return stopVote, nil
 }
 
 func (stopVote *StopVote) FindUserStopVotes(db *gorm.DB, stopId uint64, userId uint32) (*StopVote, error) {
 	var err error
-	err = db.Debug().Model(&StopVote{}).Where("stop_id = ? AND user_id", stopId, userId).Take(&stopVote).Error
+	err = db.Debug().Model(&StopVote{}).Where("stop_id = ? AND user_id = ?", stopId, userId).Take(&stopVote).Error
 	if err != nil {
-		return &StopVote{}, err
+		if strings.Contains(err.Error(), "not found") {
+			return nil, nil
+		}
+		return nil, err
 	}
 	return stopVote, nil
 }
 
-func (stopVote *StopVote) SaveStopVote(db *gorm.DB) (*StopVote, error) {
+func (stopVote *StopVote) UpdateStopVotes(db *gorm.DB) (*StopVote, error) {
 	var err error
 
-	if stopVote.ID != 0 {
-		err = db.Debug().Model(&StopVote{}).Update(&stopVote).Error
-	} else {
-		stopVote.Prepare()
-		err = db.Debug().Model(&StopVote{}).Create(&stopVote).Error
-	}
-
+	err = db.Debug().Model(&StopVote{}).Update(&stopVote).Error
 	if err != nil {
 		return &StopVote{}, err
 	}
+
+	return stopVote, nil
+}
+
+func (stopVote *StopVote) CreateStopVotes(db *gorm.DB) (*StopVote, error) {
+	var err error
+
+	err = db.Debug().Model(&StopVote{}).Create(&stopVote).Error
+	if err != nil {
+		return &StopVote{}, err
+	}
+
 	return stopVote, nil
 }
 

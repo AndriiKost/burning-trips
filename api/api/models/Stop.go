@@ -19,7 +19,7 @@ type Stop struct {
 	Longitude float32    `json:"longitude"`
 	Author    User       `json:"author"`
 	Votes     []StopVote `json:"votes"`
-	Routes    []Route    `gorm:"many2many:stop_route" json:"stops"`
+	Routes    []Route    `json:"stops"`
 	AuthorID  uint32     `gorm:"not null" json:"authorID"`
 	CreatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
@@ -162,10 +162,46 @@ func (stop *Stop) Delete(db *gorm.DB, sid uint64) (int64, error) {
 }
 
 func (stop *Stop) SearchStops(db *gorm.DB, query SearchQuery) ([]Stop, error) {
+	var stops []Stop
+
 	min_lat, max_lat := getLatMinMax(query)
 	min_lng, max_lng := getLngMinMax(query)
-	var stops []Stop
-	db = db.Model(&Stop{}).Where("latitude BETWEEN ? AND ?", min_lat, max_lat).Where("longitude BETWEEN ? AND ?", min_lng, max_lng).Find(&stops)
+
+	err := db.Model(&Stop{}).Where("latitude BETWEEN ? AND ?", min_lat, max_lat).Where("longitude BETWEEN ? AND ?", min_lng, max_lng).Find(&stops).Error
+
+	if err != nil {
+		return stops, err
+	}
+
+	if len(stops) > 0 {
+		users := []User{}
+		stopVotes := []StopVote{}
+
+		err := db.Debug().Model(&User{}).Find(&users).Error
+		if err != nil {
+			return stops, err
+		}
+
+		err = db.Debug().Model(&StopVote{}).Find(&stopVotes).Error
+		if err != nil {
+			return stops, err
+		}
+
+		for i, _ := range stops {
+			for u, _ := range users {
+				if stops[i].AuthorID == users[u].ID {
+					stops[i].Author = users[u]
+				}
+			}
+
+			for j, _ := range stopVotes {
+				if stops[i].ID == stopVotes[j].StopID {
+					stops[i].Votes = append(stops[i].Votes, stopVotes[j])
+				}
+			}
+		}
+	}
+
 	return stops, nil
 }
 

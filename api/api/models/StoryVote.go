@@ -9,7 +9,6 @@ import (
 )
 
 type StoryVote struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
 	UserID    uint32    `gorm:"primary_key" json:"userId"`
 	StoryID   uint64    `gorm:"primary_key" json:"storyId"`
 	Count     uint32    `gorm:"default:0" json:"count"`
@@ -18,7 +17,6 @@ type StoryVote struct {
 }
 
 func (storyVote *StoryVote) Prepare() {
-	storyVote.ID = 0
 	storyVote.CreatedAt = time.Now()
 	storyVote.UpdatedAt = time.Now()
 }
@@ -38,15 +36,6 @@ func (storyVote *StoryVote) Validate() error {
 		return errors.New("Vote count can't be lower then 1")
 	}
 	return nil
-}
-
-func (storyVote *StoryVote) Find(db *gorm.DB, vid uint64) (*StoryVote, error) {
-	var err error
-	err = db.Debug().Model(&StoryVote{}).Where("id = ?", vid).Take(&storyVote).Error
-	if err != nil {
-		return &StoryVote{}, err
-	}
-	return storyVote, nil
 }
 
 func (storyVote *StoryVote) FindAll(db *gorm.DB) (*[]StoryVote, error) {
@@ -77,19 +66,27 @@ func (storyVote *StoryVote) FindUserStoryVotes(db *gorm.DB, storyId uint64, user
 	return storyVote, nil
 }
 
-func (storyVote *StoryVote) SaveStoryVote(db *gorm.DB) (*StoryVote, error) {
+func (storyVote *StoryVote) UpdateStoryVote(db *gorm.DB) (*StoryVote, error) {
 	var err error
 
-	if storyVote.ID != 0 {
-		err = db.Debug().Model(&StoryVote{}).Update(&storyVote).Error
-	} else {
-		storyVote.Prepare()
-		err = db.Debug().Model(&StoryVote{}).Create(&storyVote).Error
-	}
-
+	err = db.Debug().Model(&StoryVote{}).Update(&storyVote).Error
 	if err != nil {
 		return &StoryVote{}, err
 	}
+
+	return storyVote, nil
+}
+
+func (storyVote *StoryVote) CreateStoryVote(db *gorm.DB) (*StoryVote, error) {
+	var err error
+
+	storyVote.Prepare()
+
+	err = db.Debug().Model(&StoryVote{}).Create(&storyVote).Error
+	if err != nil {
+		return &StoryVote{}, err
+	}
+
 	return storyVote, nil
 }
 

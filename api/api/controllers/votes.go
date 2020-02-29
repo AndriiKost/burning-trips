@@ -15,117 +15,175 @@ import (
 
 func (server *Server) UpdateStopVote(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during reading request body")
 		return
 	}
+
 	stopVote := models.StopVote{}
 	err = json.Unmarshal(body, &stopVote)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during stop vote extraction from request body")
 		return
 	}
+
 	err = stopVote.Validate()
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during stop validation")
 		return
 	}
+
 	uid, err := auth.ExtractTokenID(r)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
 		return
 	}
+
 	if uid != stopVote.UserID {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
 		return
 	}
-	stopVoteCreated, err := stopVote.SaveStopVote(server.DB)
+
+	createdStopVote, err := stopVote.FindUserStopVotes(server.DB, stopVote.StopID, uid)
+
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
 		responses.ERROR(w, http.StatusInternalServerError, formattedError)
 		return
 	}
-	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, stopVote.ID))
-	responses.JSON(w, http.StatusCreated, stopVoteCreated)
+
+	if createdStopVote != nil {
+		createdStopVote, err = stopVote.UpdateStopVotes(server.DB)
+	} else {
+		createdStopVote, err = stopVote.CreateStopVotes(server.DB)
+	}
+
+	if err != nil {
+		formattedError := formaterror.FormatError(err.Error())
+		responses.ERROR(w, http.StatusInternalServerError, formattedError)
+		return
+	}
+
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path))
+	responses.JSON(w, http.StatusCreated, createdStopVote)
 }
 
 func (server *Server) UpdateRouteVote(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during reading request body")
 		return
 	}
+
 	routeVote := models.RouteVote{}
+
 	err = json.Unmarshal(body, &routeVote)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during route vote extraction from request body")
 		return
 	}
+
 	err = routeVote.Validate()
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during stop validation")
 		return
 	}
+
 	uid, err := auth.ExtractTokenID(r)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
 		return
 	}
+
 	if uid != routeVote.UserID {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
 		return
 	}
+
 	routeVoteCreated, err := routeVote.SaveRouteVote(server.DB)
+
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
 		responses.ERROR(w, http.StatusInternalServerError, formattedError)
 		return
 	}
+
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, routeVote.ID))
 	responses.JSON(w, http.StatusCreated, routeVoteCreated)
 }
 
 func (server *Server) UpdateStoryVote(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during reading request body")
 		return
 	}
+
 	storyVote := models.StoryVote{}
 	err = json.Unmarshal(body, &storyVote)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during route vote extraction from request body")
 		return
 	}
+
 	err = storyVote.Validate()
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		fmt.Println("Error during story validation")
 		return
 	}
+
 	uid, err := auth.ExtractTokenID(r)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
 		return
 	}
+
 	if uid != storyVote.UserID {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
 		return
 	}
-	storyVoteCreated, err := storyVote.SaveStoryVote(server.DB)
+
+	storyVoteCreated, err := storyVote.FindUserStoryVotes(server.DB, storyVote.StoryID, uid)
+
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
 		responses.ERROR(w, http.StatusInternalServerError, formattedError)
 		return
 	}
-	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, storyVote.ID))
+
+	if storyVoteCreated != nil {
+		storyVoteCreated, err = storyVote.UpdateStoryVote(server.DB)
+	} else {
+		storyVoteCreated, err = storyVote.CreateStoryVote(server.DB)
+	}
+
+	if err != nil {
+		formattedError := formaterror.FormatError(err.Error())
+		responses.ERROR(w, http.StatusInternalServerError, formattedError)
+		return
+	}
+
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path))
 	responses.JSON(w, http.StatusCreated, storyVoteCreated)
 }

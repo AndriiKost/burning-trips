@@ -2,6 +2,7 @@ package formaterror
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -22,5 +23,6 @@ func FormatError(err string) error {
 		return errors.New("Incorrect Password")
 	}
 
+	fmt.Println("Unidentified error ", err)
 	return errors.New("Incorrect Details")
 }

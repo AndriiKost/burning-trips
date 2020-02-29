@@ -1,34 +1,22 @@
 <template>
    <section id="explore_screen">
-       	<el-form 
-			ref="search_form" 
-			label-width="120px" 
-			class="search-form"
-            @submit.prevent="search"
-		>
-            <address-autocomplete
-                label="Stop Address"
-                @location-click="onLocationClick"
-            />
-            <el-form-item>
-				<el-button type="primary" @click.prevent="search">
-				    Explore
-			    </el-button>
-            </el-form-item>
-       	</el-form>
+        <location-search 
+            @search="search" 
+            @click:location="onLocationClick" 
+        />
    </section>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import AddressAutocomplete from '@/components/global/AddressAutocomplete.vue';
+import { Component, Prop, Watch } from 'vue-property-decorator'
+import LocationSearch from '@/components/search/LocationSearch.vue';
 import { ISearchQuery } from '@/types/Explore';
 
 @Component({
    name: 'ExploreScreen',
    components: {
-       AddressAutocomplete
+       LocationSearch
    }
 })
 export default class ExploreScreen extends Vue {
@@ -49,11 +37,12 @@ export default class ExploreScreen extends Vue {
         if (this.searchPlace != null) {
             let lat = this.searchPlace.geometry.location.lat();
             let lng = this.searchPlace.geometry.location.lng();
+            let loc = this.searchPlace.formatted_address;
             if (!lng || !lat) {
                 // handle error
                 return;
             }
-            this.$router.push(`/explore?lng=${lng}&lat=${lat}`);
+            this.$router.push(`/explore?lng=${lng}&lat=${lat}&loc=${loc}`);
         }
     }
 

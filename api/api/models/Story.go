@@ -83,14 +83,30 @@ func (story *Story) FindAll(db *gorm.DB) (*[]Story, error) {
 		return &[]Story{}, err
 	}
 	if len(stories) > 0 {
+		users := []User{}
+		storyVotes := []StoryVote{}
+
+		err := db.Debug().Model(&User{}).Find(&users).Error
+		if err != nil {
+			return &[]Story{}, err
+		}
+
+		err = db.Debug().Model(&StoryVote{}).Find(&storyVotes).Error
+		if err != nil {
+			return &[]Story{}, err
+		}
+
 		for i, _ := range stories {
-			err := db.Debug().Model(&User{}).Where("id = ?", stories[i].AuthorID).Take(&stories[i].Author).Error
-			if err != nil {
-				return &[]Story{}, err
+			for u, _ := range users {
+				if stories[i].AuthorID == users[u].ID {
+					stories[i].Author = users[u]
+				}
 			}
-			err = db.Debug().Model(&StoryVote{}).Where("story_id = ?", stories[i].ID).Find(&stories[i].Votes).Error
-			if err != nil {
-				return &[]Story{}, err
+
+			for j, _ := range storyVotes {
+				if stories[i].ID == storyVotes[j].StoryID {
+					stories[i].Votes = append(stories[i].Votes, storyVotes[j])
+				}
 			}
 		}
 	}
