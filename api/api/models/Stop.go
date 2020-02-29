@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"html"
+	"sort"
 	"strings"
 	"time"
 
@@ -28,6 +29,15 @@ type Stop struct {
 type SearchQuery struct {
 	Latitude  float32 `json:"latitude"`
 	Longitude float32 `json:"longitude"`
+}
+
+func (stop *Stop) CountVotes() uint32 {
+	var count uint32
+	count = 0
+	for i, _ := range stop.Votes {
+		count = count + stop.Votes[i].Count
+	}
+	return count
 }
 
 func (stop *Stop) Prepare() {
@@ -201,6 +211,12 @@ func (stop *Stop) SearchStops(db *gorm.DB, query SearchQuery) ([]Stop, error) {
 			}
 		}
 	}
+
+	sort.Slice(stops, func(i, j int) bool {
+		votesA := stops[i].CountVotes()
+		votesB := stops[j].CountVotes()
+		return votesA > votesB
+	})
 
 	return stops, nil
 }
