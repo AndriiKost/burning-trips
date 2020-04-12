@@ -2,10 +2,11 @@ package models
 
 import (
 	"errors"
-	"github.com/jinzhu/gorm"
 	"html"
 	"strings"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Route struct {
@@ -15,7 +16,7 @@ type Route struct {
 	Content   string      `gorm:"size:255;not null;" json:"content"`
 	Author    User        `json:"author"`
 	Votes     []RouteVote `json:"votes"`
-	Stops     []Stop      `gorm:"many2many:stop_route" json:"stops"`
+	Stops     []Stop      `gorm:"many2many:stop_route;" json:"stops"`
 	AuthorID  uint32      `gorm:"not null" json:"authorID"`
 	CreatedAt time.Time   `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time   `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
@@ -65,13 +66,14 @@ func (route *Route) Find(db *gorm.DB, sid uint64) (*Route, error) {
 		if err != nil {
 			return &Route{}, err
 		}
+		db.Model(&route).Association("Stops").Find(&route.Stops)
 	}
 	return route, nil
 }
 
 func (route *Route) FindAll(db *gorm.DB) (*[]Route, error) {
 	var err error
-	routes := []Route{}
+	var routes []Route
 	err = db.Debug().Model(&Route{}).Limit(100).Find(&routes).Error
 	if err != nil {
 		return &[]Route{}, err
@@ -86,6 +88,8 @@ func (route *Route) FindAll(db *gorm.DB) (*[]Route, error) {
 			if err != nil {
 				return &[]Route{}, err
 			}
+			db.Model(&route).Related(&[]Stop{}, "Stops")
+
 		}
 	}
 	return &routes, nil

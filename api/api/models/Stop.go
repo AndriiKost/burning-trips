@@ -20,7 +20,7 @@ type Stop struct {
 	Longitude float32    `json:"longitude"`
 	Author    User       `json:"author"`
 	Votes     []StopVote `json:"votes"`
-	Routes    []Route    `json:"stops"`
+	Routes    []*Route   `gorm:"many2many:stop_route;association_jointable_foreignkey:route_id;" json:"routes"`
 	AuthorID  uint32     `gorm:"not null" json:"authorID"`
 	CreatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
@@ -50,7 +50,7 @@ func (stop *Stop) Prepare() {
 	stop.CreatedAt = time.Now()
 	stop.UpdatedAt = time.Now()
 	stop.Votes = []StopVote{}
-	stop.Routes = []Route{}
+	stop.Routes = []*Route{}
 }
 
 func (stop *Stop) Validate() error {
