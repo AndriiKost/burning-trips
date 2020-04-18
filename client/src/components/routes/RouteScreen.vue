@@ -57,7 +57,7 @@ export default class RouteScreen extends Vue {
 
    async init() {
       await this.$store.dispatch('route/getAllRoutes');
-      await this.$store.dispatch('stop/getAllStops');
+      // await this.$store.dispatch('stop/getAllStops');
       this.routes.forEach(s => s.stops = this.stops);
    }
 

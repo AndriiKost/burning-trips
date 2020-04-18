@@ -66,7 +66,10 @@ func (route *Route) Find(db *gorm.DB, sid uint64) (*Route, error) {
 		if err != nil {
 			return &Route{}, err
 		}
-		db.Model(&route).Association("Stops").Find(&route.Stops)
+		err = db.Debug().Model(&route).Association("Stops").Find(&route.Stops).Error
+		if err != nil {
+			return &Route{}, err
+		}
 	}
 	return route, nil
 }
@@ -88,8 +91,11 @@ func (route *Route) FindAll(db *gorm.DB) (*[]Route, error) {
 			if err != nil {
 				return &[]Route{}, err
 			}
-			db.Model(&route).Related(&[]Stop{}, "Stops")
-
+			err = db.Debug().Model(&routes[i]).Association("Stops").Find(routes[i].Stops).Error
+			// err = db.Debug().Model(&route).Related(&routes[i].Stops, "Stops").Error
+			if err != nil {
+				return &[]Route{}, err
+			}
 		}
 	}
 	return &routes, nil

@@ -1,6 +1,9 @@
 import LoginScreen from '@/components/auth/LoginScreen.vue';
 import ExploreResultScreen from '@/components/explore/ExploreResultScreen.vue';
 import ExploreScreen from '@/components/explore/ExploreScreen.vue';
+import CreateRouteSection from '@/components/routes/create/CreateRouteSection.vue';
+import RouteDetailsPage from '@/components/routes/RouteDetailsPage.vue';
+import RouteScreen from '@/components/routes/RouteScreen.vue';
 import CreateStopSection from '@/components/stops/create/CreateStopSection.vue';
 import StopDetailsPage from '@/components/stops/StopDetailsPage.vue';
 import StopScreen from '@/components/stops/StopScreen.vue';
@@ -33,6 +36,27 @@ const routes = [
     path: "/stops/:id",
     component: StopDetailsPage,
     name: 'Stop Details',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: "/routes",
+    component: RouteScreen,
+    name: 'Route Screen',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
+    path: "/routes/create",
+    component: CreateRouteSection,
+    name: 'Create Route'
+  },
+  {
+    path: "/routes/:id",
+    component: RouteDetailsPage,
+    name: 'Route Details',
     meta: {
       allowGuest: true
     }
