@@ -95,6 +95,18 @@ func (route *Route) FindAll(db *gorm.DB) (*[]Route, error) {
 			if err != nil {
 				return &[]Route{}, err
 			}
+			if len(routes[i].Stops) > 0 {
+				for j, _ := range routes[i].Stops {
+					err = db.Debug().Model(&User{}).Where("id = ?", routes[i].Stops[j].AuthorID).Take(&routes[i].Stops[j].Author).Error
+					if err != nil {
+						return &[]Route{}, err
+					}
+					err = db.Debug().Model(&[]StopVote{}).Where("stop_id = ?", routes[i].Stops[j].ID).Find(&routes[i].Stops[j].Votes).Error
+					if err != nil {
+						return &[]Route{}, err
+					}
+				}
+			}
 		}
 	}
 	return &routes, nil
