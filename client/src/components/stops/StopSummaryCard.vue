@@ -71,7 +71,7 @@ export default class StopSummaryCard extends Vue {
 	async save(count: number) {
 		if (!this.user) {
 			localStorage.setItem('redirectTo', window.location.pathname + window.location.search);
-			this.$router.push('/login');
+			return this.$router.push('/login');
 		}
 		const stopVote: IStopVote = { userId: this.user.id, count, id: 0, stopId: this.stop.id };
 		if (this.curUserVote) {

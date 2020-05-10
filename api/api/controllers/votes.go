@@ -51,7 +51,7 @@ func (server *Server) UpdateStopVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdStopVote, err := stopVote.FindUserStopVotes(server.DB, stopVote.StopID, uid)
+	existingStopVote, err := stopVote.FindUserStopVotes(server.DB, stopVote.StopID, uid)
 
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
@@ -59,10 +59,10 @@ func (server *Server) UpdateStopVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if createdStopVote != nil {
-		createdStopVote, err = stopVote.UpdateStopVotes(server.DB)
+	if existingStopVote != nil {
+		existingStopVote, err = stopVote.UpdateStopVotes(server.DB)
 	} else {
-		createdStopVote, err = stopVote.CreateStopVotes(server.DB)
+		existingStopVote, err = stopVote.CreateStopVotes(server.DB)
 	}
 
 	if err != nil {
@@ -72,7 +72,7 @@ func (server *Server) UpdateStopVote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path))
-	responses.JSON(w, http.StatusCreated, createdStopVote)
+	responses.JSON(w, http.StatusCreated, existingStopVote)
 }
 
 func (server *Server) UpdateRouteVote(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +114,7 @@ func (server *Server) UpdateRouteVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	routeVoteCreated, err := routeVote.SaveRouteVote(server.DB)
+	existingRouteVote, err := routeVote.FindUserRouteVotes(server.DB, routeVote.RouteID, uid)
 
 	if err != nil {
 		formattedError := formaterror.FormatError(err.Error())
@@ -122,8 +122,20 @@ func (server *Server) UpdateRouteVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, routeVote.ID))
-	responses.JSON(w, http.StatusCreated, routeVoteCreated)
+	if existingRouteVote != nil {
+		existingRouteVote, err = routeVote.UpdateRouteVote(server.DB)
+	} else {
+		existingRouteVote, err = routeVote.CreateRouteVote(server.DB)
+	}
+
+	if err != nil {
+		formattedError := formaterror.FormatError(err.Error())
+		responses.ERROR(w, http.StatusInternalServerError, formattedError)
+		return
+	}
+
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path))
+	responses.JSON(w, http.StatusCreated, existingRouteVote)
 }
 
 func (server *Server) UpdateStoryVote(w http.ResponseWriter, r *http.Request) {

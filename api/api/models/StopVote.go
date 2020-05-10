@@ -10,8 +10,8 @@ import (
 )
 
 type StopVote struct {
-	UserID    uint32    `json:"userId"`
-	StopID    uint64    `json:"stopId"`
+	UserID    uint32    `gorm:"primary_key" json:"userId"`
+	StopID    uint64    `gorm:"primary_key" json:"stopId"`
 	Count     uint32    `gorm:"default:0" json:"count"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`

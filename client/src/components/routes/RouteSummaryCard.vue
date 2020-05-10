@@ -67,6 +67,7 @@ export default class RouteSummaryCard extends Vue {
 	}
 
 	get curUserVote(): IRouteVote {
+		if (!this.user) return null;
 		return this.route.votes.find(v => v.userId === this.user.id) as IRouteVote;
 	}
 
@@ -83,6 +84,10 @@ export default class RouteSummaryCard extends Vue {
 
 	/* Methods */
 	async saveVotes(count: number) {
+		if (!this.user) {
+			localStorage.setItem('redirectTo', window.location.pathname + window.location.search);
+			return this.$router.push('/login');
+		}
 		const routeVote: IRouteVote = { userId: this.user.id, count, id: 0, routeId: this.route.id };
 		if (this.curUserVote) {
 			// update existing votes
@@ -102,6 +107,54 @@ export default class RouteSummaryCard extends Vue {
 	.el-icon {
 		margin-right: .3rem;
 		color: $dark-grey;
+	}
+}
+
+.route-summary {
+	max-width: 450px;
+
+	&.short-summary {
+		.image-wrapper {
+			.image {
+
+			}
+		}
+	}
+
+	.image-wrapper {
+		.image {
+			width: 100%;
+			max-width: 100%;
+			height: auto;
+			object-fit: cover;
+		}
+	}
+
+	.content {
+		color: $blue;
+		p {
+			opacity: .8;
+		}
+	}
+
+	.icon-brng {
+		&.top-left {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	}
+
+	.button-primary {
+		color: $blue;
+	}
+
+	.bottom {
+		margin-top: 2rem;
+	}
+
+	.content-wrapper {
+		padding: 1rem;
 	}
 }
 </style>
