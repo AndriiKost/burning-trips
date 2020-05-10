@@ -20,6 +20,7 @@ func (s *Server) initializeRoutes() {
 
 	// Stops routes
 	s.Router.HandleFunc("/stop", middlewares.SetMiddlewareJSON(s.CreateStop)).Methods("POST")
+	s.Router.HandleFunc("/search-stops", middlewares.SetMiddlewareJSON(s.SearchStops)).Methods("POST")
 	s.Router.HandleFunc("/stop", middlewares.SetMiddlewareJSON(s.GetStops)).Methods("GET")
 	s.Router.HandleFunc("/stop/{id}", middlewares.SetMiddlewareJSON(s.GetStop)).Methods("GET")
 	s.Router.HandleFunc("/stop/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateStop))).Methods("PUT")

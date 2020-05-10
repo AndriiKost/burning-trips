@@ -9,7 +9,6 @@ import (
 )
 
 type RouteVote struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
 	RouteID   uint64    `gorm:"primary_key" json:"routeId"`
 	UserID    uint32    `gorm:"primary_key" json:"userId"`
 	Count     uint32    `gorm:"default:0" json:"count"`
@@ -18,7 +17,6 @@ type RouteVote struct {
 }
 
 func (routeVote *RouteVote) Prepare() {
-	routeVote.ID = 0
 	routeVote.CreatedAt = time.Now()
 	routeVote.UpdatedAt = time.Now()
 }
@@ -60,8 +58,7 @@ func (routeVote *RouteVote) FindAll(db *gorm.DB) (*[]RouteVote, error) {
 }
 
 func (routeVote *RouteVote) FindRouteVotes(db *gorm.DB, routeId uint64) (*RouteVote, error) {
-	var err error
-	err = db.Debug().Model(&RouteVote{}).Where("route_id = ?", routeId).Take(&routeVote).Error
+	err := db.Debug().Model(&RouteVote{}).Where("route_id = ?", routeId).Take(&routeVote).Error
 	if err != nil {
 		return &RouteVote{}, err
 	}
@@ -69,23 +66,28 @@ func (routeVote *RouteVote) FindRouteVotes(db *gorm.DB, routeId uint64) (*RouteV
 }
 
 func (routeVote *RouteVote) FindUserRouteVotes(db *gorm.DB, routeId uint64, userId uint32) (*RouteVote, error) {
-	var err error
-	err = db.Debug().Model(&RouteVote{}).Where("route_id = ? AND user_id", routeId, userId).Take(&routeVote).Error
+	err := db.Debug().Model(&RouteVote{}).Where("route_id = ? AND user_id = ?", routeId, userId).Take(&routeVote).Error
 	if err != nil {
 		return &RouteVote{}, err
 	}
 	return routeVote, nil
 }
 
-func (routeVote *RouteVote) SaveRouteVote(db *gorm.DB) (*RouteVote, error) {
-	var err error
+func (routeVote *RouteVote) UpdateRouteVote(db *gorm.DB) (*RouteVote, error) {
 
-	if routeVote.ID != 0 {
-		err = db.Debug().Model(&RouteVote{}).Update(&routeVote).Error
-	} else {
-		routeVote.Prepare()
-		err = db.Debug().Model(&RouteVote{}).Create(&routeVote).Error
+	err := db.Debug().Model(&RouteVote{}).Update(&routeVote).Error
+
+	if err != nil {
+		return &RouteVote{}, err
 	}
+	return routeVote, nil
+}
+
+func (routeVote *RouteVote) CreateRouteVote(db *gorm.DB) (*RouteVote, error) {
+
+	routeVote.Prepare()
+
+	err := db.Debug().Model(&RouteVote{}).Create(&routeVote).Error
 
 	if err != nil {
 		return &RouteVote{}, err

@@ -28,7 +28,7 @@
 		<p>
 			At this time, account creation is by invites only.
 			If you are interested in participating in BETA, please send an inquiry to 
-			<a href="mailto:inquiry@burningtrips.com">burningtrips@gmail.com</a>.
+			<a href="mailto:info@burningtrips.com">info@burningtrips.com</a>.
 		</p>
 	</div>
 </template>
@@ -73,8 +73,11 @@ export default class LoginScreen extends Vue {
     async signIn() {
         this.validate();
         if (!this.valid) return;
-		const loggedIn = await this.$store.dispatch('auth/signIn', this.userToSign);
-		if (loggedIn) this.$router.push('stops');
+		const status = await this.$store.dispatch('auth/signIn', this.userToSign);
+		if (!status) return;
+		let redirectTo = localStorage.getItem('redirectTo');
+		if (!redirectTo) redirectTo = '/';
+		this.$router.push(redirectTo);
     }
 
 }

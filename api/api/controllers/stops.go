@@ -193,3 +193,24 @@ func (server *Server) DeleteStop(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Entity", fmt.Sprintf("%d", sid))
 	responses.JSON(w, http.StatusNoContent, "")
 }
+
+func (server *Server) SearchStops(w http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+
+	var query models.SearchQuery
+
+	err := decoder.Decode(&query)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	stopRepo := models.Stop{}
+
+	stops, err := stopRepo.SearchStops(server.DB, query)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, stops)
+}

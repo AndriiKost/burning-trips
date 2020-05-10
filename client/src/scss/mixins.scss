@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 /*==========================================
  === Media Queries
 /==========================================*/
@@ -43,6 +45,16 @@ html, body {
 h1, h2, h3, h4, h5, h6, p {
     font-family: 'Lato', sans-serif;
     margin: 0;
+}
+
+.bordered-heading {
+    border-bottom: 2px solid lighten($blue, 40%);
+    padding-bottom: .5rem;
+    margin-bottom: 1rem;
+}
+
+.grey {
+    color: lighten($dark-grey, 20%);
 }
 
 a.no-dec {
@@ -113,6 +125,15 @@ a.no-dec {
 
 .pull-right {
     float: right;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; 
 }
 
 // Icons

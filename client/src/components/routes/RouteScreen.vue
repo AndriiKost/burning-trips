@@ -5,7 +5,10 @@
 			:key="route.id"
          class="route-summary-wrapper"
 		>
-         <route-summary-card v-if="route" :route="route" @update-votes="updateUserVote" />
+         <route-summary-card
+            :route="route"
+            @update-votes="updateUserVote"
+         />
 		</div>
       <add-button @click.native="addNewRoute" />
    </div>
@@ -46,33 +49,30 @@ export default class RouteScreen extends Vue {
       this.$router.push('/stops/create')
    }
 
-   async updateUserVote(userVote: IRouteVote) {
-      await this.$store.dispatch('route/getAllRoutes');
-      // this.routes.forEach(route => {
-      //    route.votes.some(v => v.id === userVote.id)
-      //       ? route.votes.forEach(v => v.id === userVote.id ? v.count = userVote.count : null)
-      //       : route.votes.push(userVote);
-      // });
+   updateUserVote(userVote: IRouteVote) {
+      this.routes.forEach(route => {
+         route.votes.some(v => v.id === userVote.id)
+            ? route.votes.forEach(v => v.id === userVote.id ? v.count = userVote.count : null)
+            : route.votes.push(userVote);
+      });
    }
 
    async init() {
       await this.$store.dispatch('route/getAllRoutes');
-      await this.$store.dispatch('stop/getAllStops');
-      this.routes.forEach(s => s.stops = this.stops);
    }
 
    /* Lifecycle Hooks */
 
-   created() {
-      this.init();
+   async beforeMount() {
+      await this.init();
    }
 
 }
 </script>
 
 <style lang='scss' scoped>
-.stop-summary-wrapper {
-   .stop-summary {
+.route-list-wrapper {
+   .route-summary {
       margin: 1.2rem auto;
    }
 }

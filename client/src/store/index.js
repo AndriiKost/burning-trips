@@ -7,6 +7,7 @@ import globalStore from './global-store';
 import authStore from './auth-store';
 import storyStore from './story-store';
 import uploadStore from './upload-store';
+import exploreStore from './explore-store';
 
 Vue.use(Vuex);
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
 		auth: authStore,
 		upload: uploadStore,
 		route: routeStore,
+		explore: exploreStore,
 		story: storyStore
 	},
 	plugins: [pathify.plugin]

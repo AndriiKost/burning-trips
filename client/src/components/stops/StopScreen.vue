@@ -64,7 +64,7 @@ export default class StopScreen extends Vue {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 .stop-summary-wrapper {
    .stop-summary {
       margin: 1.2rem auto;

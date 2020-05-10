@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"html"
+	"sort"
 	"strings"
 	"time"
 
@@ -10,19 +11,33 @@ import (
 )
 
 type Stop struct {
-	ID         uint64     `gorm:"primary_key;auto_increment" json:"id"`
-	Address    string     `gorm:"size:255;not null;" json:"address"`
-	ImageUrl   string     `gorm:"size:255;not null;" json:"imageUrl"`
-	Name       string     `gorm:"size:255;not null;unique" json:"name"`
-	Content    string     `gorm:"size:255;not null;" json:"content"`
-	Latitude   float32    `json:"latitude"`
-	Longtitude float32    `json:"longtitude"`
-	Author     User       `json:"author"`
-	Votes      []StopVote `json:"votes"`
-	Routes     []Route    `gorm:"many2many:stop_route" json:"stops"`
-	AuthorID   uint32     `gorm:"not null" json:"authorID"`
-	CreatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt  time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID        uint64     `gorm:"primary_key;auto_increment" json:"id"`
+	Address   string     `gorm:"size:255;not null;" json:"address"`
+	ImageUrl  string     `gorm:"size:255;not null;" json:"imageUrl"`
+	Name      string     `gorm:"size:255;not null;unique" json:"name"`
+	Content   string     `gorm:"size:255;not null;" json:"content"`
+	Latitude  float32    `json:"latitude"`
+	Longitude float32    `json:"longitude"`
+	Author    User       `json:"author"`
+	Votes     []StopVote `json:"votes"`
+	Routes    []*Route   `gorm:"many2many:stop_route;association_jointable_foreignkey:route_id;" json:"routes"`
+	AuthorID  uint32     `gorm:"not null" json:"authorID"`
+	CreatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+}
+
+type SearchQuery struct {
+	Latitude  float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
+}
+
+func (stop *Stop) CountVotes() uint32 {
+	var count uint32
+	count = 0
+	for i, _ := range stop.Votes {
+		count = count + stop.Votes[i].Count
+	}
+	return count
 }
 
 func (stop *Stop) Prepare() {
@@ -35,7 +50,7 @@ func (stop *Stop) Prepare() {
 	stop.CreatedAt = time.Now()
 	stop.UpdatedAt = time.Now()
 	stop.Votes = []StopVote{}
-	stop.Routes = []Route{}
+	stop.Routes = []*Route{}
 }
 
 func (stop *Stop) Validate() error {
@@ -74,7 +89,7 @@ func (stop *Stop) Find(db *gorm.DB, sid uint64) (*Stop, error) {
 func (stop *Stop) FindAll(db *gorm.DB) (*[]Stop, error) {
 	var err error
 	stops := []Stop{}
-	err = db.Debug().Model(&Stop{}).Limit(100).Find(&stops).Error
+	err = db.Debug().Model(&Stop{}).Limit(10).Find(&stops).Error
 	if err != nil {
 		return &[]Stop{}, err
 	}
@@ -154,4 +169,65 @@ func (stop *Stop) Delete(db *gorm.DB, sid uint64) (int64, error) {
 
 	db = db.Debug().Model(&StopVote{}).Where("stop_id = ?", sid).Find(&StopVote{}).Delete(&StopVote{})
 	return db.RowsAffected, nil
+}
+
+func (stop *Stop) SearchStops(db *gorm.DB, query SearchQuery) ([]Stop, error) {
+	var stops []Stop
+
+	min_lat, max_lat := getLatMinMax(query)
+	min_lng, max_lng := getLngMinMax(query)
+
+	err := db.Model(&Stop{}).Where("latitude BETWEEN ? AND ?", min_lat, max_lat).Where("longitude BETWEEN ? AND ?", min_lng, max_lng).Find(&stops).Error
+
+	if err != nil {
+		return stops, err
+	}
+
+	if len(stops) > 0 {
+		users := []User{}
+		stopVotes := []StopVote{}
+
+		err := db.Debug().Model(&User{}).Find(&users).Error
+		if err != nil {
+			return stops, err
+		}
+
+		err = db.Debug().Model(&StopVote{}).Find(&stopVotes).Error
+		if err != nil {
+			return stops, err
+		}
+
+		for i, _ := range stops {
+			for u, _ := range users {
+				if stops[i].AuthorID == users[u].ID {
+					stops[i].Author = users[u]
+				}
+			}
+
+			for j, _ := range stopVotes {
+				if stops[i].ID == stopVotes[j].StopID {
+					stops[i].Votes = append(stops[i].Votes, stopVotes[j])
+				}
+			}
+		}
+	}
+
+	sort.Slice(stops, func(i, j int) bool {
+		votesA := stops[i].CountVotes()
+		votesB := stops[j].CountVotes()
+		return votesA > votesB
+	})
+
+	return stops, nil
+}
+
+func getLatMinMax(query SearchQuery) (float32, float32) {
+	min_lat := query.Latitude - 0.1
+	max_lat := query.Latitude + 0.1
+	return min_lat, max_lat
+}
+func getLngMinMax(query SearchQuery) (float32, float32) {
+	min_lng := query.Longitude - 0.1
+	max_lng := query.Longitude + 0.1
+	return min_lng, max_lng
 }
