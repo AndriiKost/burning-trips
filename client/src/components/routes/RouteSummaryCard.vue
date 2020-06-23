@@ -27,7 +27,7 @@
 						:cur-user-votes="curUserVoteCount"
 						@save-votes="saveVotes"
 					/>
-					<el-button type="text" class="button-primary">
+					<el-button type="text" class="button-primary" @click="viewDetails">
 						Read More
 					</el-button>
 				</div>
@@ -95,6 +95,10 @@ export default class RouteSummaryCard extends Vue {
 		}
 		const result = await this.$store.dispatch('route/updateRouteVote', routeVote);
 		return this.$emit('update-votes', result);
+	}
+
+	viewDetails() {
+		this.$router.push(`routes/${this.route.id}`)
 	}
 
 }
