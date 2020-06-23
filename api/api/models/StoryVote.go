@@ -59,7 +59,7 @@ func (storyVote *StoryVote) FindStoryVotes(db *gorm.DB, storyId uint64) (*StoryV
 
 func (storyVote *StoryVote) FindUserStoryVotes(db *gorm.DB, storyId uint64, userId uint32) (*StoryVote, error) {
 	var err error
-	err = db.Debug().Model(&StoryVote{}).Where("story_id = ? AND user_id", storyId, userId).Take(&storyVote).Error
+	err = db.Debug().Model(&StoryVote{}).Where("story_id = ? AND user_id = ?", storyId, userId).Take(&storyVote).Error
 	if err != nil {
 		return &StoryVote{}, err
 	}
