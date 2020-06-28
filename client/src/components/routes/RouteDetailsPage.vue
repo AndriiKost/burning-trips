@@ -1,8 +1,18 @@
 <template>
     <div>
         <div v-if="activeRoute">
-            <route-details :route="activeRoute" />
-            <stop-map :stops="activeRoute.stops" />
+            <el-tabs>
+                <el-tab-pane>
+                    <span slot="label">
+                        <i class="el-icon-map" /> Text View</span>
+                        <route-details :route="activeRoute" />
+                </el-tab-pane>
+                <el-tab-pane label="Map View">
+                    <div class="relative">
+                        <stop-map :stops="activeRoute.stops" />
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 </template>

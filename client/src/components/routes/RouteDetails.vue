@@ -77,6 +77,19 @@ export default class RouteDetails extends Vue {
    /* Data */
 
    /* Methods */
+   async saveVotes(count: number) {
+		if (!this.user) {
+			localStorage.setItem('redirectTo', window.location.pathname + window.location.search);
+			return this.$router.push('/login');
+		}
+		const routeVote: IRouteVote = { userId: this.user.id, count, id: 0, routeId: this.route.id };
+		if (this.curUserVote) {
+			// update existing votes
+			routeVote.id = this.curUserVote.id;
+		}
+		const result = await this.$store.dispatch('route/updateRouteVote', routeVote);
+		return this.$emit('update-votes', result);
+	}
 
    /* Lifecycle Hooks */
 

@@ -15,6 +15,7 @@
 			<router-view />
 		</section>
 		<!-- <navigation-menu /> -->
+		<bottom-circle-menu v-if="isMobile" />
 		<app-footer />
 	</div>
 </template>
@@ -25,24 +26,29 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import NavigationMenu from './navigation/NavigationMenu.vue';
 import AppFooter from './AppFooter.vue';
 import TopNavigation from './navigation/TopNavigation.vue';
+import BottomCircleMenu from './navigation/BottomCircleMenu.vue';
 
 @Component({
 	name: 'AppContent',
 	components: {
 		NavigationMenu,
+		BottomCircleMenu,
 		TopNavigation,
 		AppFooter
 	}
 })
 export default class AppContent extends Vue {
 
-	 /* Props */
+	/* Props */
 
-	 /* Computed */
+	/* Computed */
+	get isMobile(): boolean {
+		return true;
+	}
 
 	/* Data */
 
-	 /* Lifecycle Hooks */
+	/* Lifecycle Hooks */
 
 }
 </script>
@@ -79,6 +85,6 @@ body {
 	}
 }
 #content {
-	margin: 1.5rem .75rem;
+	margin: 1.5rem .75rem 3.5rem .75rem;
 }
 </style>

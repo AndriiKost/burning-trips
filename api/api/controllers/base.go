@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/etherlabsio/healthcheck"
+	"github.com/etherlabsio/healthcheck/checkers"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 
@@ -35,6 +38,30 @@ func (server *Server) Initialize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, D
 	server.DB.Debug().AutoMigrate(&models.User{}, &models.Stop{}) //database migration
 
 	server.Router = mux.NewRouter()
+
+	server.Router.Handle("/healthcheck", healthcheck.Handler(
+
+		// WithTimeout allows you to set a max overall timeout.
+		healthcheck.WithTimeout(5*time.Second),
+
+		// Checkers fail the status in case of any error.
+		healthcheck.WithChecker(
+			"heartbeat", checkers.Heartbeat("/Users/andrii/Projects/burning-trips/api/heartbeat"),
+		),
+
+		// healthcheck.WithChecker(
+		// 	"database", healthcheck.CheckerFunc(
+		// 		func(ctx context.Context) error {
+		// 			return server.DB.PingContext(ctx)
+		// 		},
+		// 	),
+		// ),
+
+		// Observers do not fail the status in case of error.
+		healthcheck.WithObserver(
+			"diskspace", checkers.DiskSpace("/var/log", 90),
+		),
+	))
 
 	server.initializeRoutes()
 }

@@ -1,7 +1,5 @@
 <template>
-    <el-card :body-style="{ padding: '0px' }" shadow="always">
-        <div id="stopMap"></div>
-   </el-card>
+    <div id="stopMap"></div>
 </template>
 
 <script lang="ts">
@@ -34,7 +32,7 @@ export default class StopMap extends Vue {
         mapboxgl.accessToken = config.MAPBOX_API;
         var map = new mapboxgl.Map({
             container: 'stopMap',
-            style: 'mapbox://styles/mapbox/streets-v11'
+            style: 'mapbox://styles/mapbox/light-v10'
         });
 
         this.stops.forEach(stop => {
@@ -57,5 +55,11 @@ export default class StopMap extends Vue {
 </script>
 
 <style lang='scss'>
-
+#stopMap {
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
 </style>
