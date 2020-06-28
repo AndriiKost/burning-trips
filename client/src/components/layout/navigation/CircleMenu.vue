@@ -65,7 +65,7 @@ export default {
       this.open = !this.open
       this.toggleAnimate = !this.toggleAnimate
       this.MaskToggle = !this.MaskToggle
-      this.$emit('toggle-menu', open)
+      this.$emit('toggle-menu', this.open)
     },
     isColors(value) {
       return true;
@@ -258,21 +258,21 @@ export default {
 }
 //子菜单默认背景颜色
 .blue {
-  background: @CircleMenuItem4Color;
+  border: 1px solid @CircleMenuItem4Color;
 }
 .yellow {
-  background: @CircleMenuItem3Color;
+  border: 1px solid @CircleMenuItem3Color;
 }
 .green {
-  background: @CircleMenuItem2Color;
+  border: 1px solid @CircleMenuItem2Color;
 }
 
 .purple {
-  background: @CircleMenuItem1Color;
+  border: 1px solid @CircleMenuItem1Color;
 }
 
 .pink {
-  background: @CircleMenuBtnColor;
+  border: 1px solid @CircleMenuBtnColor;
 }
 //遮罩样式
 .oy-mask-white {

@@ -11,6 +11,13 @@ class ExploreService extends BaseHttpService {
         }
     }
 
+    async searchLandmarks(query: ISearchQuery): Promise<ILandmark[]> {
+        const response = await this.post<ILandmark[]>('/search-landmarks', query);
+        if (response.ok) {
+            return response.result;
+        }
+    }
+
 }
 
 export default new ExploreService();

@@ -7,7 +7,7 @@
 		>
          <stop-summary-card :stop="stop" @update-votes="updateUserVote" />
 		</div>
-      <!-- <add-button @click.native="addNewStop" /> -->
+      
    </div>
 </template>
 
@@ -38,9 +38,6 @@ export default class StopScreen extends Vue {
    /* Data */
 
    /* Methods */
-   addNewStop() {
-      this.$router.push('/stops/create')
-   }
 
    updateUserVote(userVote: IStopVote) {
       this.stops.forEach(stop => {

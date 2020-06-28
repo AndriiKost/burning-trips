@@ -13,17 +13,29 @@
                     <i class="el-icon el-icon-sm el-icon-menu" v-show="!isOpen" />
                     <i class="el-icon el-icon-sm el-icon-close" v-show="isOpen" />
                 </button>
-                <router-link to="/" slot="item_1">
-                    <i class="el-icon el-icon-sm el-icon-search" />
+                <router-link to="/profile" slot="item_1">
+                    <div class="relative link-wrapper">
+                        <i class="el-icon el-icon-sm el-icon-user" />
+                        <span class="link-text">profile</span>
+                    </div>
                 </router-link>
-                <router-link to="/" slot="item_2">
-                    <i class="el-icon el-icon-sm el-icon-place" />
+                <router-link to="/routes" slot="item_2">
+                    <div class="relative link-wrapper">
+                        <i class="el-icon el-icon-sm el-icon-map-location" />
+                        <span class="link-text">routes</span>
+                    </div>
                 </router-link>
-                <router-link to="/" slot="item_3">
-                    <i class="el-icon el-icon-sm el-icon-place" />
+                <router-link to="/stories" slot="item_3">
+                    <div class="relative link-wrapper">
+                        <i class="el-icon el-icon-sm el-icon-notebook-2" />
+                        <span class="link-text">stories</span>
+                    </div>
                 </router-link>
                 <router-link to="/" slot="item_4">
-                    <i class="el-icon el-icon-sm el-icon-place" />
+                    <div class="relative link-wrapper">
+                        <i class="el-icon el-icon-sm el-icon-search" />
+                        <span class="link-text">search</span>
+                    </div>
                 </router-link>
             </circle-menu>
         </div>
@@ -69,5 +81,27 @@ export default class BottomCircleMenu extends Vue {
     top: 0;
     bottom: 4.5rem;
     right: 1rem;
+
+    a {
+        text-decoration: none;
+    }
+    
+    .link-wrapper {
+        // display: flex;
+        // flex-direction: column;
+        // text-decoration: none;
+
+        .link-text, .el-icon {
+            color: #000;
+            text-decoration: none;
+        }
+        
+        .link-text {
+            position: absolute;
+            bottom: -1.25rem;
+            left: 0;
+            right: 0;
+        }
+    }
 }
 </style>

@@ -10,7 +10,7 @@
             @update-votes="updateUserVote"
          />
 		</div>
-      <!-- <add-button @click.native="addNewRoute" /> -->
+      <add-button @click.native="addNewRoute" />
    </div>
 </template>
 

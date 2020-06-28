@@ -23,6 +23,10 @@
 				text="Can't find any stops for this location"
 				color-preset="light-grey"
 			/>
+			<el-button size="medium" @click="addNewStop" round type="primary" style="margin-top: 1rem;">
+				<i class="el-icon-plus" />
+				Add New
+			</el-button>
 		</div>
 	</div>
 </template>
@@ -33,6 +37,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import StopSummaryCard from '@/components/stops/StopSummaryCard.vue';
 import BackgroundLabel from '@/components/global/BackgroundLabel.vue';
 import { ISearchQuery, ISearchResult } from '@/types/Explore';
+import AddButton from '../global/AddButton.vue';
 import { Get } from 'vuex-pathify';
 import { IStop } from '../../types/Stop';
 
@@ -40,7 +45,8 @@ import { IStop } from '../../types/Stop';
 	name: 'ExploreResultScreen',
 	components: {
 		StopSummaryCard,
-		BackgroundLabel
+		BackgroundLabel,
+		AddButton
 	}
 })
 export default class ExploreResultScreen extends Vue {
@@ -62,6 +68,10 @@ export default class ExploreResultScreen extends Vue {
 	updateUserVote(votes) {
 		console.log(votes);
 	}
+
+	addNewStop() {
+      this.$router.push('/stops/create')
+   }
 
 	async init() {
 		this.locationName = this.$route.query.loc as string;

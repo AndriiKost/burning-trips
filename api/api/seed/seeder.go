@@ -37,7 +37,7 @@ var stops = []models.Stop{
 		ImageUrl:  "https://images.unsplash.com/photo-1496144300411-8dd31ce145ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
 		Address:   "2 E Main St, Madison, WI 53703",
 		Latitude:  0,
-		longitude: 0,
+		Longitude: 0,
 	},
 	models.Stop{
 		Name:      "Madison State Street",
@@ -45,7 +45,7 @@ var stops = []models.Stop{
 		ImageUrl:  "https://architectureunderdevelopment.files.wordpress.com/2011/06/middle-of-state-street.jpg",
 		Address:   "State Street, Madisom, WI 53703",
 		Latitude:  0,
-		longitude: 0,
+		Longitude: 0,
 	},
 	models.Stop{
 		Name:      "Other Stop",
@@ -53,7 +53,7 @@ var stops = []models.Stop{
 		ImageUrl:  "",
 		Address:   "",
 		Latitude:  0,
-		longitude: 0,
+		Longitude: 0,
 	},
 	models.Stop{
 		Name:      "Some Other Stop",
@@ -61,7 +61,7 @@ var stops = []models.Stop{
 		ImageUrl:  "",
 		Address:   "",
 		Latitude:  0,
-		longitude: 0,
+		Longitude: 0,
 	},
 }
 

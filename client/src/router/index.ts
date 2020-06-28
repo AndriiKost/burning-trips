@@ -67,6 +67,14 @@ const routes = [
   //   name: 'Account Screen',
   // },
   {
+    path: '/stories',
+    component: StoryScreen,
+    name: 'Story Screen',
+    meta: {
+      allowGuest: true
+    }
+  },
+  {
     path: '/story/details/:storyId',
     component: StoryDetails,
     name: 'story-details',
