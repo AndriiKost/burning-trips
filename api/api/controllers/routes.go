@@ -26,6 +26,12 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/stop/{id}", middleware.SetMiddlewareJSON(middleware.SetMiddlewareAuthentication(s.UpdateStop))).Methods("PUT")
 	s.Router.HandleFunc("/stop/{id}", middleware.SetMiddlewareAuthentication(s.DeleteStop)).Methods("DELETE")
 
+	// Landmarks routes
+	s.Router.HandleFunc("/search-landmarks", middleware.SetMiddlewareJSON(s.SearchLandmarks)).Methods("POST")
+	s.Router.HandleFunc("/landmark", middleware.SetMiddlewareJSON(s.GetLandmarks)).Methods("GET")
+	s.Router.HandleFunc("/landmark/{id}", middleware.SetMiddlewareJSON(s.GetLandmark)).Methods("GET")
+
+
 	// Route routes
 	s.Router.HandleFunc("/route", middleware.SetMiddlewareJSON(s.CreateRoute)).Methods("POST")
 	s.Router.HandleFunc("/route", middleware.SetMiddlewareJSON(s.GetRoutes)).Methods("GET")

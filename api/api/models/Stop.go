@@ -26,11 +26,6 @@ type Stop struct {
 	UpdatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
-type SearchQuery struct {
-	Latitude  float32 `json:"latitude"`
-	Longitude float32 `json:"longitude"`
-}
-
 func (stop *Stop) CountVotes() uint32 {
 	var count uint32
 	count = 0
@@ -219,15 +214,4 @@ func (stop *Stop) SearchStops(db *gorm.DB, query SearchQuery) ([]Stop, error) {
 	})
 
 	return stops, nil
-}
-
-func getLatMinMax(query SearchQuery) (float32, float32) {
-	min_lat := query.Latitude - 0.1
-	max_lat := query.Latitude + 0.1
-	return min_lat, max_lat
-}
-func getLngMinMax(query SearchQuery) (float32, float32) {
-	min_lng := query.Longitude - 0.1
-	max_lng := query.Longitude + 0.1
-	return min_lng, max_lng
 }

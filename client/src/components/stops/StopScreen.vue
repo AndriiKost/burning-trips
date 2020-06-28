@@ -7,7 +7,7 @@
 		>
          <stop-summary-card :stop="stop" @update-votes="updateUserVote" />
 		</div>
-      <add-button @click.native="addNewStop" />
+      <!-- <add-button @click.native="addNewStop" /> -->
    </div>
 </template>
 
