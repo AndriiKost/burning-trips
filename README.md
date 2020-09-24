@@ -10,7 +10,9 @@ There are a total of 4 docker images:
 - Front-end application - `burning-client`. With help  of modern javascript framework - Vue.js, and a superset for js language - Typescript, the client application follows most of the modern best practices.
 - Server application - `burning-gateway`. Written in modern language Golang with a good test coverege
 - Reverse proxy - `burning-nginx`. 
-- Data layer - PostgreSQL database hosted on Amazon RDS.
+- Automated SSL certification renewal image - `certbot`
+
+PostgreSQL database is hosted on AWS RDS.
 ### Description
 
 Traveling somewhere? Check out our application to get the best places to see, rated by travelers - for travelers.
