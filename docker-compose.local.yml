@@ -1,0 +1,40 @@
+version: '3'
+services:
+  burning-gateway:
+    container_name: burning-gateway
+    build: ./api
+    ports: 
+      - 8081:8081
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    networks:
+      - burning-network
+      
+  # Vue App
+  client:
+    container_name: burning-client
+    build: ./client
+    ports:
+      - 8080:80
+
+  nginx:
+    container_name: burning-nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx/local/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - burning-gateway
+      - client
+    restart: always
+
+# Networks to be created to facilitate communication between containers
+networks:
+  burning-network:
+    driver: bridge
+
+volumes:
+  api:

@@ -1,4 +1,5 @@
 import { ISearchQuery } from '@/types/Explore';
+import { ILandmark } from '@/types/Landmark';
 import { IStop } from '@/types/Stop';
 import BaseHttpService from './BaseHttpService';
 

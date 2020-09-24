@@ -19,6 +19,7 @@ services:
       - 8080:80
 
   nginx:
+    container_name: burning-nginx
     image: nginx:latest
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
