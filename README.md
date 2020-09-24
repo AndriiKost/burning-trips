@@ -6,11 +6,11 @@ The application is machine and OS agnostic, as long as there's docker installed 
 
 Multiple Docker services are being initialized by docker-compose.
 
-There are a total of 4 docker images:
 - Front-end application - `burning-client`. With help  of modern javascript framework - Vue.js, and a superset for js language - Typescript, the client application follows most of the modern best practices.
 - Server application - `burning-gateway`. Written in modern language Golang with a good test coverege
 - Reverse proxy - `burning-nginx`. 
 - Automated SSL certification renewal image - `certbot`
+- Scraper runs only when needed - scrapes information and details for over 100 000 landmarks around the globe.
 
 PostgreSQL database is hosted on AWS RDS.
 ### Description
