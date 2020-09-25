@@ -1,8 +1,6 @@
 ## Burning Trips
 
-Technical description:
-
-The application is machine and OS agnostic, as long as there's docker installed it will run.
+### Technical description
 
 Multiple Docker services are being initialized by docker-compose.
 
