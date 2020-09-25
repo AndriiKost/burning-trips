@@ -13,7 +13,7 @@ Multiple Docker services are being initialized by docker-compose.
 
 The application is hosted on aws (currently offline) using services: EC2, Route 53, S3, Load Balancer, Serverless Lambda and RDS.
 
-### Description
+### Application Summary
 
 Traveling somewhere? Check out our application to get the best places to see, rated by travelers - for travelers.
 
