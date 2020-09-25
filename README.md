@@ -13,7 +13,7 @@ Multiple Docker services are being initialized by docker-compose.
 - Scraper runs only when needed - scrapes information and details for over 100 000 landmarks around the globe.
 - PostgreSQL database is hosted on AWS RDS.
 
-The application is hosted on aws (currently offline) using services: EC2, Route 53, S3, Load Balancer, Serverless Lambda
+The application is hosted on aws (currently offline) using services: EC2, Route 53, S3, Load Balancer, Serverless Lambda and RDS.
 
 ### Description
 
