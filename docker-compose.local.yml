@@ -31,10 +31,22 @@ services:
       - client
     restart: always
 
+  db:
+    container_name: burning-db
+    image: postgres
+    volumes:
+      - db-burning:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - burning-network
+    context: ./db-burning/vars.env
+
 # Networks to be created to facilitate communication between containers
 networks:
   burning-network:
     driver: bridge
 
 volumes:
+  db-burning:
   api:

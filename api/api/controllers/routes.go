@@ -22,6 +22,7 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/stop", middleware.SetMiddlewareJSON(s.CreateStop)).Methods("POST")
 	s.Router.HandleFunc("/search-stops", middleware.SetMiddlewareJSON(s.SearchStops)).Methods("POST")
 	s.Router.HandleFunc("/stop", middleware.SetMiddlewareJSON(s.GetStops)).Methods("GET")
+	s.Router.HandleFunc("/stops-set-image-url", middleware.SetMiddlewareJSON(s.SetStopsImageUrl)).Methods("GET")
 	s.Router.HandleFunc("/stop/{id}", middleware.SetMiddlewareJSON(s.GetStop)).Methods("GET")
 	s.Router.HandleFunc("/stop/{id}", middleware.SetMiddlewareJSON(middleware.SetMiddlewareAuthentication(s.UpdateStop))).Methods("PUT")
 	s.Router.HandleFunc("/stop/{id}", middleware.SetMiddlewareAuthentication(s.DeleteStop)).Methods("DELETE")
@@ -30,7 +31,6 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/search-landmarks", middleware.SetMiddlewareJSON(s.SearchLandmarks)).Methods("POST")
 	s.Router.HandleFunc("/landmark", middleware.SetMiddlewareJSON(s.GetLandmarks)).Methods("GET")
 	s.Router.HandleFunc("/landmark/{id}", middleware.SetMiddlewareJSON(s.GetLandmark)).Methods("GET")
-
 
 	// Route routes
 	s.Router.HandleFunc("/route", middleware.SetMiddlewareJSON(s.CreateRoute)).Methods("POST")
@@ -50,6 +50,9 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/votes/stop-votes", middleware.SetMiddlewareAuthentication(s.UpdateStopVote)).Methods("POST")
 	s.Router.HandleFunc("/votes/route-votes", middleware.SetMiddlewareAuthentication(s.UpdateRouteVote)).Methods("POST")
 	s.Router.HandleFunc("/votes/story-votes", middleware.SetMiddlewareAuthentication(s.UpdateStoryVote)).Methods("POST")
+
+	// View Models
+	s.Router.HandleFunc("/view-models/featured", middleware.SetMiddlewareJSON(s.GetFeaturedStops)).Methods("GET")
 
 	// File upload
 	s.Router.HandleFunc("/file-upload/presign/{object-name}", middleware.SetMiddlewareAuthentication((s.GetPresignedUploadUrl))).Methods("GET")

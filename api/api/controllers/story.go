@@ -12,8 +12,8 @@ import (
 	"github.com/andriikost/burning-gateway/api/models"
 	"github.com/andriikost/burning-gateway/api/responses"
 	"github.com/andriikost/burning-gateway/api/utils/formaterror"
-	"mvdan.cc/xurls/v2"
 	"github.com/gorilla/mux"
+	"mvdan.cc/xurls/v2"
 )
 
 func (server *Server) CreateStory(w http.ResponseWriter, r *http.Request) {

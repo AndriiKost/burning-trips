@@ -175,3 +175,9 @@ func (story *Story) Delete(db *gorm.DB, sid uint64) (int64, error) {
 	db = db.Debug().Model(&StoryVote{}).Where("story_id = ?", sid).Find(&StoryVote{}).Delete(&StoryVote{})
 	return db.RowsAffected, nil
 }
+
+func (story *Story) FindAllByStop(db *gorm.DB, stopId uint64) ([]Story, error) {
+	var stories []Story
+	err := db.Debug().Model(&Route{}).Where("stop_id = ?", stopId).Take(&stories).Error
+	return stories, err
+}

@@ -11,19 +11,20 @@ import (
 )
 
 type Stop struct {
-	ID        uint64     `gorm:"primary_key;auto_increment" json:"id"`
-	Address   string     `gorm:"size:255;not null;" json:"address"`
-	ImageUrl  string     `gorm:"size:255;not null;" json:"imageUrl"`
-	Name      string     `gorm:"size:255;not null;unique" json:"name"`
-	Content   string     `gorm:"size:255;not null;" json:"content"`
-	Latitude  float32    `json:"latitude"`
-	Longitude float32    `json:"longitude"`
-	Author    User       `json:"author"`
-	Votes     []StopVote `json:"votes"`
-	Routes    []*Route   `gorm:"many2many:stop_route;association_jointable_foreignkey:route_id;" json:"routes"`
-	AuthorID  uint32     `gorm:"not null" json:"authorID"`
-	CreatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID           uint64     `gorm:"primary_key;auto_increment" json:"id"`
+	Address      string     `gorm:"size:max;" json:"address"`
+	ImageUrl     string     `gorm:"size:max;" json:"imageUrl"`
+	ImageFullUrl string     `gorm:"size:max;" json:"imageFullUrl"`
+	Name         string     `gorm:"size:max;" json:"name"`
+	Content      string     `gorm:"size:max;" json:"content"`
+	Latitude     float32    `json:"latitude"`
+	Longitude    float32    `json:"longitude"`
+	Author       User       `json:"author"`
+	Votes        []StopVote `json:"votes"`
+	Routes       []*Route   `gorm:"many2many:stop_route;association_jointable_foreignkey:route_id;" json:"routes"`
+	AuthorID     uint32     `gorm:"not null" json:"authorID"`
+	CreatedAt    time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt    time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 func (stop *Stop) CountVotes() uint32 {
@@ -40,6 +41,7 @@ func (stop *Stop) Prepare() {
 	stop.Name = html.EscapeString(strings.TrimSpace(stop.Name))
 	stop.Content = html.EscapeString(strings.TrimSpace(stop.Content))
 	stop.ImageUrl = html.EscapeString(strings.TrimSpace(stop.ImageUrl))
+	stop.ImageUrl = html.EscapeString(strings.TrimSpace(stop.ImageFullUrl))
 	stop.Author = User{}
 	stop.Address = html.EscapeString(strings.TrimSpace(stop.Address))
 	stop.CreatedAt = time.Now()
@@ -84,22 +86,22 @@ func (stop *Stop) Find(db *gorm.DB, sid uint64) (*Stop, error) {
 func (stop *Stop) FindAll(db *gorm.DB) (*[]Stop, error) {
 	var err error
 	stops := []Stop{}
-	err = db.Debug().Model(&Stop{}).Limit(10).Find(&stops).Error
+	err = db.Debug().Model(&Stop{}).Limit(1000000).Find(&stops).Error
 	if err != nil {
 		return &[]Stop{}, err
 	}
-	if len(stops) > 0 {
-		for i, _ := range stops {
-			err := db.Debug().Model(&User{}).Where("id = ?", stops[i].AuthorID).Take(&stops[i].Author).Error
-			if err != nil {
-				return &[]Stop{}, err
-			}
-			err = db.Debug().Model(&StopVote{}).Where("stop_id = ?", stops[i].ID).Find(&stops[i].Votes).Error
-			if err != nil {
-				return &[]Stop{}, err
-			}
-		}
-	}
+	// if len(stops) > 0 {
+	// 	for i, _ := range stops {
+	// 		err := db.Debug().Model(&User{}).Where("id = ?", stops[i].AuthorID).Take(&stops[i].Author).Error
+	// 		if err != nil {
+	// 			return &[]Stop{}, err
+	// 		}
+	// 		err = db.Debug().Model(&StopVote{}).Where("stop_id = ?", stops[i].ID).Find(&stops[i].Votes).Error
+	// 		if err != nil {
+	// 			return &[]Stop{}, err
+	// 		}
+	// 	}
+	// }
 	return &stops, nil
 }
 
@@ -109,26 +111,27 @@ func (stop *Stop) Update(db *gorm.DB) (*Stop, error) {
 
 	err = db.Debug().Model(&Stop{}).Where("id = ?", stop.ID).Updates(
 		Stop{
-			Name:      stop.Name,
-			Content:   stop.Content,
-			Address:   stop.Address,
-			ImageUrl:  stop.ImageUrl,
-			UpdatedAt: time.Now(),
+			Name:         stop.Name,
+			Content:      stop.Content,
+			Address:      stop.Address,
+			ImageUrl:     stop.ImageUrl,
+			ImageFullUrl: stop.ImageFullUrl,
+			UpdatedAt:    time.Now(),
 		}).Error
 
 	if err != nil {
 		return &Stop{}, err
 	}
-	if stop.ID != 0 {
-		err = db.Debug().Model(&User{}).Where("id = ?", stop.AuthorID).Take(&stop.Author).Error
-		if err != nil {
-			return &Stop{}, err
-		}
-		err = db.Debug().Model(&[]StopVote{}).Where("stop_id = ?", stop.ID).Find(&stop.Votes).Error
-		if err != nil {
-			return &Stop{}, err
-		}
-	}
+	// if stop.ID != 0 {
+	// 	err = db.Debug().Model(&User{}).Where("id = ?", stop.AuthorID).Take(&stop.Author).Error
+	// 	if err != nil {
+	// 		return &Stop{}, err
+	// 	}
+	// 	err = db.Debug().Model(&[]StopVote{}).Where("stop_id = ?", stop.ID).Find(&stop.Votes).Error
+	// 	if err != nil {
+	// 		return &Stop{}, err
+	// 	}
+	// }
 	return stop, nil
 }
 
@@ -214,4 +217,36 @@ func (stop *Stop) SearchStops(db *gorm.DB, query SearchQuery) ([]Stop, error) {
 	})
 
 	return stops, nil
+}
+
+func (stop *Stop) GetNearestStops(db *gorm.DB, stopId uint64) ([]Stop, error) {
+	var stops []Stop
+
+	query := &SearchQuery{
+		Latitude:  stop.Latitude,
+		Longitude: stop.Longitude,
+	}
+
+	min_lat, max_lat := getLatMinMax(*query)
+	min_lng, max_lng := getLngMinMax(*query)
+
+	err := db.Model(&Stop{}).Where("id = ?", stopId).Where("latitude BETWEEN ? AND ?", min_lat, max_lat).Where("longitude BETWEEN ? AND ?", min_lng, max_lng).First(10).Find(&stops).Error
+
+	return stops, err
+}
+
+func (stop *Stop) GetTopRankedStops(db *gorm.DB, stopId uint64) ([]Stop, error) {
+	var stops []Stop
+
+	query := &SearchQuery{
+		Latitude:  stop.Latitude,
+		Longitude: stop.Longitude,
+	}
+
+	min_lat, max_lat := getLatMinMax(*query)
+	min_lng, max_lng := getLngMinMax(*query)
+
+	err := db.Model(&Stop{}).Where("id = ?", stopId).Where("latitude BETWEEN ? AND ?", min_lat, max_lat).Where("longitude BETWEEN ? AND ?", min_lng, max_lng).Joins("User").Joins("Votes").First(10).Find(&stops).Error
+
+	return stops, err
 }

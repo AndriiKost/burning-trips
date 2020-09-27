@@ -112,6 +112,12 @@ func (route *Route) FindAll(db *gorm.DB) (*[]Route, error) {
 	return &routes, nil
 }
 
+func (route *Route) FindAllByStop(db *gorm.DB, stopId uint64) ([]Route, error) {
+	var routes []Route
+	err := db.Debug().Model(&Route{}).Where("stop_id = ?", stopId).Take(&routes).Error
+	return routes, err
+}
+
 func (route *Route) Update(db *gorm.DB) (*Route, error) {
 
 	var err error
