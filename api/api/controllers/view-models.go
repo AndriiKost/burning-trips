@@ -30,36 +30,36 @@ func (server *Server) GetFeaturedStops(w http.ResponseWriter, r *http.Request) {
 	routeRepo := models.Route{}
 	storyRepo := models.Story{}
 
-	curStop := stopRepo.Find(server.DB, stopId)
+	curStop, err := stopRepo.Find(server.DB, stopId)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	} else {
-		vm.Stop = curStop
+		vm.Stop = *curStop
 	}
 
-	nearestStops := stopRepo.GetNearestStops(server.DB, stopId)
+	nearestStops, err := stopRepo.GetNearestStops(server.DB, stopId)
 	if err != nil {
 		fmt.Println("stopRepo GetNearestStops ", err)
 	} else {
 		vm.NearestStops = nearestStops
 	}
 
-	topRankedStops := stopRepo.GetTopRankedStops(server.DB, stopId)
+	topRankedStops, err := stopRepo.GetTopRankedStops(server.DB, stopId)
 	if err != nil {
 		fmt.Println("stopRepo GetTopRankedStops ", err)
 	} else {
 		vm.TopRankedStops = topRankedStops
 	}
 
-	routes := routeRepo.FindAllByStop(server.DB, stopId)
+	routes, err := routeRepo.FindAllByStop(server.DB, stopId)
 	if err != nil {
 		fmt.Println("routeRepo FindAllByStop ", err)
 	} else {
 		vm.Routes = routes
 	}
 
-	stories := storyRepo.FindAllByStop(server.DB, stopId)
+	stories, err := storyRepo.FindAllByStop(server.DB, stopId)
 	if err != nil {
 		fmt.Println("storyRepo FindAllByStop ", err)
 	} else {

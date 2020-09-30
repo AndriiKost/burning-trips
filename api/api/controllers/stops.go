@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/andriikost/burning-gateway/api/auth"
 	"github.com/andriikost/burning-gateway/api/models"
@@ -213,33 +212,5 @@ func (server *Server) SearchStops(w http.ResponseWriter, req *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	responses.JSON(w, http.StatusOK, stops)
-}
-
-func (server *Server) SetStopsImageUrl(w http.ResponseWriter, req *http.Request) {
-
-	stopRepo := models.Stop{}
-
-	stops, err := stopRepo.FindAll(server.DB)
-	if err != nil {
-		responses.ERROR(w, http.StatusInternalServerError, err)
-		return
-	}
-
-	stopValues := *stops
-
-	for i, _ := range stopValues {
-		img := stopValues[i].ImageUrl
-		imgUrlNoThumb := strings.Replace(img, "/thumb/", "/", -1)
-		imgSlice := strings.Split(imgUrlNoThumb, "/")
-		imgSliceNoLast := imgSlice[:len(imgSlice)-1]
-		stopValues[i].ImageFullUrl = strings.Join(imgSliceNoLast[:], "/")
-
-		fmt.Println(stopValues[i].ID)
-		fmt.Println(stopValues[i].ImageFullUrl)
-
-		stopValues[i].Update(server.DB)
-	}
-
 	responses.JSON(w, http.StatusOK, stops)
 }
