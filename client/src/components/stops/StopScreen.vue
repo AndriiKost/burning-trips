@@ -1,13 +1,21 @@
 <template>
    <div class="stop-list-wrapper relative">
+      <div class="stop-search">
+         <search-field
+            v-model="query"
+         />
+      </div>
 		<div 
-			v-for="stop in stops"
+			v-for="stop in filteredStops"
 			:key="stop.id"
          class="stop-summary-wrapper"
 		>
          <stop-summary-card :stop="stop" @update-votes="updateUserVote" />
 		</div>
+
+      <add-button @click="showCreateOptions" />
       
+      <modal-wrapper v-if="activeModal" />
    </div>
 </template>
 
@@ -15,15 +23,20 @@
 import Vue from 'vue';
 import StopSummaryCard from './StopSummaryCard.vue';
 import AddButton from '../global/AddButton.vue';
+import ModalWrapper from './modals/ModalWrapper.vue';
+import SearchField from '../global/SearchField.vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Get, Sync } from 'vuex-pathify';
 import { IStop } from '../../types/Stop';
 import { IStopVote } from '../../types/Vote';
+import { ModalType } from '@/types/components/Modal';
 
 @Component({
    name: 'StopScreen',
    components: {
       StopSummaryCard,
+      ModalWrapper,
+      SearchField,
       AddButton
    }
 })
@@ -35,7 +48,15 @@ export default class StopScreen extends Vue {
    @Sync('stop/stops')
    readonly stops: IStop[];
 
+   @Sync('stop/activeModal')
+   activeModal: ModalType;
+
+   get filteredStops(): IStop[] {
+      return this.stops.filter(stop => stop.name.indexOf(this.query) > 0);
+   }
+
    /* Data */
+   query: string = null;
 
    /* Methods */
 
@@ -45,6 +66,10 @@ export default class StopScreen extends Vue {
             ? stop.votes.forEach(v => v.id === userVote.id ? v.count = userVote.count : null)
             : stop.votes.push(userVote);
       });
+   }
+
+   showCreateOptions() {
+      this.activeModal = ModalType.CreateContentFromStops;
    }
 
    async init() {

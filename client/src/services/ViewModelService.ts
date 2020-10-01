@@ -11,7 +11,7 @@ export default class ViewModelService {
     }
 
     async getStopViewModel(stopId: number): Promise<IFeaturedStops> {
-        const res = await this._httpSvc.get<IFeaturedStops>('/view-models/featured?id=', stopId);
+        const res = await this._httpSvc.get<IFeaturedStops>(`/view-models/featured?id=${stopId}`);
         if (!res.ok || !res) return null;
         return res.result;
     }

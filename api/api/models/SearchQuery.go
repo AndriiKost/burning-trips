@@ -3,6 +3,7 @@ package models
 type SearchQuery struct {
 	Latitude  float32 `json:"latitude"`
 	Longitude float32 `json:"longitude"`
+	Keyword   string  `json:"keyword"`
 }
 
 func getLatMinMax(query SearchQuery) (float32, float32) {

@@ -1,5 +1,5 @@
 <template>
-	<div style="margin-top: 3rem;padding-right: 1rem;">
+	<div class="container-tiny login-screen-wrapper">
 		<div style="margin: 1rem 2rem;">
 			<h2>Please Sign In</h2>
 		</div>
@@ -10,7 +10,7 @@
 			label-width="120px" 
 			class="new-stop-form"
 		>
-			<el-form-item label="email" prop="email">
+			<el-form-item label="Email" prop="email">
 				<el-input v-model="userToSign.email"></el-input>
 			</el-form-item>
             <el-form-item label="Password" prop="password">
@@ -84,5 +84,8 @@ export default class LoginScreen extends Vue {
 </script>
 
 <style lang='scss'>
-
+.login-screen-wrapper {
+	margin-top: 3rem;
+	padding-right: 1rem;
+}
 </style>

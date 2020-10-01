@@ -10,7 +10,10 @@ export async function loggedInGuard(to: Route, from: Route, next: any) {
     } else {
         next();
     }
-    // TODO: redirect after logging ing
+    if (localStorage.redirectAfterLogin) {
+        next(localStorage.redirectAfterLogin);
+    }
+    next('/');
 }
 
 export function preventDuplicate(to: Route, from: Route, next: any) {

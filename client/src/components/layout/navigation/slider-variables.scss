@@ -1,0 +1,82 @@
+
+/*** 
+  Typeography and color schema for vue-slider
+  https://github.com/jeremyhamm/vue-slider
+***/
+
+// Typography
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+$font-family-sans-serif: "Titillium Web", sans-serif;
+
+// Background
+$background-color: #FFFFFF;
+
+// Hamburger icon colors
+$menu-icon-color: #999999;
+
+// Menu colors
+$menu-background: #3b889A;
+$menu-text: #FFFFFF;
+$menu-text-hover: #E0E0E0;
+
+// Export Styles
+:export {
+  background: {
+    color: $background-color
+  };
+  menu: {
+    icon-color: $menu-icon-color
+  };
+}
+body {
+    background: $background-color;
+    transition: background .5s;
+  }
+  #app {
+    transition: margin-left .5s;
+    transition: margin-right .5s;
+    padding: 20px;
+  }
+  .navMenu {
+    font-family: $font-family-sans-serif;
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    background: #fff;
+    border-left: 1px solid #eee;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 0.5s;
+    a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: $menu-text;
+      display: block;
+      transition: 0.3s;
+      &:hover {
+        color: $menu-text-hover;
+      }
+    }
+    .closebtn {
+      position: absolute;
+      color: #000;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+  @media screen and (max-height: 450px) {
+    .navMenu {
+      padding-top: 15px;
+      a {
+        font-size: 18px;
+      }
+    }
+  }

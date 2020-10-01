@@ -21,7 +21,8 @@ export default class AddressAutocomplete extends Vue {
 
     /* Props */
     @Prop({ type: String, default: 'Address' })
-    label: string;
+    readonly label: string;
+
     /* Computed */
 
     /* Data */

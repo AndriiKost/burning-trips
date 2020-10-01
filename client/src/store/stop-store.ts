@@ -1,6 +1,7 @@
 import stopService from '@/services/StopService';
 import ViewModelService from '@/services/ViewModelService';
 import voteService from '@/services/VoteService';
+import { ModalType } from '@/types/components/Modal';
 import { IFeaturedStops } from '@/types/FeaturedStops';
 import { IStop } from '@/types/Stop';
 import { IStopVote } from '@/types/Vote';
@@ -13,6 +14,7 @@ class StopStore {
     stops: IStop[] = [];
     featuredLandmarks: IStop[] = [];
     upsellLandmarks: IStop[] = [];
+    activeModal: ModalType = null;
 }
 
 const state = new StopStore();
@@ -24,11 +26,11 @@ mutations['NEW_MUTATIONS'] = function(state: StopStore, arg: any) {
 
 const actions = {
 
-    async createStop({ commit, state }: Store<StopStore>, newStop: IStop) {
+    async createStop(_: Store<StopStore>, newStop: IStop) {
         return await stopService.createStop(newStop);
     },
 
-    async getAllStops({ commit, state }: Store<StopStore>) {
+    async getAllStops({ commit }: Store<StopStore>) {
         const stops = await stopService.getAllStops();
         if (!stops) return [];
         commit('SET_STOPS', stops);
@@ -39,7 +41,7 @@ const actions = {
         return await stopService.getStop(stopID);
     },
 
-    async updateStopVote({ commit }: Store<StopStore>, vote: IStopVote) {
+    async updateStopVote(_: Store<StopStore>, vote: IStopVote) {
         return await voteService.updateStopVote(vote);
     },
 

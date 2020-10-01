@@ -12,6 +12,7 @@ require (
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/githubnemo/CompileDaemon v1.0.0 // indirect
 	github.com/go-delve/delve v1.3.2 // indirect
+	github.com/go-pg/pg/v10 v10.3.2 // indirect
 	github.com/gorilla/mux v1.7.3
 	github.com/heptiolabs/healthcheck v0.0.0-20180807145615-6ff867650f40 // indirect
 	github.com/howeyc/fsnotify v0.9.0 // indirect
@@ -29,11 +30,9 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	go.starlark.net v0.0.0-20191021185836-28350e608555 // indirect
 	golang.org/x/arch v0.0.0-20191101135251-a0d8588395bd // indirect
-	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a
+	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
 	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421
-	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
 	google.golang.org/api v0.3.1
-	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1
 	mvdan.cc/xurls/v2 v2.1.0
 )

@@ -8,14 +8,14 @@
 						<span>Burning Trips</span>
 					</div>
 				</router-link>
-				<!-- <top-navigation /> -->
+				<slide-menu />
 			</div>
 		</section>
 		<section id="content">
 			<router-view />
 		</section>
 		<!-- <navigation-menu /> -->
-		<bottom-circle-menu v-if="isMobile" />
+		<!-- <bottom-circle-menu v-if="isMobile" /> -->
 		<app-footer />
 	</div>
 </template>
@@ -27,11 +27,13 @@ import NavigationMenu from './navigation/NavigationMenu.vue';
 import AppFooter from './AppFooter.vue';
 import TopNavigation from './navigation/TopNavigation.vue';
 import BottomCircleMenu from './navigation/BottomCircleMenu.vue';
+import SlideMenu from './navigation/SlideMenu.vue';
 
 @Component({
 	name: 'AppContent',
 	components: {
 		NavigationMenu,
+		SlideMenu,
 		BottomCircleMenu,
 		TopNavigation,
 		AppFooter
