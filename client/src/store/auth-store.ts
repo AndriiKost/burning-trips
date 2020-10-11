@@ -37,9 +37,11 @@ const actions = {
 }
 
 const getters = {
-    dummy(state) {
-        return 'dummy';
+
+    isLoggedIn(state): boolean {
+        return state.loggedInUser != null;
     }
+
 }
 
 export default {

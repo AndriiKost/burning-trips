@@ -107,9 +107,10 @@ export default {
         this.app.style[marginDirection] = width
         this.app.style.transition = `${marginDirection} .5s`
       }
-      if (this.opacity) {
-        document.body.style.background = this.hexToRGB(styles['background-color'], this.opacity)
-      }
+      // if (this.opacity) {
+      //   document.body.style.background = this.hexToRGB(styles['background-color'], this.opacity)
+      // }
+      this.$emit('open-complete');
     },
     closeMenu () {
       this.menuWidth = { 'width': 0 }
@@ -117,9 +118,10 @@ export default {
         this.app.style.marginLeft = '0'
         this.app.style.marginRight = '0'
       }
-      if (this.opacity) {
-        document.body.style.background = styles['background-color']
-      }
+      // if (this.opacity) {
+      //   document.body.style.background = styles['background-color']
+      // }
+      this.$emit('close-complete');
     },
     toggleMenu () {
       if (this.menuWidth.width === 0) {

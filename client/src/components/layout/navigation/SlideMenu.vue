@@ -5,10 +5,16 @@
         direction="right" 
         :opacity="0.15" 
     >
-        <router-link to="/profile">
+        <router-link to="/profile" v-if="isLoggedIn">
             <div class="relative link-wrapper">
                 <i class="el-icon el-icon-sm el-icon-user" />
                 <span class="link-text">Profile</span>
+            </div>
+        </router-link>
+        <router-link to="/login" v-if="!isLoggedIn">
+            <div class="relative link-wrapper">
+                <i class="el-icon el-icon-sm el-icon-user" />
+                <span class="link-text">Sign In</span>
             </div>
         </router-link>
         <router-link to="/routes">
@@ -35,6 +41,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Get } from 'vuex-pathify';
 import Slider from './Slider.vue';
 
 @Component({
@@ -48,6 +55,8 @@ export default class SlideMenu extends Vue {
    /* Props */
 
    /* Computed */
+   @Get('auth/isLoggedIn')
+   readonly isLoggedIn: boolean;
 
    /* Data */
 

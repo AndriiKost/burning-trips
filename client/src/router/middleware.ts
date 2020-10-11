@@ -13,7 +13,7 @@ export async function loggedInGuard(to: Route, from: Route, next: any) {
     if (localStorage.redirectAfterLogin) {
         next(localStorage.redirectAfterLogin);
     }
-    next('/');
+    next(to);
 }
 
 export function preventDuplicate(to: Route, from: Route, next: any) {
