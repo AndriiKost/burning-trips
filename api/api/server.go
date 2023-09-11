@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/andriikost/burning-gateway/api/controllers"
+	"github.com/andriikost/burning-gateway/api/seed"
 	"github.com/joho/godotenv"
 )
 
@@ -14,7 +15,7 @@ var server = controllers.Server{}
 func Run() {
 
 	var err error
-	err = godotenv.Load(".env.local")
+	err = godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error getting env, not comming through %v", err)
 	} else {
@@ -30,7 +31,7 @@ func Run() {
 		os.Getenv("DB_NAME"),
 	)
 
-	// seed.Load(server.DB)
+	seed.Load(server.DB)
 
 	server.Run(":8081")
 

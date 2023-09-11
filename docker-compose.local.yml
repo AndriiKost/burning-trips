@@ -40,7 +40,20 @@ services:
       - 5432:5432
     networks:
       - burning-network
-    context: ./db-burning/vars.env
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=dev
+      - POSTGRES_DB=burning_db
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: dev
+    ports:
+      - "5050:80"
 
 # Networks to be created to facilitate communication between containers
 networks:
